@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "email": "j@j.com",
+      "password": "123"
+    },
+    {
+      "id": "2",
+      "name": "Jane Doe",
+      "email": "j@j.com",
+      "password": "123"
+    },
+    {
+      "name": "cung",
+      "email": "cung@gmail.com",
+      "password": "00000000",
+      "id": "vfWZaAoUeEI"
+    },
+    {
+      "name": "cung",
+      "email": "cung@gmail.com",
+      "password": "4444444",
+      "id": "_MqUMhNwFms"
+    },
+    {
+      "name": "kkk",
+      "email": "nguncung65@gmail.com",
+      "password": "00000000",
+      "id": "mPUlCpZRl_8"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

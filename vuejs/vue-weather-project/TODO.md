@@ -1,0 +1,2 @@
+- [x] Update Tailwind content globs to include Vue files so inline Tailwind classes compile
+- [ ] Run dev/build to verify Tailwind utilities are generated (confirm custom colors/fonts work)
