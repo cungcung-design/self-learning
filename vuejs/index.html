@@ -1,0 +1,229 @@
+<!-- <div id="app">
+  <h3>To Do List</h3>
+
+  <input type="text" placeholder="enter task" v-model="newTask">
+  <button @click="addTask">Add</button>
+
+  <ul>
+    <li v-for="(task,index) in tasks" :key="index">
+      <span 
+        @click="toggleTask(index)" 
+        :style="{ textDecoration: task.completed ? 'line-through' : 'none' }"
+      >
+        {{ task.name }}
+      </span>
+      <button @click="removeTask(index)">Remove Task</button>
+    </li>
+  </ul>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+Vue.createApp({
+  data() {
+    return {
+      newTask: "",
+      tasks: JSON.parse(localStorage.getItem("tasks")) || []
+    }
+  },
+  methods: {
+    addTask() {
+      if(this.newTask !== "") {
+        this.tasks.push({
+          name: this.newTask,
+          completed: false
+        });
+        this.newTask = "";
+        this.saveTasks();
+      }
+    },
+    removeTask(index) {
+      this.tasks.splice(index,1);
+      this.saveTasks();
+    },
+    toggleTask(index) {
+      this.tasks[index].completed = !this.tasks[index].completed;
+      this.saveTasks();
+    },
+    saveTasks() {
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    }
+  }
+}).mount("#app");
+</script> -->
+
+
+<!-- <div id="app">
+  <h2>MINI Shops</h2>
+  <h3>Products</h3>
+  <ul>
+    <li v-for="product in products" :key="product.id">
+      {{product.name}} - ${{product.price}}
+
+      <button @click="addToCart(product)">Add To Cart</button>
+    </li>
+  </ul>
+  <h3>Cart</h3>
+  <p v-if="cart.length === 0">Cart is empty</p>
+  <ul>
+    <li v-for="(item,index) in cart" :key="index">
+      {{item.name}} - ${{item.price}} * {{item.quantity}}
+      <button   @click="removeFromCart(index)">Remove</button>
+    </li>
+
+  </ul>
+  <p >Total : ${{totalPrice}}</p>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+Vue.createApp({
+  data(){
+    return{
+      products : [
+        {id: 1, name: "Product 1", price: 10},
+        {id: 2, name: "Product 2", price: 20},
+        {id: 3, name: "Product 3", price: 30}],
+        cart: [],
+    }
+  },
+  computed : {
+    totalPrice(){
+      return this.cart.reduce ((sum , item) => sum + item.price * item.quantity, 0);
+    }
+  },
+  methods: {
+    addToCart (product){
+      const exist = this.cart.find (item => item.name === product.name);
+      if(exist){
+        exist.quantity++;
+      }else{
+        this.cart.push({...product, quantity: 1});
+      }
+    },
+    removeFromCart(index){
+      this.cart.splice(index, 1);
+    }
+  }
+}).mount("#app");
+</script> -->
+
+<!-- <div id="app" class="max-w-3xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
+
+  <h2 class="text-3xl font-bold mb-4 text-center">Mini Shop</h2>
+
+  <h3 class="text-xl font-semibold mb-2">Products</h3>
+  <ul class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <li v-for="(product,index) in products" :key="index" 
+        class="bg-white p-4 rounded-lg shadow flex flex-col justify-between">
+      <span class="text-lg font-medium">{{ product.name }}</span>
+      <span class="text-gray-700 mb-2">${{ product.price }}</span>
+      <button @click="addToCart(product)" 
+              class="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition">
+        Add to Cart
+      </button>
+    </li>
+  </ul>
+
+  <h3 class="text-xl font-semibold mb-2">Cart</h3>
+  <p v-if="cart.length === 0" class="text-gray-500 italic mb-2">Cart is empty</p>
+  <ul class="mb-4">
+    <li v-for="(item,index) in cart" :key="index" 
+        class="bg-white p-3 rounded-lg mb-2 flex justify-between items-center shadow">
+      <div>
+        {{ item.name }} - ${{ item.price }} x {{ item.quantity }}
+      </div>
+      <button @click="removeFromCart(index)"
+              class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 transition">
+        Remove
+      </button>
+    </li>
+  </ul>
+
+  <p class="text-lg font-bold text-right">Total: ${{ totalPrice }}</p>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+Vue.createApp({
+  data(){
+    return{
+      products:[
+        {name:"Shoes", price:50},
+        {name:"T-shirt", price:20},
+        {name:"Hat", price:15}
+      ],
+      cart:[]
+    }
+  },
+
+  computed:{
+    totalPrice(){
+      return this.cart.reduce((sum,item)=>sum + item.price*item.quantity,0)
+    }
+  },
+
+  methods:{
+    addToCart(product){
+      const exist = this.cart.find(item=>item.name===product.name)
+      if(exist){
+        exist.quantity += 1
+      }else{
+        this.cart.push({...product, quantity:1})
+      }
+    },
+    removeFromCart(index){
+      this.cart.splice(index,1)
+    }
+  }
+
+}).mount("#app")
+</script> -->
+
+
+<div id="app" class="bg-gray-100 min-h-screen p-10">
+
+  <h1 class="text-4xl font-bold text-center mb-10">My Modern Blog</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div v-for="(post, index) in posts" :key="index"
+         class="bg-white p-6 rounded-2xl shadow-xl transform transition-transform hover:-translate-y-4 hover:shadow-2xl">
+      
+      <img :src="post.img" class="rounded-xl mb-4 w-full h-48 object-cover" />
+      
+      <h2 class="text-2xl font-semibold mb-2">{{ post.title }}</h2>
+      
+      <p class="text-gray-600 mb-4">{{ post.summary }}</p>
+      
+      <button class="bg-blue-500 text-white py-2 px-4 rounded-xl hover:bg-blue-600 transition">
+        Read More
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+Vue.createApp({
+  data() {
+    return {
+      posts: [
+        { title: "Modern UI Trends", summary: "Learn about 3D UI and interactive designs.", img: "https://via.placeholder.com/400x300?text=Post+1" },
+        { title: "Vue.js Components", summary: "How to build reusable components for modern websites.", img: "https://via.placeholder.com/400x300?text=Post+2" },
+        { title: "Tailwind CSS Magic", summary: "Creating beautiful designs quickly with Tailwind.", img: "https://via.placeholder.com/400x300?text=Post+3" },
+        { title: "Responsive Design", summary: "How to make your site mobile and desktop friendly.", img: "https://via.placeholder.com/400x300?text=Post+4" },
+        { title: "3D Hover Effects", summary: "Add depth to your UI with simple CSS transforms.", img: "https://via.placeholder.com/400x300?text=Post+5" },
+        { title: "Blog Best Practices", summary: "Tips to make your blog modern and user-friendly.", img: "https://via.placeholder.com/400x300?text=Post+6" },
+      ]
+    }
+  }
+}).mount("#app")
+</script>

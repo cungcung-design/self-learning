@@ -1,0 +1,3 @@
+- [ ] Inspect failing test and current route behavior
+- [ ] Fix '/' route to return 200 instead of redirecting (or adjust test)
+- [ ] Run `php artisan test` again to confirm fix
