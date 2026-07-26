@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Inertia\Inertia;
+
+class SettingsController extends Controller
+{
+    /**
+     * Display the admin settings page.
+     */
+    public function index()
+    {
+        return Inertia::render('Admin/Settings');
+    }
+}
+
