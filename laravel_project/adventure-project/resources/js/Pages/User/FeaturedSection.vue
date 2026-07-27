@@ -1,27 +1,25 @@
 <script setup>
-import AdventureCard from "@/Pages/User/AdventureCard.vue";
+import AdventureCard from '@/Pages/User/AdventureCard.vue'
 
 defineProps({
     adventures: {
         type: Array,
         default: () => [],
     },
-});
+})
 </script>
 
 <template>
     <section class="py-20">
         <div class="max-w-7xl mx-auto px-6">
-            <h2
-                class="text-4xl font-extrabold text-center mb-12 text-slate-900 tracking-tight"
-            >
+            <h2 class="text-4xl font-extrabold text-center mb-12 text-slate-900 tracking-tight">
                 Featured Adventures
             </h2>
 
             <!-- Grid Layout -->
             <div
                 v-if="adventures && adventures.length > 0"
-                class="grid md:grid-cols-3 gap-8"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
                 <AdventureCard
                     v-for="adventure in adventures"

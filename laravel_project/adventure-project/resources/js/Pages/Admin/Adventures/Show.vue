@@ -1,245 +1,142 @@
 <script setup>
-import MainLayout from "@/Layouts/MainLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import AdminLayout from '@/Layouts/AdminLayout.vue'
+import { Link, router } from '@inertiajs/vue3'
+import { 
+    ArrowLeftIcon, 
+    PencilSquareIcon, 
+    TrashIcon, 
+    MapPinIcon, 
+    ClockIcon, 
+    UsersIcon, 
+    BanknotesIcon,
+    TagIcon
+} from '@heroicons/vue/24/outline'
 
 const props = defineProps({
-    adventure: Object,
-});
+    adventure: Object
+})
 
-const form = useForm({
-    adventure_id: props.adventure.id,
-    booking_date: "",
-    participants: 1,
-});
-
-const submit = () => {
-    form.post(route("bookings.store"));
-};
+const deleteAdventure = (id) => {
+    if (confirm('Are you sure you want to delete this adventure? This action cannot be undone.')) {
+        router.delete(route('admin.adventures.destroy', id))
+    }
+}
 </script>
 
 <template>
-    <MainLayout>
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <!-- Hero Image Banner -->
-            <div class="mb-10">
-                <img
-                    v-if="adventure.image"
-                    :src="'/storage/' + adventure.image"
-                    :alt="adventure.title"
-                    class="w-full h-[450px] object-cover rounded-3xl shadow-md"
-                />
-                <div
-                    v-else
-                    class="w-full h-[450px] rounded-3xl bg-green-50 flex items-center justify-center text-8xl shadow-inner"
+    <AdminLayout>
+        <div class="max-w-5xl mx-auto px-6 py-12 md:py-16">
+            
+            <!-- Top Navigation & Actions Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+                <Link 
+                    :href="route('admin.adventures.index')" 
+                    class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-green-700 bg-white border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm transition w-fit"
                 >
-                    🏔️
+                    <ArrowLeftIcon class="w-4 h-4" /> Back to Adventures
+                </Link>
+
+                <div class="flex items-center gap-3">
+                    <Link 
+                        :href="route('admin.adventures.edit', adventure.id)" 
+                        class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl transition shadow-sm text-sm"
+                    >
+                        <PencilSquareIcon class="w-4 h-4" /> Edit Package
+                    </Link>
+
+                    <button 
+                        @click="deleteAdventure(adventure.id)"
+                        class="inline-flex items-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-5 py-2.5 rounded-xl transition text-sm shadow-sm border border-rose-100"
+                    >
+                        <TrashIcon class="w-4 h-4" /> Delete
+                    </button>
                 </div>
             </div>
 
-            <!-- Main Layout Grid -->
-            <div class="grid lg:grid-cols-3 gap-12">
-                <!-- Left Column: Adventure Info (Spans 2 columns) -->
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- Title & Category -->
-                    <div>
-                        <span
-                            class="text-green-700 font-semibold uppercase tracking-wider text-sm bg-green-50 px-3 py-1 rounded-full"
-                        >
-                            {{ adventure.category?.name }}
-                        </span>
-                        <h1
-                            class="text-4xl lg:text-5xl font-extrabold text-slate-900 mt-3"
-                        >
-                            {{ adventure.title }}
-                        </h1>
+            <!-- Main Content Card -->
+            <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                
+                <!-- Hero Image Display -->
+                <div class="relative w-full h-[380px] bg-slate-100">
+                    <img 
+                        v-if="adventure.image" 
+                        :src="'/storage/' + adventure.image" 
+                        :alt="adventure.title" 
+                        class="w-full h-full object-cover"
+                    />
+                    <div v-else class="w-full h-full flex items-center justify-center text-7xl bg-green-50 text-green-700">
+                        🏔️
                     </div>
 
-                    <!-- Meta Info Badges (Location, Duration, Max People) -->
-                    <div
-                        class="grid grid-cols-3 gap-4 text-gray-700 bg-stone-50 p-5 rounded-2xl border border-stone-100 text-center"
-                    >
+                    <!-- Category Pill Overlay -->
+                    <div class="absolute top-6 left-6">
+                        <span class="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-md text-green-800 font-bold px-4 py-1.5 rounded-full text-xs shadow-lg uppercase tracking-wider">
+                            <TagIcon class="w-3.5 h-3.5 text-green-700" /> {{ adventure.category?.name || 'General' }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Body Details -->
+                <div class="p-8 md:p-10 space-y-8">
+                    
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                            {{ adventure.title }}
+                        </h1>
+                        <p class="text-slate-500 flex items-center gap-1.5 text-sm mt-2">
+                            <MapPinIcon class="w-4 h-4 text-green-600" /> {{ adventure.location }}
+                        </p>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
                         <div>
-                            <p
-                                class="text-xs text-gray-400 uppercase font-semibold"
-                            >
-                                Location
-                            </p>
-                            <p class="font-bold mt-1">
-                                📍 {{ adventure.location }}
-                            </p>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Price</span>
+                            <span class="text-2xl font-extrabold text-green-700 flex items-center gap-1">
+                                RM {{ adventure.price }}
+                            </span>
                         </div>
-                        <div class="border-x border-stone-200">
-                            <p
-                                class="text-xs text-gray-400 uppercase font-semibold"
-                            >
-                                Duration
-                            </p>
-                            <p class="font-bold mt-1">
-                                🕒 {{ adventure.duration }} Days
-                            </p>
-                        </div>
+
                         <div>
-                            <p
-                                class="text-xs text-gray-400 uppercase font-semibold"
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Duration</span>
+                            <span class="text-lg font-bold text-slate-800 flex items-center gap-1.5">
+                                <ClockIcon class="w-5 h-5 text-slate-400" /> {{ adventure.duration }} Days
+                            </span>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Max Group Size</span>
+                            <span class="text-lg font-bold text-slate-800 flex items-center gap-1.5">
+                                <UsersIcon class="w-5 h-5 text-slate-400" /> {{ adventure.max_people }} People
+                            </span>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Difficulty</span>
+                            <span class="inline-block font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mt-0.5"
+                                :class="{
+                                    'bg-emerald-100 text-emerald-800': adventure.difficulty === 'Easy',
+                                    'bg-amber-100 text-amber-800': adventure.difficulty === 'Moderate',
+                                    'bg-rose-100 text-rose-800': adventure.difficulty === 'Hard' || adventure.difficulty === 'Extreme',
+                                }"
                             >
-                                Group Size
-                            </p>
-                            <p class="font-bold mt-1">
-                                👥 Max {{ adventure.max_people }}
-                            </p>
+                                {{ adventure.difficulty }}
+                            </span>
                         </div>
                     </div>
 
                     <!-- Description Section -->
-                    <div class="space-y-3">
-                        <h2 class="text-2xl font-bold text-slate-800">
-                            About This Adventure
-                        </h2>
-                        <p class="text-gray-600 leading-relaxed text-lg">
+                    <div class="space-y-3 pt-4 border-t border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-900">Adventure Overview</h2>
+                        <p class="text-slate-600 leading-relaxed whitespace-pre-line text-base">
                             {{ adventure.description }}
                         </p>
                     </div>
 
-                    <!-- What's Included Section -->
-                    <div class="space-y-4 pt-4 border-t border-stone-100">
-                        <h3 class="text-2xl font-bold text-slate-800">
-                            What's Included
-                        </h3>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div
-                                class="flex items-center gap-3 bg-white p-4 rounded-xl border border-stone-100 shadow-sm"
-                            >
-                                <span
-                                    class="text-green-600 bg-green-50 p-2 rounded-lg font-bold"
-                                    >✓</span
-                                >
-                                <span class="font-medium text-slate-700"
-                                    >Professional Guide</span
-                                >
-                            </div>
-                            <div
-                                class="flex items-center gap-3 bg-white p-4 rounded-xl border border-stone-100 shadow-sm"
-                            >
-                                <span
-                                    class="text-green-600 bg-green-50 p-2 rounded-lg font-bold"
-                                    >✓</span
-                                >
-                                <span class="font-medium text-slate-700"
-                                    >Meals & Refreshments</span
-                                >
-                            </div>
-                            <div
-                                class="flex items-center gap-3 bg-white p-4 rounded-xl border border-stone-100 shadow-sm"
-                            >
-                                <span
-                                    class="text-green-600 bg-green-50 p-2 rounded-lg font-bold"
-                                    >✓</span
-                                >
-                                <span class="font-medium text-slate-700"
-                                    >Transportation Support</span
-                                >
-                            </div>
-                            <!-- Dynamic check if saved via database JSON -->
-                            <template
-                                v-if="
-                                    adventure.included &&
-                                    Array.isArray(adventure.included)
-                                "
-                            >
-                                <div
-                                    v-for="(item, index) in adventure.included"
-                                    :key="index"
-                                    class="flex items-center gap-3 bg-white p-4 rounded-xl border border-stone-100 shadow-sm"
-                                >
-                                    <span
-                                        class="text-green-600 bg-green-50 p-2 rounded-lg font-bold"
-                                        >✓</span
-                                    >
-                                    <span class="font-medium text-slate-700">{{
-                                        item
-                                    }}</span>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Right Column: Booking Card Sidebar -->
-                <div>
-                    <div
-                        class="bg-white shadow-xl rounded-3xl p-8 border border-stone-100 sticky top-24"
-                    >
-                        <!-- Price Tag -->
-                        <div
-                            class="flex justify-between items-center mb-6 pb-6 border-b border-stone-100"
-                        >
-                            <div>
-                                <p class="text-sm text-gray-400">
-                                    Price per person
-                                </p>
-                                <p
-                                    class="text-3xl font-extrabold text-green-700"
-                                >
-                                    RM {{ adventure.price }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Booking Form -->
-                        <form @submit.prevent="submit" class="space-y-4">
-                            <div>
-                                <label
-                                    class="block font-semibold text-slate-700 mb-2 text-sm"
-                                >
-                                    Booking Date
-                                </label>
-                                <input
-                                    type="date"
-                                    v-model="form.booking_date"
-                                    class="w-full border-stone-200 rounded-xl p-3 focus:ring-green-600 focus:border-green-600 text-sm shadow-sm"
-                                />
-                                <div
-                                    v-if="form.errors.booking_date"
-                                    class="text-red-500 text-xs mt-1"
-                                >
-                                    {{ form.errors.booking_date }}
-                                </div>
-                            </div>
-
-                            <div>
-                                <label
-                                    class="block font-semibold text-slate-700 mb-2 text-sm"
-                                >
-                                    Participants
-                                </label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    v-model="form.participants"
-                                    class="w-full border-stone-200 rounded-xl p-3 focus:ring-green-600 focus:border-green-600 text-sm shadow-sm"
-                                />
-                                <div
-                                    v-if="form.errors.participants"
-                                    class="text-red-500 text-xs mt-1"
-                                >
-                                    {{ form.errors.participants }}
-                                </div>
-                            </div>
-
-                            <button
-                                :disabled="form.processing"
-                                class="w-full mt-4 bg-green-700 hover:bg-green-800 text-white font-semibold py-4 rounded-xl shadow-lg transition duration-200 disabled:opacity-50"
-                            >
-                                {{
-                                    form.processing
-                                        ? "Processing..."
-                                        : "Book Now"
-                                }}
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
+
         </div>
-    </MainLayout>
+    </AdminLayout>
 </template>

@@ -46,17 +46,14 @@ public function index(Request $request)
 
         // Sorting
         switch ($request->sort) {
-            case 'price_asc':
+            case 'price_low':
                 $query->orderBy('price', 'asc');
                 break;
-            case 'price_desc':
+            case 'price_high':
                 $query->orderBy('price', 'desc');
                 break;
-            case 'duration_asc':
-                $query->orderBy('duration', 'asc');
-                break;
-            case 'duration_desc':
-                $query->orderBy('duration', 'desc');
+            case 'name':
+                $query->orderBy('title', 'asc');
                 break;
             default:
                 $query->latest();
@@ -127,15 +124,16 @@ public function store(Request $request)
         Adventure::create($validated);
 
         return redirect()->route('adventures.index');
-    }    /**
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(Adventure $adventure)
     {
         $adventure->load([
-        'category',
-        'reviews.user',
-        
+            'category',
+            'reviews.user',
         ]);
 
         // Check if authenticated user has favorited this adventure
@@ -147,8 +145,41 @@ public function store(Request $request)
             $adventure->is_favorited = false;
         }
 
-return Inertia::render('User/Adventures/AdventureDetail', [
-            'adventure' => $adventure
+        // Get related adventures (same category, excluding current)
+        $related = Adventure::with('category')
+            ->where('category_id', $adventure->category_id)
+            ->where('id', '!=', $adventure->id)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return Inertia::render('User/Adventures/AdventureDetail', [
+            'adventure' => $adventure,
+            'related' => $related,
+        ]);
+    }
+
+    /**
+     * Admin: Display adventure listing.
+     */
+    public function adminIndex()
+    {
+        $adventures = Adventure::with('category')->latest()->paginate(10);
+
+        return Inertia::render('Admin/Adventures/Index', [
+            'adventures' => $adventures,
+        ]);
+    }
+
+    /**
+     * Admin: Display adventure details.
+     */
+    public function adminShow(Adventure $adventure)
+    {
+        $adventure->load('category');
+
+        return Inertia::render('Admin/Adventures/Show', [
+            'adventure' => $adventure,
         ]);
     }
 

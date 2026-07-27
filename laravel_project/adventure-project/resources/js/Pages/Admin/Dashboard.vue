@@ -16,8 +16,9 @@ defineProps({ stats: Object });
         <div class="max-w-7xl mx-auto px-6 py-12">
             <h1 class="text-4xl font-extrabold mb-10">Admin Dashboard</h1>
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <div
-                    class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between"
+                <Link
+                    :href="route('admin.adventures.index')"
+                    class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase">
@@ -28,9 +29,10 @@ defineProps({ stats: Object });
                         </h2>
                     </div>
                     <MapIcon class="w-8 h-8 text-green-700" />
-                </div>
-                <div
-                    class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between"
+                </Link>
+                <Link
+                    :href="route('admin.bookings.index')"
+                    class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase">
@@ -41,9 +43,10 @@ defineProps({ stats: Object });
                         </h2>
                     </div>
                     <BookmarkSquareIcon class="w-8 h-8 text-blue-600" />
-                </div>
-                <div
-                    class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between"
+                </Link>
+                <Link
+                    :href="route('admin.users.index')"
+                    class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
                     <div>
                         <p class="text-xs font-bold text-slate-400 uppercase">
@@ -54,7 +57,7 @@ defineProps({ stats: Object });
                         </h2>
                     </div>
                     <UsersIcon class="w-8 h-8 text-orange-600" />
-                </div>
+                </Link>
                 <div
                     class="bg-white p-6 rounded-3xl shadow-xl flex items-center justify-between"
                 >

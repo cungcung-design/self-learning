@@ -1,90 +1,85 @@
 <script setup>
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router } from '@inertiajs/vue3'
+import PrimaryButton from '@/Components/UI/PrimaryButton.vue'
 
 const props = defineProps({
-    adventure: Object,
-});
+    adventure: {
+        type: Object,
+        required: true,
+    },
+})
 
-const toggleFavorite = () => {
-    router.post(route("user.favorites.store"), {
-        adventure_id: props.adventure.id,
-    });
-};
+function toggleFavorite(id) {
+    router.post(route('user.favorites.store', id))
+}
 </script>
 
 <template>
     <div
-        class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 flex flex-col justify-between relative"
+        class="bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full"
     >
-        <!-- Favorite Heart Button (Moved inside the card, absolute top-right) -->
-        <button
-            @click="toggleFavorite"
-            class="absolute top-3 right-3 bg-white/80 backdrop-blur-sm rounded-full p-2.5 shadow-md hover:bg-white transition z-10 cursor-pointer"
-        >
-            {{ adventure.is_favorited ? "❤️" : "🤍" }}
-        </button>
-
-        <!-- Image Header -->
-        <div class="h-56 overflow-hidden relative">
+        <!-- Image & Favorite Action -->
+        <div class="relative">
             <img
-                v-if="adventure.image"
-                :src="'/storage/' + adventure.image"
+                :src="adventure.image ? '/storage/' + adventure.image : 'https://placehold.co/600x400?text=No+Image'"
                 :alt="adventure.title"
-                class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                class="w-full h-56 object-cover"
             />
-            <div
-                v-else
-                class="h-full bg-green-100 flex items-center justify-center text-5xl"
+
+            <!-- Favorite Button (Top Right) -->
+            <button
+                @click="toggleFavorite(adventure.id)"
+                class="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-transform duration-200 hover:scale-110 active:scale-95"
+                aria-label="Add to favorites"
             >
-                🏔️
-            </div>
+                🤍
+            </button>
         </div>
 
-        <!-- Content Body -->
-        <div class="p-6 flex-1 flex flex-col justify-between">
-            <div>
-                <!-- Category -->
-                <span
-                    class="text-sm text-green-700 font-semibold uppercase tracking-wider"
-                >
-                    {{ adventure.category?.name }}
-                </span>
+        <!-- Content -->
+        <div class="p-5 flex flex-col flex-grow">
 
-                <!-- Title -->
-                <h3 class="text-xl font-bold text-slate-800 mt-2">
-                    {{ adventure.title }}
-                </h3>
+            <!-- Category -->
+            <span
+                class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-2 self-start"
+            >
+                {{ adventure.category.name }}
+            </span>
 
-                <!-- Location -->
-                <p class="text-gray-500 mt-2 text-sm flex items-center gap-1">
-                    📍 {{ adventure.location }}
-                </p>
+            <!-- Title -->
+            <h2 class="text-xl font-bold text-slate-900 mb-4 line-clamp-1">
+                {{ adventure.title }}
+            </h2>
 
-                <!-- Info Badges -->
-                <div
-                    class="flex justify-between mt-4 text-sm text-gray-600 bg-stone-50 p-3 rounded-xl"
-                >
-                    <span>🕒 {{ adventure.duration }} Days</span>
-                    <span>👥 Max {{ adventure.max_people }}</span>
+            <!-- Meta Details -->
+            <div class="space-y-2 text-sm text-gray-500 mb-6">
+                <div class="flex items-center gap-2">
+                    <span>📍</span>
+                    <span class="truncate">{{ adventure.location }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span>🕒</span>
+                    <span>{{ adventure.duration }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span>👥</span>
+                    <span>Max {{ adventure.max_people }} People</span>
                 </div>
             </div>
 
-            <!-- Price and Action Footer -->
-            <div
-                class="flex justify-between items-center mt-6 pt-4 border-t border-stone-100"
-            >
+            <!-- Price & Action Footer (Inline layout) -->
+            <div class="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
                 <div>
-                    <p class="text-xs text-gray-400">Starting from</p>
-                    <p class="text-xl font-bold text-green-700">
+                    <span class="text-xs text-gray-400 block">Price</span>
+                    <p class="text-2xl font-bold text-green-600">
                         RM {{ adventure.price }}
                     </p>
                 </div>
 
-                <Link
-                    :href="route('adventures.show', adventure.id)"
-                    class="bg-green-700 text-white px-5 py-2.5 rounded-xl hover:bg-green-800 transition shadow-sm font-medium text-sm"
-                >
-                    View
+                <Link :href="route('adventures.show', adventure.id)">
+                    <PrimaryButton>
+                        View Details
+                    </PrimaryButton>
                 </Link>
             </div>
         </div>

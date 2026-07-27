@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AdventureAvailabilityController;
 use App\Http\Controllers\AdventureController;
 use App\Http\Controllers\BookingController;
@@ -56,7 +57,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
     // Adventure Management (Admin CRUD)
-    Route::resource('adventures', AdventureController::class)->except(['show']);
+    Route::get('/adventures', [AdventureController::class, 'adminIndex'])->name('adventures.index');
+    Route::get('/adventures/{adventure}', [AdventureController::class, 'adminShow'])->name('adventures.show');
+    Route::resource('adventures', AdventureController::class)->except(['index', 'show']);
 
     // Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
@@ -80,17 +83,15 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::delete('/profile', [UserProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Reviews
-    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/adventures/{adventure}/reviews',[ReviewController::class,'store'])->name('reviews.store');
 
     // Favorites
-    Route::post('/favorites', [FavoriteController::class, 'toggleFavorite'])->name('favorites.store');
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/{adventure}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{adventure}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 
     // Payment
-    Route::get('/payment/{booking}', [PaymentController::class, 'checkout'])->name('payment.checkout');
-
     Route::get('/payment/{booking}/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
-
     Route::post('/payment/{booking}/pay', [PaymentController::class, 'process'])->name('payment.process');
 });
 

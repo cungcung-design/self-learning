@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Adventure;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,6 +19,26 @@ class FavoriteController extends Controller
         return Inertia::render('User/Favorites/Favorite', [
             'favorites' => $favorites,
         ]);
+    }
+
+    public function store(Adventure $adventure)
+    {
+        Favorite::firstOrCreate([
+            'user_id' => auth()->id(),
+            'adventure_id' => $adventure->id,
+        ]);
+
+        return back();
+    }
+
+    public function destroy(Adventure $adventure)
+    {
+        Favorite::where([
+            'user_id' => auth()->id(),
+            'adventure_id' => $adventure->id,
+        ])->delete();
+
+        return back();
     }
 
     public function toggleFavorite(Request $request)

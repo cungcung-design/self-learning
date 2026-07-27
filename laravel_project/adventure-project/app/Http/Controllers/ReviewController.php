@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Adventure;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, Adventure $adventure)
     {
-        $validated  = $request->validate([
-        'adenture_id' => 'required|exists:adventures,id',
-        'user_id' => 'required|exists:users,id',
-        'rating' => 'required|integer|min:1|max:5',
-        'comment' => 'nullable|string',
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
         ]);
 
-        $review = new Review();
-        $review->adventure_id = $validated['adenture_id'];
-        $review->user_id = $validated['user_id'];
-        $review->rating = $validated['rating'];
-        $review->comment = $validated['comment'];
-        $review->save();
+        Review::create([
+            'adventure_id' => $adventure->id,
+            'user_id' => auth()->id(),
+            'rating' => $validated['rating'],
+            'comment' => $validated['comment'] ?? '',
+        ]);
 
         return redirect()->back()->with('success', 'Review submitted successfully!');
     }

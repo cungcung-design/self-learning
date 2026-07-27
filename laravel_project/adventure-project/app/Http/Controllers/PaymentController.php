@@ -15,6 +15,11 @@ class PaymentController extends Controller
 {
     public function checkout(Booking $booking)
     {
+        // 0. Ensure the booking belongs to the authenticated user
+        if ($booking->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this booking.');
+        }
+
         // 1. Eager load the adventure relationship so we can access its price
         $booking->load('adventure');
 
@@ -35,6 +40,11 @@ class PaymentController extends Controller
     }
     public function process(Request $request, Booking $booking)
     {
+        // Ensure the booking belongs to the authenticated user
+        if ($booking->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized access to this booking.');
+        }
+
         $booking->update(['status' => 'confirmed']);
         $booking->payment()->update(['status' => 'paid']);
 
