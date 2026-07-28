@@ -1,6 +1,7 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import NotificationBell from '@/Components/NotificationBell.vue'
 
 const page = usePage()
 
@@ -45,6 +46,18 @@ const menus = [
         route: 'admin.reviews.index',
         component: 'Admin/Reviews/Index',
     },
+    {
+        title: 'Reports',
+        icon: '📈',
+        route: 'admin.reports.index',
+        component: 'Admin/Reports/Index',
+    },
+    {
+        title: 'Activity Logs',
+        icon: '📋',
+        route: 'admin.activities.index',
+        component: 'Admin/Activities/Index',
+    },
 ]
 </script>
 
@@ -52,34 +65,36 @@ const menus = [
     <aside class="w-64 min-h-screen bg-slate-900 text-white">
 
         <!-- Logo -->
-        <div class="px-6 py-8 border-b border-slate-700">
+        <div class="px-6 py-8 border-b border-slate-700 flex items-center justify-between">
             <h1 class="text-2xl font-bold">
                 🏕 Adventure Admin
             </h1>
+            <NotificationBell :notifications="page.props.auth?.user?.notifications || []" />
         </div>
 
         <!-- Navigation -->
-        <nav class="mt-6">
+        <nav class="mt-6 space-y-1 px-3">
 
             <Link
                 v-for="menu in menus"
                 :key="menu.route"
                 :href="route(menu.route)"
-                class="flex items-center gap-4 px-6 py-4 transition duration-200"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-200"
                 :class="componentName.startsWith(menu.component)
-                    ? 'bg-green-600 text-white'
-                    : 'text-slate-300 hover:bg-slate-800'"
+                    ? 'bg-green-600 text-white shadow-lg shadow-green-900/20'
+                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'"
             >
-                <span class="text-xl">
+                <span class="text-lg">
                     {{ menu.icon }}
                 </span>
 
-                <span>
+                <span class="font-medium">
                     {{ menu.title }}
                 </span>
             </Link>
 
         </nav>
+
 
         <!-- Bottom -->
         <div class="absolute bottom-0 w-64 border-t border-slate-700 p-6">

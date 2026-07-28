@@ -10,6 +10,7 @@ const props = defineProps({
 
 const form = useForm({
     payment_id: props.payment?.id ?? null,
+    payment_method: 'stripe',
 })
 
 const payNow = () => {
@@ -60,6 +61,19 @@ const payNow = () => {
                     <h2 class="text-xl font-bold text-slate-900">
                         Payment Summary
                     </h2>
+
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Payment Method</label>
+                        <div class="space-y-2">
+                            <label v-for="method in ['stripe','toyyibpay','paypal']" :key="method" class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer" :class="form.payment_method === method ? 'border-green-600 bg-green-50' : 'border-gray-200'">
+                                <input type="radio" :value="method" v-model="form.payment_method" class="text-green-600 focus:ring-green-600">
+                                <span class="text-sm font-medium capitalize text-slate-700">{{ method }}</span>
+                            </label>
+                        </div>
+                        <div v-if="form.errors.payment_method" class="text-red-500 text-xs mt-1">
+                            {{ form.errors.payment_method }}
+                        </div>
+                    </div>
 
                     <div class="flex items-center justify-between pt-4 border-t border-stone-100">
                         <span class="font-medium text-gray-500">Total</span>

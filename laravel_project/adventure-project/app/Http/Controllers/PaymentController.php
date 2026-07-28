@@ -2,69 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\BookingConfirmedMail;
+use App\Mail\PaymentReceiptMail;
 use App\Models\Booking;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
     public function checkout(Booking $booking)
     {
-        // 0. Ensure the booking belongs to the authenticated user
         if ($booking->user_id !== auth()->id()) {
             abort(403, 'Unauthorized access to this booking.');
         }
 
-        // 1. Eager load the adventure relationship so we can access its price
         $booking->load('adventure');
 
-        // 2. Check if a payment record already exists for this booking to avoid duplicates
-        $payment = Payment::firstOrCreate(
-            ['booking_id' => $booking->id],
-            [
-                'amount' => $booking->participants * $booking->adventure->price,
-                'status' => 'pending',
-            ]
-        );
+        $payment = Payment::where('booking_id', $booking->id)->first();
 
-        // 3. Pass both the booking (with its adventure) and payment details to Vue
         return Inertia::render('User/Payment/Checkout', [
             'booking' => $booking,
             'payment' => $payment,
         ]);
     }
 
-    public function processPaymentCallback(Request $request, Booking $booking)
-    {
-        $booking->update([
-            'payment_status' => 'paid',
-            'status' => 'confirmed',
-            'payment_id' => $request->input('transaction_id'),
-        ]);
-
-        return redirect()->route('admin.bookings.show', $booking)
-            ->with('success', 'Payment verified and recorded successfully.');
-    }
-
     public function process(Request $request, Booking $booking)
     {
-        // Ensure the booking belongs to the authenticated user
-        if ($booking->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized access to this booking.');
+        $request->validate([
+            'payment_method' => 'required|string|in:stripe,toyyibpay,paypal'
+        ]);
+
+        $booking->load('adventure');
+
+        $payment = Payment::updateOrCreate(
+            ['booking_id' => $booking->id],
+            [
+                'payment_method' => $request->payment_method,
+                'amount' => $booking->participants * $booking->adventure->price,
+                'status' => 'pending'
+            ]
+        );
+
+        return redirect()->route('payment.success', ['booking' => $booking->id]);
+    }
+
+    public function success(Booking $booking)
+    {
+        $payment = $booking->payment()->first();
+
+        $booking->update([
+            'status' => 'confirmed',
+            'payment_status' => 'paid',
+        ]);
+
+        if ($payment) {
+            $payment->update([
+                'status' => 'paid',
+                'transaction_id' => 'TXN' . strtoupper(uniqid()),
+                'paid_at' => Carbon::now()
+            ]);
         }
 
-        $booking->update(['status' => 'confirmed']);
-        $booking->payment()->update(['status' => 'paid']);
+        $booking->load(['user', 'adventure', 'payment']);
 
-        $booking->load(['user', 'adventure']);
+        $booking->user->notify(new \App\Notifications\BookingStatusNotification($booking));
 
-        Mail::to($booking->user->email)->send(new BookingConfirmedMail($booking));
+        Mail::to($booking->user->email)->send(new PaymentReceiptMail($booking));
 
         return redirect()->route('user.bookings.index')
-            ->with('success', 'Booking confirmed successfully!');
+            ->with('success', 'Payment successful! Booking confirmed.');
+    }
 
+    public function cancel(Booking $booking)
+    {
+        $payment = $booking->payment()->first();
+
+        if ($payment) {
+            $payment->update(['status' => 'failed']);
+        }
+
+        $booking->update(['payment_status' => 'failed']);
+
+        return redirect()->route('user.bookings.index')
+            ->with('error', 'Payment process was cancelled.');
     }
 }

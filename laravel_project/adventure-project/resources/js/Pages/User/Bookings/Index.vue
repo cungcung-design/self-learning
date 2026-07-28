@@ -160,6 +160,13 @@ const getStatusBadge = (status) => {
                                         >
                                             View
                                         </Link>
+                                        <Link
+                                            v-if="['confirmed','paid','completed'].includes(booking.status?.toLowerCase())"
+                                            :href="route('invoice.download', booking.id)"
+                                            class="text-blue-600 hover:text-blue-900 font-medium text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition"
+                                        >
+                                            Invoice
+                                        </Link>
                                         <button
                                             v-if="booking.status?.toLowerCase() !== 'cancelled'"
                                             @click="cancelBooking(booking.id)"

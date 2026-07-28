@@ -47,6 +47,18 @@ const updateStatus = (status) => {
                     <span class="text-gray-400 font-medium">Total Price</span>
                     <span class="font-bold text-gray-900">RM {{ booking.adventure?.price * booking.participants }}</span>
                 </div>
+                <div v-if="booking.payment" class="flex justify-between py-3 border-b border-gray-50">
+                    <span class="text-gray-400 font-medium">Payment Method</span>
+                    <span class="font-semibold text-gray-800 capitalize">{{ booking.payment.payment_method }}</span>
+                </div>
+                <div v-if="booking.payment" class="flex justify-between py-3 border-b border-gray-50">
+                    <span class="text-gray-400 font-medium">Transaction ID</span>
+                    <span class="font-semibold text-gray-800">{{ booking.payment.transaction_id || '-' }}</span>
+                </div>
+                <div v-if="booking.payment" class="flex justify-between py-3 border-b border-gray-50">
+                    <span class="text-gray-400 font-medium">Payment Status</span>
+                    <span class="font-semibold text-gray-800 capitalize">{{ booking.payment.status }}</span>
+                </div>
             </div>
 
             <div class="mt-8 flex gap-4">
@@ -62,6 +74,12 @@ const updateStatus = (status) => {
                     class="flex-1 py-3 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition text-center">
                     Cancel Booking
                 </button>
+                <a
+                    v-if="['confirmed','paid','completed'].includes(booking.status?.toLowerCase())"
+                    :href="route('invoice.download', booking.id)"
+                    class="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition text-center text-center">
+                    Download Invoice
+                </a>
             </div>
         </div>
     </AdminLayout>

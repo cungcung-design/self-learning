@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\BookingConfirmedMail;
+use App\Notifications\BookingStatusNotification;
 use App\Models\Booking;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Spatie\Activitylog\Models\Activity;
 
 class BookingController extends Controller
 {
@@ -40,7 +40,7 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        $booking->load(['user', 'adventure']);
+        $booking->load(['user', 'adventure', 'payment']);
 
         return Inertia::render('Admin/Bookings/Show', [
             'booking' => $booking,
@@ -69,23 +69,35 @@ class BookingController extends Controller
     {
         $booking->update(['status' => 'confirmed']);
 
-        Mail::to($booking->user->email)->send(new BookingConfirmedMail($booking));
+        activity()
+            ->performedOn($booking)
+            ->causedBy(auth()->user())
+            ->log('Confirmed booking #' . $booking->id);
 
-        return back()->with('success', 'Booking confirmed and email dispatched.');
+        $booking->user->notify(new BookingStatusNotification($booking));
+
+        return back()->with('success', 'Booking confirmed and notification dispatched.');
     }
 
     public function cancel(Booking $booking)
     {
         $booking->update(['status' => 'cancelled']);
 
-        return back()->with('success', 'Booking cancelled successfully.');
+        activity()
+            ->performedOn($booking)
+            ->causedBy(auth()->user())
+            ->log('Cancelled booking #' . $booking->id);
+
+        $booking->user->notify(new BookingStatusNotification($booking));
+
+        return back()->with('success', 'Booking cancelled and notification dispatched.');
     }
 
     public function downloadInvoice(Booking $booking)
     {
-        $booking->load(['user', 'adventure']);
+        $booking->load(['user', 'adventure', 'payment']);
 
-        $pdf = Pdf::loadView('pdf.invoice', [
+        $pdf = Pdf::loadView('invoice.booking', [
             'booking' => $booking,
         ]);
 

@@ -3,17 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
-class Adventure extends Model // Renamed from adventures
+class Adventure extends Model
 {
+    use LogsActivity;
+
     protected $fillable = [
         'category_id', 'title', 'description', 'location',
         'price', 'difficulty', 'duration', 'max_people', 'image',
     ];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
+    }
+
     public function category()
     {
-        return $this->belongsTo(Category::class); // Changed from Category::class
+        return $this->belongsTo(Category::class);
     }
 
     public function bookings()

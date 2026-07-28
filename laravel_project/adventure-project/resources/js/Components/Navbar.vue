@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { Bars3Icon } from "@heroicons/vue/24/outline";
+import NotificationBell from "@/Components/NotificationBell.vue";
 </script>
 
 <template>
@@ -66,6 +67,8 @@ import { Bars3Icon } from "@heroicons/vue/24/outline";
 
                     <!-- If User IS logged in -->
                     <template v-else>
+                        <NotificationBell :notifications="$page.props.auth?.user?.notifications || []" />
+
                         <!-- Admin Control Link (Only shows if role is admin) -->
                         <Link
                             v-if="$page.props.auth?.user?.role === 'admin'"

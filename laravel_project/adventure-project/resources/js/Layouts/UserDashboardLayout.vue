@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
+import NotificationBell from '@/Components/NotificationBell.vue'
 </script>
 
 <template>
@@ -7,9 +8,12 @@ import { Link } from '@inertiajs/vue3'
         <div class="flex">
             <!-- Sidebar -->
             <aside class="w-64 bg-white min-h-screen p-6 hidden md:block border-r border-stone-100">
-                <h1 class="text-xl font-extrabold text-green-600 tracking-tight">
-                    Adventure Explorer
-                </h1>
+                <div class="flex items-center justify-between mb-10">
+                    <h1 class="text-xl font-extrabold text-green-600 tracking-tight">
+                        Adventure Explorer
+                    </h1>
+                    <NotificationBell :notifications="$page.props.auth?.user?.notifications || []" />
+                </div>
 
                 <nav class="mt-10 space-y-2">
                     <Link

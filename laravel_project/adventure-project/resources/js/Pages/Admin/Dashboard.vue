@@ -6,16 +6,17 @@ import RevenueChart from '@/Components/Admin/Charts/RevenueChart.vue';
 import BookingStatusChart from '@/Components/Admin/Charts/BookingStatusChart.vue';
 
 defineProps({
-    adventures: Number,
-    bookings: Number,
-    users: Number,
-    revenue: Number,
-    revenueLabels: Array,
-    revenueValues: Array,
-    bookingStats: Object,
-    topAdventures: Array,
-    recentBookings: Array,
-    latestReviews: Array,
+    adventures: { type: Number, default: 0 },
+    bookings: { type: Number, default: 0 },
+    users: { type: Number, default: 0 },
+    revenue: { type: Number, default: 0 },
+    revenueLabels: { type: Array, default: () => [] },
+    revenueValues: { type: Array, default: () => [] },
+    bookingStats: { type: Object, default: () => ({ confirmed: 0, pending: 0, cancelled: 0 }) },
+    topAdventures: { type: Array, default: () => [] },
+    recentBookings: { type: Array, default: () => [] },
+    latestReviews: { type: Array, default: () => [] },
+    financialReports: { type: Object, default: () => ({}) },
 });
 </script>
 
@@ -28,7 +29,6 @@ defineProps({
                 <a href="/admin/adventures/create" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">➕ Add Adventure</a>
                 <a href="/admin/categories/create" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">📂 Add Category</a>
                 <a href="/admin/bookings" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">📅 View Bookings</a>
-                <a href="/admin/reports" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">📊 Generate Report</a>
             </div>
         </div>
 
@@ -38,6 +38,14 @@ defineProps({
             <DashboardCard title="Bookings" :value="bookings" icon="📅" color="border-blue-500" />
             <DashboardCard title="Users" :value="users" icon="👥" color="border-purple-500" />
             <DashboardCard title="Revenue" :value="'RM ' + revenue" icon="💰" color="border-yellow-500" />
+        </div>
+
+        <!-- Financial Reports -->
+        <div v-if="financialReports" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <DashboardCard title="Today Revenue" :value="'RM ' + financialReports.today" icon="📅" color="border-emerald-500" />
+            <DashboardCard title="Week Revenue" :value="'RM ' + financialReports.week" icon="📆" color="border-indigo-500" />
+            <DashboardCard title="Month Revenue" :value="'RM ' + financialReports.month" icon="🗓" color="border-orange-500" />
+            <DashboardCard title="Total Revenue" :value="'RM ' + financialReports.total" icon="💎" color="border-pink-500" />
         </div>
 
         <!-- Charts Section -->

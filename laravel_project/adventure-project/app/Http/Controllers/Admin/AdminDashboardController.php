@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Adventure;
 use App\Models\Booking;
+use App\Models\Payment;
 use App\Models\Review;
 use App\Models\User;
 use Carbon\Carbon;
@@ -54,6 +55,19 @@ class AdminDashboardController extends Controller
                 ->latest()
                 ->take(3)
                 ->get(),
+
+            'financialReports' => [
+                'today' => Payment::where('status', 'paid')
+                    ->whereDate('paid_at', Carbon::today())
+                    ->sum('amount'),
+                'week' => Payment::where('status', 'paid')
+                    ->whereBetween('paid_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+                    ->sum('amount'),
+                'month' => Payment::where('status', 'paid')
+                    ->whereMonth('paid_at', Carbon::now()->month)
+                    ->sum('amount'),
+                'total' => Payment::where('status', 'paid')->sum('amount'),
+            ],
         ]);
     }
 }

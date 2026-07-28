@@ -9,6 +9,8 @@ use App\Http\Controllers\AdventureAvailabilityController;
 use App\Http\Controllers\AdventureController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\User\BookingController as UserBookingController;
@@ -70,6 +72,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Reviews
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 
+    // Reports
+    Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export/excel', [\App\Http\Controllers\Admin\ReportExportController::class, 'excel'])->name('reports.excel');
+    Route::get('/reports/export/pdf', [\App\Http\Controllers\Admin\ReportExportController::class, 'pdf'])->name('reports.pdf');
+
+    // Activity Logs
+    Route::get('/activities', [\App\Http\Controllers\Admin\ActivityController::class, 'index'])->name('activities.index');
+
     // Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
 
@@ -108,6 +118,15 @@ Route::middleware(['auth', 'client'])->prefix('user')->name('user.')->group(func
     // Payment
     Route::get('/payment/{booking}/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
     Route::post('/payment/{booking}/pay', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/{booking}/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/{booking}/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/invoice/{booking}', [InvoiceController::class, 'download'])->name('invoice.download');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
 });
 
 // 5. Breeze Authentication Routes (login, register, password reset, etc.)
