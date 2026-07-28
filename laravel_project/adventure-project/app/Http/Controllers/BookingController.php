@@ -18,7 +18,7 @@ class BookingController extends Controller
             ->get();
 
         return Inertia::render('Bookings/Index', [
-            'bookings' => $bookings
+            'bookings' => $bookings,
         ]);
     }
 
@@ -30,7 +30,7 @@ class BookingController extends Controller
             ->get();
 
         return Inertia::render('Admin/Bookings/Index', [
-            'bookings' => $bookings
+            'bookings' => $bookings,
         ]);
     }
 
@@ -43,11 +43,11 @@ class BookingController extends Controller
         ]);
 
         $booking = Booking::create([
-            'user_id'      => auth()->id(),
+            'user_id' => auth()->id(),
             'adventure_id' => $validated['adventure_id'],
             'booking_date' => $validated['booking_date'],
             'participants' => $validated['participants'],
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         return redirect()->route('user.payment.checkout', $booking->id);
@@ -65,7 +65,7 @@ class BookingController extends Controller
         $booking->update(['status' => 'cancelled']);
 
         return redirect()->back()->with('success', 'Booking cancelled successfully!');
-    } 
+    }
 
     public function destroy(Booking $booking)
     {

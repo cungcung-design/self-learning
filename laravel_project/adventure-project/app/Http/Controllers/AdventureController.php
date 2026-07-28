@@ -14,14 +14,14 @@ class AdventureController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index(Request $request)
+    public function index(Request $request)
     {
         // Public listing - shows all adventures with filtering & pagination
         $query = Adventure::query()->with('category');
 
         // Search by title
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%'.$request->search.'%');
         }
 
         // Filter by category
@@ -71,6 +71,7 @@ public function index(Request $request)
 
             $adventures->getCollection()->transform(function ($adventure) use ($userFavIds) {
                 $adventure->is_favorited = in_array($adventure->id, $userFavIds);
+
                 return $adventure;
             });
         }
@@ -78,13 +79,13 @@ public function index(Request $request)
         return Inertia::render('User/Adventures/Index', [
             'adventures' => $adventures,
             'categories' => Category::orderBy('name')->get(),
-            'filters'    => $request->only([
+            'filters' => $request->only([
                 'search',
                 'category',
                 'min_price',
                 'max_price',
                 'duration',
-                'sort'
+                'sort',
             ]),
         ]);
     }
@@ -94,27 +95,27 @@ public function index(Request $request)
      */
     public function create()
     {
-            return Inertia::render('Admin/Adventures/Create', [
-        'categories' => Category::all()
-    ]);
+        return Inertia::render('Admin/Adventures/Create', [
+            'categories' => Category::all(),
+        ]);
 
     }
 
     /**
      * Store a newly created resource in storage.
      */
-public function store(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'       => 'required',
-            'location'    => 'required',
-            'price'       => 'required',
+            'title' => 'required',
+            'location' => 'required',
+            'price' => 'required',
             'category_id' => 'required',
             'description' => 'nullable',
-            'difficulty'  => 'nullable',
-            'duration'    => 'nullable',
-            'max_people'  => 'nullable',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'difficulty' => 'nullable',
+            'duration' => 'nullable',
+            'max_people' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -190,26 +191,26 @@ public function store(Request $request)
     {
         return Inertia::render('Admin/Adventures/Edit', [
             'adventure' => $adventure,
-            'categories' => Category::all()
-            ]);
+            'categories' => Category::all(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-public function update(Request $request, Adventure $adventure)
+    public function update(Request $request, Adventure $adventure)
     {
         // Fixed: Added all editable fields so they don't get lost on update
         $validated = $request->validate([
             'category_id' => 'required',
-            'title'       => 'required',
-            'location'    => 'required',
-            'price'       => 'required',
+            'title' => 'required',
+            'location' => 'required',
+            'price' => 'required',
             'description' => 'nullable',
-            'difficulty'  => 'nullable',
-            'duration'    => 'nullable',
-            'max_people'  => 'nullable',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'difficulty' => 'nullable',
+            'duration' => 'nullable',
+            'max_people' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -229,7 +230,7 @@ public function update(Request $request, Adventure $adventure)
         if ($adventure->image) {
             Storage::disk('public')->delete($adventure->image);
         }
-        
+
         $adventure->delete();
 
         return redirect()->route('adventures.index')->with('success', 'Adventure deleted successfully.');

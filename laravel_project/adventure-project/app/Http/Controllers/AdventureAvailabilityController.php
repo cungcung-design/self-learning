@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Adventure;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class AdventureAvailabilityController extends Controller
 {
@@ -34,13 +33,12 @@ class AdventureAvailabilityController extends Controller
             }
 
             $dates[] = [
-                'date'      => $date->format('Y-m-d'),
+                'date' => $date->format('Y-m-d'),
                 'remaining' => max(0, $remaining),
-                'status'    => $status,
+                'status' => $status,
             ];
         }
 
         return response()->json($dates);
     }
 }
-

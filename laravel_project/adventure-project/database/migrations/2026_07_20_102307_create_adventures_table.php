@@ -11,32 +11,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('adventures', function (Blueprint $table) {
+        Schema::create('adventures', function (Blueprint $table) {
 
-    $table->id();
+            $table->id();
 
-    $table->foreignId('category_id')
-          ->constrained()
-          ->cascadeOnDelete();
+            $table->foreignId('category_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->string('title');
+            $table->string('title');
 
-    $table->text('description');
+            $table->text('description');
 
-    $table->string('location');
+            $table->string('location');
 
-    $table->decimal('price', 8,2);
+            $table->decimal('price', 8, 2);
 
-    $table->string('difficulty');
+            $table->string('difficulty');
 
-    $table->integer('duration');
+            $table->integer('duration');
 
-    $table->integer('max_people');
+            $table->integer('max_people');
 
-    $table->string('image')->nullable();
+            $table->string('image')->nullable();
 
-    $table->timestamps();
-});
+            $table->timestamps();
+        });
     }
 
     /**

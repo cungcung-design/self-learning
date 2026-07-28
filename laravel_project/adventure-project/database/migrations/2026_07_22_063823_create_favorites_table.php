@@ -11,26 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('favorites', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
 
-    $table->id();
+            $table->id();
 
-    $table->foreignId('user_id')
-          ->constrained()
-          ->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->foreignId('adventure_id')
-          ->constrained()
-          ->cascadeOnDelete();
+            $table->foreignId('adventure_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->timestamps();
+            $table->timestamps();
 
-    // Prevent duplicate favorites
-    $table->unique([
-        'user_id',
-        'adventure_id'
-    ]);
-});
+            // Prevent duplicate favorites
+            $table->unique([
+                'user_id',
+                'adventure_id',
+            ]);
+        });
     }
 
     /**

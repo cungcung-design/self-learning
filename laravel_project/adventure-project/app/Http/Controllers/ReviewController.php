@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Adventure;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ReviewController extends Controller
 {
+    public function index()
+    {
+        $reviews = Review::with(['user', 'adventure'])->latest()->get();
+
+        return Inertia::render('Admin/Reviews/Index', [
+            'reviews' => $reviews,
+        ]);
+    }
+
     public function store(Request $request, Adventure $adventure)
     {
         $validated = $request->validate([

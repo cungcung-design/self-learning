@@ -3,24 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
-use App\Models\Favorite;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-
     public function index()
     {
 
         $user = auth()->user();
 
-
         $bookings = Booking::with('adventure')
             ->where('user_id', $user->id)
             ->latest()
             ->get();
-
-
 
         return Inertia::render(
             'Dashboard/Index',
@@ -28,11 +23,10 @@ class DashboardController extends Controller
 
                 'bookings' => $bookings,
 
-                'user'=>$user
+                'user' => $user,
 
             ]
         );
 
     }
-
 }

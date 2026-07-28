@@ -15,9 +15,9 @@ class DashboardController extends Controller
         $user = auth()->user();
         $bookings = $user->bookings()->with('adventure')->latest()->take(5)->get();
 
-        return Inertia::render('User/Dashboard', [
+        return Inertia::render('User/Dashboard/Index', [
+            'user' => $user,
             'bookings' => $bookings,
         ]);
     }
 }
-

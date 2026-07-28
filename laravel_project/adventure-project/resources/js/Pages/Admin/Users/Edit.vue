@@ -8,13 +8,12 @@ const props = defineProps({
 });
 
 const form = useForm({
-    name: props.user.name,
-    email: props.user.email,
     role: props.user.role,
+    status: props.user.status,
 });
 
 const submit = () => {
-    form.put(route("admin.users.update", props.user.id));
+    form.patch(route("admin.users.update", props.user.id));
 };
 </script>
 
@@ -27,7 +26,7 @@ const submit = () => {
                         Edit User
                     </h1>
                     <p class="text-slate-500 text-sm mt-1">
-                        Update user details and role.
+                        Update user role and status.
                     </p>
                 </div>
                 <Link
@@ -45,42 +44,6 @@ const submit = () => {
                     <div>
                         <label
                             class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
-                            >Name</label
-                        >
-                        <input
-                            type="text"
-                            v-model="form.name"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-slate-900 font-medium focus:ring-2 focus:ring-green-600 focus:border-green-600 transition shadow-sm"
-                        />
-                        <div
-                            v-if="form.errors.name"
-                            class="text-red-500 text-xs mt-1.5"
-                        >
-                            {{ form.errors.name }}
-                        </div>
-                    </div>
-
-                    <div>
-                        <label
-                            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
-                            >Email</label
-                        >
-                        <input
-                            type="email"
-                            v-model="form.email"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-slate-900 font-medium focus:ring-2 focus:ring-green-600 focus:border-green-600 transition shadow-sm"
-                        />
-                        <div
-                            v-if="form.errors.email"
-                            class="text-red-500 text-xs mt-1.5"
-                        >
-                            {{ form.errors.email }}
-                        </div>
-                    </div>
-
-                    <div>
-                        <label
-                            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
                             >Role</label
                         >
                         <select
@@ -95,6 +58,26 @@ const submit = () => {
                             class="text-red-500 text-xs mt-1.5"
                         >
                             {{ form.errors.role }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
+                            >Status</label
+                        >
+                        <select
+                            v-model="form.status"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-slate-900 font-medium focus:ring-2 focus:ring-green-600 focus:border-green-600 transition shadow-sm"
+                        >
+                            <option value="active">Active</option>
+                            <option value="blocked">Blocked</option>
+                        </select>
+                        <div
+                            v-if="form.errors.status"
+                            class="text-red-500 text-xs mt-1.5"
+                        >
+                            {{ form.errors.status }}
                         </div>
                     </div>
 

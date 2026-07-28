@@ -19,4 +19,3 @@ class EnsureUserIsAdmin
         abort(403, 'Unauthorized. Admin access required.');
     }
 }
-

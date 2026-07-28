@@ -14,12 +14,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // Add role here
+        'role',
+        'status',
     ];
 
     // Set default values for model attributes
     protected $attributes = [
         'role' => 'user',
+        'status' => 'active',
     ];
 
     protected $hidden = [
@@ -45,11 +47,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class);
     }
-    public function reviews(){
+
+    public function reviews()
+    {
         return $this->hasMany(Review::class);
     }
 
-    public function favorites(){
+    public function favorites()
+    {
         return $this->hasMany(Favorite::class);
     }
 }

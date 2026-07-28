@@ -13,32 +13,27 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
 
-    $table->id();
+            $table->id();
 
+            $table->foreignId('booking_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->foreignId('booking_id')
-          ->constrained()
-          ->cascadeOnDelete();
+            $table->string('transaction_id')
+                ->nullable();
 
+            $table->decimal('amount', 10, 2);
 
-    $table->string('transaction_id')
-          ->nullable();
+            $table->enum('status', [
+                'pending',
+                'paid',
+                'failed',
+            ])
+                ->default('pending');
 
+            $table->timestamps();
 
-    $table->decimal('amount',10,2);
-
-
-    $table->enum('status',[
-        'pending',
-        'paid',
-        'failed'
-    ])
-    ->default('pending');
-
-
-    $table->timestamps();
-
-});
+        });
     }
 
     /**

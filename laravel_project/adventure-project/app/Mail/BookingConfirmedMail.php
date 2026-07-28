@@ -2,19 +2,18 @@
 
 namespace App\Mail;
 
+use App\Models\Booking;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Booking;
 
 class BookingConfirmedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    
+
     public $booking;
 
     /**
@@ -41,7 +40,7 @@ class BookingConfirmedMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'booking_comfirmed', // Point to your actual blade view file
+            view: 'emails.bookings.confirmed',
         );
     }
 

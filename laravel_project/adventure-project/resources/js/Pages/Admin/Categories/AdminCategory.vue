@@ -1,5 +1,5 @@
 <script setup>
-import MainLayout from '@/Layouts/MainLayout.vue'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { PlusIcon, PencilSquareIcon, TrashIcon, TagIcon } from '@heroicons/vue/24/outline'
 
@@ -13,7 +13,7 @@ const deleteCategory = (id) => {
 </script>
 
 <template>
-    <MainLayout>
+    <AdminLayout>
         <div class="max-w-5xl mx-auto px-6 py-12 md:py-16">
             
             <!-- Header -->
@@ -71,5 +71,5 @@ const deleteCategory = (id) => {
             </div>
 
         </div>
-    </MainLayout>
+    </AdminLayout>
 </template>

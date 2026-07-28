@@ -12,7 +12,7 @@ class EnsureUserIsClient
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->check() && !auth()->user()->isAdmin()) {
+        if (auth()->check() && ! auth()->user()->isAdmin()) {
             return $next($request);
         }
 
@@ -24,4 +24,3 @@ class EnsureUserIsClient
         abort(403, 'Unauthorized. User access required.');
     }
 }
-

@@ -11,7 +11,7 @@ class FavoriteController extends Controller
 {
     public function index()
     {
-       $favorites = auth()->user()->favorites()
+        $favorites = auth()->user()->favorites()
             ->with('adventure.category')
             ->latest()
             ->get();

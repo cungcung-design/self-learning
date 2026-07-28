@@ -1,5 +1,5 @@
 <script setup>
-import MainLayout from '@/Layouts/MainLayout.vue'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
 import { useForm, Link } from '@inertiajs/vue3'
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
 
@@ -13,7 +13,7 @@ const submit = () => {
 </script>
 
 <template>
-    <MainLayout>
+    <AdminLayout>
         <div class="max-w-2xl mx-auto px-6 py-12">
             <div class="flex items-center justify-between mb-8">
                 <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Create Category</h1>
@@ -42,5 +42,5 @@ const submit = () => {
                 </form>
             </div>
         </div>
-    </MainLayout>
+    </AdminLayout>
 </template>

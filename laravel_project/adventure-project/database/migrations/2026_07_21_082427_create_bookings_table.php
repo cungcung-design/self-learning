@@ -11,29 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('bookings', function (Blueprint $table) {
 
-    $table->id();
-    $table->foreignId('user_id')
-          ->constrained()
-          ->cascadeOnDelete();
-    $table->foreignId('adventure_id')
-          ->constrained()
-          ->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->foreignId('adventure_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->date('booking_date');
+            $table->date('booking_date');
 
-    $table->unsignedInteger('participants');
+            $table->unsignedInteger('participants');
 
-    $table->enum('status', [
-        'pending',
-        'confirmed',
-        'cancelled'
-    ])->default('pending');
+            $table->enum('status', [
+                'pending',
+                'confirmed',
+                'cancelled',
+            ])->default('pending');
 
-    $table->timestamps();
+            $table->timestamps();
 
-});
+        });
     }
 
     /**

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BookingConfirmedMail;
 use App\Models\Booking;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Inertia\Inertia; 
-use Inertia\Response;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\BookingConfirmedMail;
-use App\Mail\NewBookingNotification;
+use Inertia\Inertia;
 
 class PaymentController extends Controller
 {
@@ -28,16 +26,29 @@ class PaymentController extends Controller
             ['booking_id' => $booking->id],
             [
                 'amount' => $booking->participants * $booking->adventure->price,
-                'status' => 'pending'
+                'status' => 'pending',
             ]
         );
 
         // 3. Pass both the booking (with its adventure) and payment details to Vue
         return Inertia::render('User/Payment/Checkout', [
             'booking' => $booking,
-            'payment' => $payment
+            'payment' => $payment,
         ]);
     }
+
+    public function processPaymentCallback(Request $request, Booking $booking)
+    {
+        $booking->update([
+            'payment_status' => 'paid',
+            'status' => 'confirmed',
+            'payment_id' => $request->input('transaction_id'),
+        ]);
+
+        return redirect()->route('admin.bookings.show', $booking)
+            ->with('success', 'Payment verified and recorded successfully.');
+    }
+
     public function process(Request $request, Booking $booking)
     {
         // Ensure the booking belongs to the authenticated user
@@ -53,7 +64,7 @@ class PaymentController extends Controller
         Mail::to($booking->user->email)->send(new BookingConfirmedMail($booking));
 
         return redirect()->route('user.bookings.index')
-        ->with('success', 'Booking confirmed successfully!');
-    
-}
+            ->with('success', 'Booking confirmed successfully!');
+
+    }
 }

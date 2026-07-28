@@ -4,56 +4,58 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of all platform users.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->latest()->paginate(10)->withQueryString();
 
         return Inertia::render('Admin/Users/Index', [
-            'users' => $users
+            'users' => $users,
+            'filters' => $request->only(['search', 'role']),
         ]);
     }
 
-    /**
-     * Show the form for editing a user.
-     */
-    public function edit(User $user)
+    public function show(User $user)
     {
-        return Inertia::render('Admin/Users/Edit', [
-            'user' => $user
+        $user->load(['bookings.adventure', 'reviews.adventure']);
+
+        return Inertia::render('Admin/Users/Show', [
+            'user' => $user,
         ]);
     }
 
-    /**
-     * Update the specified user.
-     */
-    public function update(User $user)
+    public function update(Request $request, User $user)
     {
-        request()->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+        $request->validate([
             'role' => 'required|in:user,admin',
+            'status' => 'required|in:active,blocked',
         ]);
 
-        $user->update(request()->only('name', 'email', 'role'));
+        $user->update($request->only(['role', 'status']));
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+        return back()->with('success', 'User updated successfully.');
     }
 
-    /**
-     * Remove the specified user.
-     */
     public function destroy(User $user)
     {
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User and related logs deleted successfully.');
     }
 }
-

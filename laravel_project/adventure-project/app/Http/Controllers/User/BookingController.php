@@ -21,7 +21,7 @@ class BookingController extends Controller
             ->get();
 
         return Inertia::render('User/Bookings/Index', [
-            'bookings' => $bookings
+            'bookings' => $bookings,
         ]);
     }
 
@@ -37,11 +37,11 @@ class BookingController extends Controller
         ]);
 
         $booking = Booking::create([
-            'user_id'      => auth()->id(),
+            'user_id' => auth()->id(),
             'adventure_id' => $validated['adventure_id'],
             'booking_date' => $validated['booking_date'],
             'participants' => $validated['participants'],
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         return redirect()
@@ -63,5 +63,4 @@ class BookingController extends Controller
 
         return redirect()->back()->with('success', 'Booking deleted successfully.');
     }
-
 }
