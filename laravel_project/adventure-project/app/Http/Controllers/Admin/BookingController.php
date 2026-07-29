@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateInvoice;
+use App\Jobs\SendBookingEmail;
+use App\Jobs\SendBookingNotification;
 use App\Notifications\BookingStatusNotification;
 use App\Models\Booking;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -74,9 +77,11 @@ class BookingController extends Controller
             ->causedBy(auth()->user())
             ->log('Confirmed booking #' . $booking->id);
 
-        $booking->user->notify(new BookingStatusNotification($booking));
+        SendBookingEmail::dispatch($booking);
+        GenerateInvoice::dispatch($booking);
+        SendBookingNotification::dispatch($booking, 'confirmed');
 
-        return back()->with('success', 'Booking confirmed and notification dispatched.');
+        return back()->with('success', 'Booking confirmed successfully.');
     }
 
     public function cancel(Booking $booking)
@@ -88,9 +93,9 @@ class BookingController extends Controller
             ->causedBy(auth()->user())
             ->log('Cancelled booking #' . $booking->id);
 
-        $booking->user->notify(new BookingStatusNotification($booking));
+        SendBookingNotification::dispatch($booking, 'cancelled');
 
-        return back()->with('success', 'Booking cancelled and notification dispatched.');
+        return back()->with('success', 'Booking cancelled successfully.');
     }
 
     public function downloadInvoice(Booking $booking)

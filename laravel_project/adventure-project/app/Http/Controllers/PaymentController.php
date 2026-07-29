@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendPaymentReceipt;
+use App\Jobs\GenerateInvoice;
+use App\Jobs\SendBookingNotification;
 
 class PaymentController extends Controller
 {
@@ -67,9 +70,9 @@ class PaymentController extends Controller
 
         $booking->load(['user', 'adventure', 'payment']);
 
-        $booking->user->notify(new \App\Notifications\BookingStatusNotification($booking));
-
-        Mail::to($booking->user->email)->send(new PaymentReceiptMail($booking));
+        SendPaymentReceipt::dispatch($booking);
+        GenerateInvoice::dispatch($booking);
+        SendBookingNotification::dispatch($booking, 'confirmed');
 
         return redirect()->route('user.bookings.index')
             ->with('success', 'Payment successful! Booking confirmed.');
@@ -84,6 +87,8 @@ class PaymentController extends Controller
         }
 
         $booking->update(['payment_status' => 'failed']);
+
+        SendBookingNotification::dispatch($booking, 'cancelled');
 
         return redirect()->route('user.bookings.index')
             ->with('error', 'Payment process was cancelled.');

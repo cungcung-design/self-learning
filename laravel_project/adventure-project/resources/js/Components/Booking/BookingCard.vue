@@ -1,15 +1,29 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useForm } from '@inertiajs/vue3'
 import PrimaryButton from '@/Components/UI/PrimaryButton.vue'
+import SeatBadge from '@/Components/Calendar/SeatBadge.vue'
 
 const props = defineProps({
     adventure: Object,
 })
 
 const participants = ref(2)
+const selectedScheduleId = ref(null)
 
 const totalPrice = computed(() => {
     return props.adventure.price * participants.value
+})
+
+const availableSchedules = computed(() => {
+    if (!props.adventure.schedules) return []
+    return props.adventure.schedules.filter(
+        (s) => s.status === 'available' && s.capacity - s.booked > 0
+    )
+})
+
+const selectedSchedule = computed(() => {
+    return availableSchedules.value.find((s) => s.id === selectedScheduleId.value) || null
 })
 
 function decrement() {
@@ -20,8 +34,27 @@ function increment() {
     if (participants.value < props.adventure.max_people) participants.value++
 }
 
+const form = useForm({
+    schedule_id: null,
+    participants: 2,
+})
+
 function bookNow() {
-    // Handle booking action logic here
+    if (!selectedScheduleId.value) {
+        alert('Please select a trip date.')
+        return
+    }
+
+    form.schedule_id = selectedScheduleId.value
+    form.participants = participants.value
+
+    form.post(`/adventures/${props.adventure.id}/book`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            selectedScheduleId.value = null
+            participants.value = 2
+        },
+    })
 }
 </script>
 
@@ -41,12 +74,32 @@ function bookNow() {
             </button>
         </div>
 
-        <!-- Choose Date -->
+        <!-- Choose Trip Date -->
         <div class="space-y-2">
-            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Choose Date</label>
-            <div class="border border-stone-200 rounded-2xl p-3.5 text-sm text-gray-600 bg-stone-50 flex items-center justify-between cursor-pointer hover:border-green-600 transition">
-                <span>📅 Select tour date</span>
-                <span class="text-xs font-bold text-green-600">Change</span>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500">Choose Trip Date</label>
+            <div class="space-y-2">
+                <div
+                    v-for="schedule in availableSchedules"
+                    :key="schedule.id"
+                    @click="schedule.status === 'available' && (selectedScheduleId = schedule.id)"
+                    class="border rounded-2xl p-3 flex justify-between items-center cursor-pointer transition"
+                    :class="{
+                        'border-blue-600 bg-blue-50/30': selectedScheduleId === schedule.id,
+                        'opacity-50 cursor-not-allowed bg-gray-50': schedule.status !== 'available',
+                    }"
+                >
+                    <div>
+                        <div class="font-bold text-gray-800">📅 {{ schedule.trip_date }}</div>
+                        <div class="text-xs text-gray-500 mt-0.5">🕒 {{ schedule.start_time }} - {{ schedule.end_time }}</div>
+                    </div>
+                    <SeatBadge
+                        :status="schedule.status"
+                        :remaining="schedule.capacity - schedule.booked"
+                    />
+                </div>
+            </div>
+            <div v-if="availableSchedules.length === 0" class="text-xs text-gray-500">
+                No available schedules for this adventure.
             </div>
         </div>
 
@@ -81,8 +134,8 @@ function bookNow() {
         </div>
 
         <!-- Book Action Button -->
-        <PrimaryButton @click="bookNow" class="w-full py-4 text-base">
-            Book Now
+        <PrimaryButton @click="bookNow" :disabled="!selectedScheduleId || form.processing" class="w-full py-4 text-base">
+            {{ form.processing ? 'Processing...' : 'Confirm & Proceed to Checkout' }}
         </PrimaryButton>
     </div>
 </template>

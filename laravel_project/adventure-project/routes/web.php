@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdventureScheduleController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ChatController as AdminChatController;
+use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AdventureAvailabilityController;
 use App\Http\Controllers\AdventureController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
@@ -66,6 +70,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/adventures/{adventure}', [AdventureController::class, 'adminShow'])->name('adventures.show');
     Route::resource('adventures', AdventureController::class)->except(['index', 'show']);
 
+    // Adventure Image Management
+    Route::delete('/adventures/{adventure}/images/{image}', [AdventureController::class, 'destroyImage'])->name('adventures.images.destroy');
+    Route::post('/adventures/{adventure}/images/{image}/cover', [AdventureController::class, 'setCover'])->name('adventures.images.cover');
+
+    // Adventure Schedules
+    Route::get('/adventures/{adventure}/schedules', [AdventureScheduleController::class, 'index'])->name('adventures.schedules.index');
+    Route::get('/adventures/{adventure}/schedules/create', [AdventureScheduleController::class, 'create'])->name('adventures.schedules.create');
+    Route::post('/adventures/{adventure}/schedules', [AdventureScheduleController::class, 'store'])->name('adventures.schedules.store');
+    Route::get('/adventures/{adventure}/schedules/{schedule}/edit', [AdventureScheduleController::class, 'edit'])->name('adventures.schedules.edit');
+    Route::put('/adventures/{adventure}/schedules/{schedule}', [AdventureScheduleController::class, 'update'])->name('adventures.schedules.update');
+    Route::delete('/adventures/{adventure}/schedules/{schedule}', [AdventureScheduleController::class, 'destroy'])->name('adventures.schedules.destroy');
+
     // Category Management
     Route::resource('categories', CategoryController::class);
 
@@ -85,6 +101,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Invoice Download
     Route::get('/bookings/{booking}/invoice', [AdminBookingController::class, 'downloadInvoice'])->name('bookings.invoice');
+
+    // Chat
+    Route::get('/chat', [AdminChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{conversation}', [AdminChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{conversation}/reply', [AdminChatController::class, 'reply'])->name('chat.reply');
+
+    // Queue Failed Jobs
+    Route::get('/queue/failed', [\App\Http\Controllers\Admin\QueueController::class, 'failedJobs'])->name('queue.failed');
+    Route::post('/queue/failed/{job}/retry', [\App\Http\Controllers\Admin\QueueController::class, 'retryJob'])->name('queue.retry');
+    Route::post('/queue/failed/{job}/delete', [\App\Http\Controllers\Admin\QueueController::class, 'deleteJob'])->name('queue.delete');
 });
 
 // Payment Gateway Callback (public, no auth required)
@@ -99,6 +125,7 @@ Route::middleware(['auth', 'client'])->prefix('user')->name('user.')->group(func
 
     // Bookings
     Route::post('/bookings', [UserBookingController::class, 'store'])->name('bookings.store');
+    Route::post('/adventures/{adventure}/book', [UserBookingController::class, 'store'])->name('bookings.from-adventure');
     Route::get('/bookings', [UserBookingController::class, 'index'])->name('bookings.index');
     Route::delete('/bookings/{booking}', [UserBookingController::class, 'destroy'])->name('bookings.destroy');
 
@@ -120,6 +147,10 @@ Route::middleware(['auth', 'client'])->prefix('user')->name('user.')->group(func
     Route::post('/payment/{booking}/pay', [PaymentController::class, 'process'])->name('payment.process');
     Route::get('/payment/{booking}/success', [PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/{booking}/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+
+    // Chat
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

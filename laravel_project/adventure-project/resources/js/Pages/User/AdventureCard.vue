@@ -16,7 +16,7 @@ function toggleFavorite(id) {
 
 <template>
     <div
-        class="bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full"
+        class="bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full border border-gray-100 dark:border-gray-700"
     >
         <!-- Image & Favorite Action -->
         <div class="relative">
@@ -29,7 +29,7 @@ function toggleFavorite(id) {
             <!-- Favorite Button (Top Right) -->
             <button
                 @click="toggleFavorite(adventure.id)"
-                class="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-transform duration-200 hover:scale-110 active:scale-95"
+                class="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-md transition-transform duration-200 hover:scale-110 active:scale-95"
                 aria-label="Add to favorites"
             >
                 🤍
@@ -41,18 +41,18 @@ function toggleFavorite(id) {
 
             <!-- Category -->
             <span
-                class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-2 self-start"
+                class="inline-block bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 text-xs font-semibold px-3 py-1 rounded-full mb-2 self-start"
             >
                 {{ adventure.category.name }}
             </span>
 
             <!-- Title -->
-            <h2 class="text-xl font-bold text-slate-900 mb-4 line-clamp-1">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4 line-clamp-1">
                 {{ adventure.title }}
             </h2>
 
             <!-- Meta Details -->
-            <div class="space-y-2 text-sm text-gray-500 mb-6">
+            <div class="space-y-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
                 <div class="flex items-center gap-2">
                     <span>📍</span>
                     <span class="truncate">{{ adventure.location }}</span>
@@ -68,18 +68,18 @@ function toggleFavorite(id) {
             </div>
 
             <!-- Price & Action Footer (Inline layout) -->
-            <div class="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+            <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700 mt-auto">
                 <div>
-                    <span class="text-xs text-gray-400 block">Price</span>
-                    <p class="text-2xl font-bold text-green-600">
+                    <span class="text-xs text-gray-400 dark:text-gray-500 block">Price</span>
+                    <p class="text-2xl font-bold text-green-600 dark:text-green-400">
                         RM {{ adventure.price }}
                     </p>
                 </div>
 
-                <Link :href="route('adventures.show', adventure.id)">
-                    <PrimaryButton>
+                <Link :href="route('adventures.show', adventure.id)" class="w-full sm:w-auto">
+                    <span class="block w-full text-center px-5 py-3 bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white rounded-xl text-sm font-semibold transition shadow-sm">
                         View Details
-                    </PrimaryButton>
+                    </span>
                 </Link>
             </div>
         </div>

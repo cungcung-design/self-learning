@@ -13,9 +13,12 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'adventure_id',
+        'schedule_id',
         'booking_date',
         'participants',
+        'total_price',
         'status',
+        'payment_status',
     ];
 
     public function user()
@@ -26,6 +29,11 @@ class Booking extends Model
     public function adventure()
     {
         return $this->belongsTo(Adventure::class);
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(AdventureSchedule::class, 'schedule_id');
     }
 
     public function payment()

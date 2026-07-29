@@ -1,6 +1,6 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, ref } from "@inertiajs/vue3";
 
 const props = defineProps({
     categories: Array,
@@ -11,15 +11,29 @@ const form = useForm({
     title: "",
     description: "",
     location: "",
+    google_maps_url: "",
     price: "",
     difficulty: "",
     duration: "",
     max_people: "",
     image: null,
+    images: [],
 });
 
+const galleryPreviews = ref([]);
+
+const handleGalleryImages = (e) => {
+    const files = Array.from(e.target.files);
+    form.images = files;
+    galleryPreviews.value = files.map((file) => URL.createObjectURL(file));
+};
+
 const submit = () => {
-    form.post("/adventures");
+    form.post("/adventures", {
+        onSuccess: () => {
+            galleryPreviews.value = [];
+        },
+    });
 };
 
 // Reusable styling classes
@@ -49,9 +63,9 @@ const inputClass = "border p-2 rounded w-full mb-2";
                 >
                     {{ form.errors.category_id }}
                 </div>
-                <!-- 2. IMAGE UPLOAD SECTION -->
+                <!-- 2. MAIN IMAGE UPLOAD SECTION -->
                 <div class="mt-2">
-                    <label class="block font-semibold">Upload Image</label>
+                    <label class="block font-semibold">Upload Main Image</label>
                     <input
                         type="file"
                         @input="form.image = $event.target.files[0]"
@@ -59,6 +73,35 @@ const inputClass = "border p-2 rounded w-full mb-2";
                     />
                     <div v-if="form.errors.image" class="text-sm text-red-500">
                         {{ form.errors.image }}
+                    </div>
+                </div>
+
+                <!-- 3. GALLERY IMAGES UPLOAD SECTION -->
+                <div class="mt-4">
+                    <label class="block font-semibold">Adventure Images</label>
+                    <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        @change="handleGalleryImages"
+                        class="w-full p-2 border rounded"
+                    />
+                    <div v-if="form.errors.images" class="text-sm text-red-500">
+                        {{ form.errors.images }}
+                    </div>
+
+                    <!-- Image Previews -->
+                    <div v-if="galleryPreviews.length" class="grid grid-cols-4 gap-3 mt-3">
+                        <div
+                            v-for="(preview, index) in galleryPreviews"
+                            :key="index"
+                            class="relative rounded-xl overflow-hidden border border-stone-200 h-24"
+                        >
+                            <img
+                                :src="preview"
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -89,6 +132,12 @@ const inputClass = "border p-2 rounded w-full mb-2";
                     />
                 </div>
 
+                <input
+                    v-model="form.google_maps_url"
+                    :class="inputClass"
+                    placeholder="Google Maps URL"
+                />
+
                 <!-- Details -->
                 <select v-model="form.difficulty" :class="inputClass">
                     <option value="" disabled>Select Difficulty</option>
@@ -114,7 +163,7 @@ const inputClass = "border p-2 rounded w-full mb-2";
                 <button
                     type="submit"
                     :disabled="form.processing"
-                    class="p-3 font-bold text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
+                    class="w-full px-5 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl disabled:opacity-50 transition shadow-sm"
                 >
                     {{ form.processing ? "Saving..." : "Save Adventure" }}
                 </button>

@@ -17,7 +17,7 @@ const showingNavigationDropdown = ref(false);
                 class="border-b border-gray-100 bg-white"
             >
                 <!-- Primary Navigation Menu -->
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-7xl px-4 lg:px-8 xl:px-12 2xl:px-16">
                     <div class="flex h-16 justify-between">
                         <div class="flex">
                             <!-- Logo -->
@@ -31,7 +31,7 @@ const showingNavigationDropdown = ref(false);
 
                             <!-- Navigation Links -->
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                                class="hidden space-x-8 lg:-my-px lg:ms-10 lg:flex"
                             >
                                 <NavLink
                                     :href="route('dashboard')"
@@ -42,7 +42,7 @@ const showingNavigationDropdown = ref(false);
                             </div>
                         </div>
 
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
+                        <div class="hidden lg:ms-6 lg:flex lg:items-center">
                             <!-- Settings Dropdown -->
                             <div class="relative ms-3">
                                 <Dropdown align="right" width="48">
@@ -89,7 +89,7 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
+                        <div class="-me-2 flex items-center lg:hidden">
                             <button
                                 @click="
                                     showingNavigationDropdown =
@@ -137,7 +137,7 @@ const showingNavigationDropdown = ref(false);
                         block: showingNavigationDropdown,
                         hidden: !showingNavigationDropdown,
                     }"
-                    class="sm:hidden"
+                    class="lg:hidden"
                 >
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
@@ -184,7 +184,7 @@ const showingNavigationDropdown = ref(false);
                 class="bg-white shadow"
                 v-if="$slots.header"
             >
-                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-7xl px-4 lg:px-8 xl:px-12 2xl:px-16">
                     <slot name="header" />
                 </div>
             </header>

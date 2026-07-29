@@ -1,11 +1,12 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { useForm, Link } from "@inertiajs/vue3";
+import { useForm, Link, router } from "@inertiajs/vue3";
 import {
     ArrowLeftIcon,
     PhotoIcon,
     CloudArrowUpIcon,
 } from "@heroicons/vue/24/outline";
+import { ref } from "vue";
 
 const props = defineProps({
     adventure: Object,
@@ -17,6 +18,7 @@ const form = useForm({
     title: props.adventure.title || "",
     description: props.adventure.description || "",
     location: props.adventure.location || "",
+    google_maps_url: props.adventure.google_maps_url || "",
     price: props.adventure.price || "",
     difficulty: props.adventure.difficulty || "",
     duration: props.adventure.duration || "",
@@ -25,8 +27,47 @@ const form = useForm({
     _method: "PUT",
 });
 
+const galleryFiles = ref([]);
+const galleryPreviews = ref([]);
+
+const handleGalleryImages = (e) => {
+    const files = Array.from(e.target.files);
+    galleryFiles.value = files;
+    galleryPreviews.value = files.map((file) => URL.createObjectURL(file));
+};
+
 const submit = () => {
-    form.post(route("adventures.update", props.adventure.id));
+    if (galleryFiles.value.length) {
+        form.images = galleryFiles.value;
+    }
+
+    form.post(route("adventures.update", props.adventure.id), {
+        onSuccess: () => {
+            galleryFiles.value = [];
+            galleryPreviews.value = [];
+        },
+    });
+};
+
+const deleteImage = (imageId) => {
+    if (confirm("Are you sure you want to delete this image?")) {
+        router.delete(
+            route("adventures.images.destroy", [props.adventure.id, imageId]),
+            {
+                preserveScroll: true,
+            }
+        );
+    }
+};
+
+const setCover = (imageId) => {
+    router.post(
+        route("adventures.images.cover", [props.adventure.id, imageId]),
+        {},
+        {
+            preserveScroll: true,
+        }
+    );
 };
 </script>
 
@@ -128,6 +169,26 @@ const submit = () => {
                                 {{ form.errors.location }}
                             </div>
                         </div>
+
+                        <div class="md:col-span-3">
+                            <label
+                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                >Google Maps URL</label
+                            >
+                            <input
+                                type="url"
+                                v-model="form.google_maps_url"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-green-600 transition shadow-sm"
+                                placeholder="https://maps.google.com/..."
+                            />
+                            <div
+                                v-if="form.errors.google_maps_url"
+                                class="text-red-500 text-xs mt-1.5 font-medium"
+                            >
+                                {{ form.errors.google_maps_url }}
+                            </div>
+                        </div>
+                    </div>
 
                         <div>
                             <label
@@ -290,6 +351,75 @@ const submit = () => {
                                     class="text-red-500 text-xs mt-1.5 font-medium"
                                 >
                                     {{ form.errors.image }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Images Manager -->
+                    <div class="mt-8 space-y-4">
+                        <h3 class="text-lg font-bold text-gray-800">Adventure Images</h3>
+
+                        <!-- Existing Gallery Images -->
+                        <div v-if="adventure.images && adventure.images.length" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div
+                                v-for="image in adventure.images"
+                                :key="image.id"
+                                class="relative rounded-xl overflow-hidden border border-stone-200 h-32"
+                            >
+                                <img
+                                    :src="'/storage/' + image.image"
+                                    class="w-full h-full object-cover"
+                                />
+                                <span
+                                    v-if="image.is_cover"
+                                    class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md"
+                                >
+                                    Cover
+                                </span>
+                                <div class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition flex items-center justify-center gap-2">
+                                    <button
+                                        @click="setCover(image.id)"
+                                        type="button"
+                                        class="text-xs bg-white/90 hover:bg-white text-gray-800 px-4 py-2.5 rounded-xl font-semibold"
+                                    >
+                                        Cover
+                                    </button>
+                                    <button
+                                        @click="deleteImage(image.id)"
+                                        type="button"
+                                        class="text-xs bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl font-semibold"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload New Images -->
+                        <div class="border-2 border-dashed border-slate-200 rounded-2xl p-6">
+                            <label class="block font-semibold mb-2">Upload More Images</label>
+                            <input
+                                type="file"
+                                multiple
+                                accept="image/*"
+                                @change="handleGalleryImages"
+                                class="w-full p-2 border rounded"
+                            />
+                            <div v-if="form.errors.images" class="text-sm text-red-500 mt-1">
+                                {{ form.errors.images }}
+                            </div>
+
+                            <div v-if="galleryPreviews.length" class="grid grid-cols-4 gap-3 mt-3">
+                                <div
+                                    v-for="(preview, index) in galleryPreviews"
+                                    :key="index"
+                                    class="relative rounded-xl overflow-hidden border border-stone-200 h-24"
+                                >
+                                    <img
+                                        :src="preview"
+                                        class="w-full h-full object-cover"
+                                    />
                                 </div>
                             </div>
                         </div>

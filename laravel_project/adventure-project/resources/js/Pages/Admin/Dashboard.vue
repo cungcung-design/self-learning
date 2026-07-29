@@ -23,12 +23,12 @@ defineProps({
 <template>
     <AdminLayout>
         <!-- Quick Actions Panel -->
-        <div class="bg-white rounded-2xl shadow p-4 mb-8 flex flex-wrap gap-4 items-center justify-between">
-            <span class="font-bold text-gray-700">Quick Actions</span>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-4 mb-8 flex flex-wrap gap-4 items-center justify-between transition-colors duration-200">
+            <span class="font-bold text-gray-700 dark:text-gray-200">Quick Actions</span>
             <div class="flex flex-wrap gap-3">
                 <a href="/admin/adventures/create" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">➕ Add Adventure</a>
-                <a href="/admin/categories/create" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">📂 Add Category</a>
-                <a href="/admin/bookings" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition">📅 View Bookings</a>
+                <a href="/admin/categories/create" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition">📂 Add Category</a>
+                <a href="/admin/bookings" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition">📅 View Bookings</a>
             </div>
         </div>
 
@@ -57,25 +57,25 @@ defineProps({
         <!-- Secondary Information Panels -->
         <div class="grid lg:grid-cols-2 gap-6 mb-8">
             <!-- Top Adventures -->
-            <div class="bg-white rounded-2xl shadow p-6">
-                <h3 class="text-xl font-bold mb-4 text-gray-800">Top Adventures</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 transition-colors duration-200">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Top Adventures</h3>
                 <div class="space-y-4">
-                    <div v-for="(adv, index) in topAdventures" :key="adv.id" class="flex justify-between items-center border-b border-gray-100 pb-3 last:border-0">
-                        <span class="font-medium text-gray-700">
+                    <div v-for="(adv, index) in topAdventures" :key="adv.id" class="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-3 last:border-0">
+                        <span class="font-medium text-gray-700 dark:text-gray-200">
                             {{ index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉' }} {{ adv.title }}
                         </span>
-                        <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-semibold">{{ adv.bookings_count }} Bookings</span>
+                        <span class="text-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 rounded-full font-semibold">{{ adv.bookings_count }} Bookings</span>
                     </div>
                 </div>
             </div>
 
             <!-- Latest Bookings -->
-            <div class="bg-white rounded-2xl shadow p-6">
-                <h3 class="text-xl font-bold mb-4 text-gray-800">Latest Bookings</h3>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 transition-colors duration-200">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">Latest Bookings</h3>
                 <div class="space-y-4">
-                    <div v-for="booking in recentBookings" :key="booking.id" class="flex justify-between items-center border-b border-gray-100 pb-3 last:border-0">
-                        <span class="font-medium text-gray-700">{{ booking.user?.name }} - {{ booking.adventure?.title }}</span>
-                        <span class="text-xs bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full font-semibold uppercase">{{ booking.status }}</span>
+                    <div v-for="booking in recentBookings" :key="booking.id" class="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-3 last:border-0">
+                        <span class="font-medium text-gray-700 dark:text-gray-200">{{ booking.user?.name }} - {{ booking.adventure?.title }}</span>
+                        <span class="text-xs bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 px-2.5 py-1 rounded-full font-semibold uppercase">{{ booking.status }}</span>
                     </div>
                 </div>
             </div>

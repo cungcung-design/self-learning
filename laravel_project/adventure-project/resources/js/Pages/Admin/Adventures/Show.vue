@@ -59,7 +59,13 @@ const deleteAdventure = (id) => {
                 <!-- Hero Image Display -->
                 <div class="relative w-full h-[380px] bg-slate-100">
                     <img 
-                        v-if="adventure.image" 
+                        v-if="adventure.images && adventure.images.length" 
+                        :src="'/storage/' + (adventure.images.find(i => i.is_cover)?.image || adventure.images[0].image)" 
+                        :alt="adventure.title" 
+                        class="w-full h-full object-cover"
+                    />
+                    <img 
+                        v-else-if="adventure.image" 
                         :src="'/storage/' + adventure.image" 
                         :alt="adventure.title" 
                         class="w-full h-full object-cover"
@@ -76,6 +82,19 @@ const deleteAdventure = (id) => {
                     </div>
                 </div>
 
+                <!-- Gallery Strip -->
+                <div v-if="adventure.images && adventure.images.length > 1" class="px-8 md:px-10 py-4 bg-white border-b border-slate-100">
+                    <div class="flex gap-3 overflow-x-auto">
+                        <img
+                            v-for="image in adventure.images"
+                            :key="image.id"
+                            :src="'/storage/' + image.image"
+                            class="h-16 w-24 object-cover rounded-lg border-2"
+                            :class="image.is_cover ? 'border-green-600' : 'border-transparent opacity-80 hover:opacity-100'"
+                        />
+                    </div>
+                </div>
+
                 <!-- Body Details -->
                 <div class="p-8 md:p-10 space-y-8">
                     
@@ -86,6 +105,14 @@ const deleteAdventure = (id) => {
                         <p class="text-slate-500 flex items-center gap-1.5 text-sm mt-2">
                             <MapPinIcon class="w-4 h-4 text-green-600" /> {{ adventure.location }}
                         </p>
+                        <div v-if="adventure.google_maps_url" class="mt-2">
+                            <a 
+                                :href="adventure.google_maps_url" 
+                                target="_blank" 
+                                class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition">
+                                🗺 View on Google Maps
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Stats Grid -->

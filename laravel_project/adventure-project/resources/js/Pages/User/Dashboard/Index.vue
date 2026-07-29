@@ -1,115 +1,132 @@
 <script setup>
+import { Link } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/UserDashboardLayout.vue'
 
-defineProps({
-    user: Object,
-    bookings: Array,
+const props = defineProps({
+    user: {
+        type: Object,
+        required: true,
+    },
+    stats: {
+        type: Object,
+        required: true,
+    },
+    upcomingAdventure: {
+        type: Object,
+        default: null,
+    },
 })
+
+const formatDate = (dateStr) => {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    })
+}
 </script>
 
 <template>
     <DashboardLayout>
-        <!-- Welcome Header -->
-        <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight mb-2">
-            Welcome, {{ user.name }} 👋
-        </h1>
-        <p class="text-sm text-gray-500 mb-10">
-            Here is an overview of your adventure bookings and activities.
-        </p>
-
-        <!-- Stats Grid -->
-        <div class="grid md:grid-cols-3 gap-6 mb-12">
-            <!-- Total Bookings -->
-            <div class="bg-white rounded-3xl shadow-sm border border-stone-100 p-6 space-y-2">
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Total Bookings
-                </h2>
-                <p class="text-4xl font-extrabold text-slate-900">
-                    {{ bookings.length }}
-                </p>
-            </div>
-
-            <!-- Upcoming Trips -->
-            <div class="bg-white rounded-3xl shadow-sm border border-stone-100 p-6 space-y-2">
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Upcoming Trips
-                </h2>
-                <p class="text-4xl font-extrabold text-green-600">
-                    {{ bookings.filter(b => b.status === 'confirmed').length }}
-                </p>
-            </div>
-
-            <!-- Favorites -->
-            <div class="bg-white rounded-3xl shadow-sm border border-stone-100 p-6 space-y-2">
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Favorites
-                </h2>
-                <p class="text-3xl font-extrabold text-slate-900 flex items-center gap-2">
-                    <span>❤️</span>
-                    <span class="text-2xl">0</span>
-                </p>
-            </div>
+        <div>
+            <!-- Welcome Header -->
+            <div class="mb-8">
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-1">
+                Welcome back, {{ user.name }} 👋
+            </h1>
+            <p class="text-sm text-gray-500">
+                Here is what's happening with your outdoor adventures today.
+            </p>
         </div>
 
-        <!-- Recent Bookings Section -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">
-                My Bookings
-            </h2>
-        </div>
-
-        <div v-if="bookings && bookings.length > 0" class="space-y-4">
-            <div
-                v-for="booking in bookings"
-                :key="booking.id"
-                class="bg-white rounded-3xl shadow-sm border border-stone-100 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all hover:shadow-md"
+        <!-- Stats Row -->
+        <div class="flex flex-wrap items-center gap-4 mb-8">
+            <Link
+                :href="route('user.bookings.index')"
+                class="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 shadow-sm hover:shadow transition text-sm font-semibold text-slate-900"
             >
-                <div class="space-y-1">
-                    <h3 class="text-lg font-bold text-slate-900">
-                        {{ booking.adventure.title }}
-                    </h3>
-                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 font-medium">
-                        <span>📅 {{ booking.booking_date }}</span>
-                        <span>👥 {{ booking.participants }} people</span>
-                    </div>
-                </div>
+                <span>📅</span>
+                <span>Total Bookings: {{ stats.total_bookings }}</span>
+            </Link>
 
-                <div class="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end pt-4 sm:pt-0 border-t sm:border-0 border-stone-100">
-                    <div class="text-right">
-                        <span class="text-xs text-gray-400 block sm:hidden">Total</span>
-                        <p class="text-xl font-bold text-green-600">
-                            RM {{ booking.total_price }}
-                        </p>
-                    </div>
+            <div class="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 shadow-sm text-sm font-semibold text-slate-900">
+                <span>🏔</span>
+                <span>Upcoming Trips: {{ stats.upcoming_trips }}</span>
+            </div>
 
-                    <span
-                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider"
-                        :class="{
-                            'bg-yellow-100 text-yellow-700': booking.status === 'pending',
-                            'bg-green-100 text-green-700': booking.status === 'confirmed',
-                            'bg-red-100 text-red-700': booking.status === 'cancelled',
-                        }"
-                    >
-                        {{ booking.status }}
+            <Link
+                :href="route('user.favorites.index')"
+                class="inline-flex items-center gap-2 bg-white border border-stone-200 rounded-xl px-4 py-3 shadow-sm hover:shadow transition text-sm font-semibold text-slate-900"
+            >
+                <span>⭐</span>
+                <span>Favorites: {{ stats.favorites }}</span>
+            </Link>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-stone-200 mb-8"></div>
+
+        <!-- Upcoming Confirmed Adventure -->
+        <h2 class="text-xl font-bold text-slate-900 tracking-tight mb-5">
+            Upcoming Confirmed Adventure:
+        </h2>
+
+        <div
+            v-if="upcomingAdventure"
+            class="bg-white border border-stone-200 rounded-2xl shadow-sm p-6 max-w-4xl"
+        >
+            <div class="space-y-4 mb-6">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    🏔 {{ upcomingAdventure.title }}
+                </h3>
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium">
+                    <span class="flex items-center gap-1">
+                        📅 Date: {{ formatDate(upcomingAdventure.booking_date) }}
+                    </span>
+                    <span class="text-stone-300">|</span>
+                    <span class="flex items-center gap-1">
+                        👥 {{ upcomingAdventure.participants }} Participants
+                    </span>
+                    <span class="text-stone-300">|</span>
+                    <span class="flex items-center gap-1">
+                        Status: Confirmed ✅
                     </span>
                 </div>
             </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <a
+                    :href="route('invoice.download', upcomingAdventure.id)"
+                    class="inline-flex items-center gap-2 bg-slate-900 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-slate-800 transition shadow-sm"
+                >
+                    📄 Download Invoice
+                </a>
+
+                <Link
+                    :href="route('user.bookings.index')"
+                    class="inline-flex items-center gap-2 bg-white border border-stone-200 text-slate-900 text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-stone-50 transition shadow-sm"
+                >
+                    View Booking Details
+                </Link>
+            </div>
         </div>
 
-        <!-- Empty State -->
         <div
             v-else
-            class="text-center py-20 bg-stone-50 rounded-3xl border border-stone-100 border-dashed"
+            class="text-center py-12 bg-stone-50 rounded-2xl border border-stone-200 border-dashed max-w-4xl"
         >
-            <div class="mx-auto w-16 h-16 bg-green-50 text-green-600 flex items-center justify-center rounded-2xl mb-4 shadow-sm text-2xl">
-                🎒
-            </div>
-            <h3 class="text-lg font-bold text-slate-900 mb-1">
-                No bookings found
-            </h3>
-            <p class="text-sm text-gray-500 max-w-sm mx-auto">
-                You haven't booked any adventures yet. Explore our list and start your journey!
+            <p class="text-sm text-gray-500">
+                No upcoming confirmed adventures. Start booking today!
             </p>
+            <Link
+                href="/adventures"
+                class="mt-4 inline-flex text-sm font-semibold text-green-700 hover:text-green-800"
+            >
+                Browse Adventures →
+            </Link>
+        </div>
         </div>
     </DashboardLayout>
 </template>

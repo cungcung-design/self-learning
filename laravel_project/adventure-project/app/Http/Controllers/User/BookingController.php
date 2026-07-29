@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdventureSchedule;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,7 +17,7 @@ class BookingController extends Controller
     {
         $bookings = auth()->user()
             ->bookings()
-            ->with('adventure.category')
+            ->with(['adventure.category', 'schedule'])
             ->latest()
             ->get();
 
@@ -28,21 +29,14 @@ class BookingController extends Controller
     /**
      * Store a new booking.
      */
-    public function store(Request $request)
+    public function store(Request $request, BookingService $service)
     {
         $validated = $request->validate([
-            'adventure_id' => 'required|exists:adventures,id',
-            'booking_date' => 'required|date|after_or_equal:today',
+            'schedule_id' => 'required|exists:adventure_schedules,id',
             'participants' => 'required|integer|min:1',
         ]);
 
-        $booking = Booking::create([
-            'user_id' => auth()->id(),
-            'adventure_id' => $validated['adventure_id'],
-            'booking_date' => $validated['booking_date'],
-            'participants' => $validated['participants'],
-            'status' => 'pending',
-        ]);
+        $booking = $service->storeBooking(auth()->id(), $validated);
 
         return redirect()
             ->route('user.payment.checkout', $booking->id)
@@ -54,7 +48,6 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
-        // Ensure the booking belongs to the authenticated user
         if ($booking->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }

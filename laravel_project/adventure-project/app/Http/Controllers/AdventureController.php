@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Adventure;
+use App\Models\AdventureImage;
 use App\Models\Category;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -17,7 +19,12 @@ class AdventureController extends Controller
     public function index(Request $request)
     {
         // Public listing - shows all adventures with filtering & pagination
-        $query = Adventure::query()->with('category');
+        $query = Adventure::query()
+            ->with([
+                'category:id,name',
+                'images:id,adventure_id,image,is_cover,sort_order',
+            ])
+            ->withCount('bookings');
 
         // Search by title
         if ($request->filled('search')) {
@@ -62,6 +69,14 @@ class AdventureController extends Controller
 
         $adventures = $query->paginate(9)->withQueryString();
 
+        // Cache popular adventures for 1 hour
+        $popularAdventures = Cache::remember('popular_adventures', 3600, function () {
+            return Adventure::withCount('bookings')
+                ->orderByDesc('bookings_count')
+                ->take(6)
+                ->get();
+        });
+
         // Attach is_favorited flag if user is logged in
         if (auth()->check()) {
             $userFavIds = Favorite::where('user_id', auth()->id())
@@ -78,6 +93,7 @@ class AdventureController extends Controller
 
         return Inertia::render('User/Adventures/Index', [
             'adventures' => $adventures,
+            'popularAdventures' => $popularAdventures,
             'categories' => Category::orderBy('name')->get(),
             'filters' => $request->only([
                 'search',
@@ -104,25 +120,27 @@ class AdventureController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAdventureRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required',
-            'location' => 'required',
-            'price' => 'required',
-            'category_id' => 'required',
-            'description' => 'nullable',
-            'difficulty' => 'nullable',
-            'duration' => 'nullable',
-            'max_people' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('adventures', 'public');
         }
 
-        Adventure::create($validated);
+        $adventure = Adventure::create($validated);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('adventures', 'public');
+
+                $adventure->images()->create([
+                    'image' => $path,
+                    'sort_order' => $index,
+                    'is_cover' => $index === 0,
+                ]);
+            }
+        }
 
         return redirect()->route('adventures.index');
     }
@@ -135,6 +153,12 @@ class AdventureController extends Controller
         $adventure->load([
             'category',
             'reviews.user',
+            'images',
+            'schedules' => function ($query) {
+                $query->where('trip_date', '>=', now()->toDateString())
+                    ->orderBy('trip_date')
+                    ->limit(10);
+            },
         ]);
 
         // Check if authenticated user has favorited this adventure
@@ -177,7 +201,7 @@ class AdventureController extends Controller
      */
     public function adminShow(Adventure $adventure)
     {
-        $adventure->load('category');
+        $adventure->load('category', 'images');
 
         return Inertia::render('Admin/Adventures/Show', [
             'adventure' => $adventure,
@@ -189,6 +213,8 @@ class AdventureController extends Controller
      */
     public function edit(Adventure $adventure)
     {
+        $adventure->load('images');
+
         return Inertia::render('Admin/Adventures/Edit', [
             'adventure' => $adventure,
             'categories' => Category::all(),
@@ -198,20 +224,9 @@ class AdventureController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Adventure $adventure)
+    public function update(UpdateAdventureRequest $request, Adventure $adventure)
     {
-        // Fixed: Added all editable fields so they don't get lost on update
-        $validated = $request->validate([
-            'category_id' => 'required',
-            'title' => 'required',
-            'location' => 'required',
-            'price' => 'required',
-            'description' => 'nullable',
-            'difficulty' => 'nullable',
-            'duration' => 'nullable',
-            'max_people' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             if ($adventure->image) {
@@ -221,6 +236,20 @@ class AdventureController extends Controller
         }
 
         $adventure->update($validated);
+
+        if ($request->hasFile('images')) {
+            $nextSort = $adventure->images()->max('sort_order') + 1;
+
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('adventures', 'public');
+
+                $adventure->images()->create([
+                    'image' => $path,
+                    'sort_order' => $nextSort++,
+                    'is_cover' => false,
+                ]);
+            }
+        }
 
         return redirect()->route('adventures.index')->with('success', 'Adventure updated successfully!');
     }
@@ -234,5 +263,33 @@ class AdventureController extends Controller
         $adventure->delete();
 
         return redirect()->route('adventures.index')->with('success', 'Adventure deleted successfully.');
+    }
+
+    public function destroyImage(Adventure $adventure, AdventureImage $image)
+    {
+        if ($image->adventure_id !== $adventure->id) {
+            abort(404);
+        }
+
+        if ($image->is_cover && $adventure->images()->count() > 1) {
+            $adventure->images()->where('id', '!=', $image->id)->first()?->update(['is_cover' => true]);
+        }
+
+        Storage::disk('public')->delete($image->image);
+        $image->delete();
+
+        return back()->with('success', 'Image deleted successfully.');
+    }
+
+    public function setCover(Adventure $adventure, AdventureImage $image)
+    {
+        if ($image->adventure_id !== $adventure->id) {
+            abort(404);
+        }
+
+        $adventure->images()->update(['is_cover' => false]);
+        $image->update(['is_cover' => true]);
+
+        return back()->with('success', 'Cover image updated successfully.');
     }
 }

@@ -68,6 +68,7 @@ function deleteAdventure(id) {
                             <h2 class="text-lg font-bold text-slate-900 line-clamp-1">
                                 {{ adventure.title }}
                             </h2>
+                            <p class="text-sm text-gray-500 mt-0.5">📍 {{ adventure.location }}</p>
                             <p class="font-extrabold text-green-600 mt-0.5">
                                 RM {{ adventure.price }}
                             </p>
@@ -78,14 +79,14 @@ function deleteAdventure(id) {
                     <div class="flex items-center gap-2 w-full sm:w-auto justify-end pt-3 sm:pt-0 border-t sm:border-0 border-stone-100">
                         <Link
                             :href="route('adventures.edit', adventure.id)"
-                            class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition bg-blue-600 rounded-xl hover:bg-blue-700 shadow-sm"
+                            class="flex-1 sm:flex-none text-center px-5 py-3 text-xs font-semibold uppercase tracking-wider text-white transition bg-blue-600 rounded-xl hover:bg-blue-700 shadow-sm"
                         >
                             Edit
                         </Link>
                         <button
                             @click="deleteAdventure(adventure.id)"
                             :disabled="deleteForm.processing"
-                            class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition bg-red-600 rounded-xl hover:bg-red-700 shadow-sm disabled:opacity-50"
+                            class="flex-1 sm:flex-none text-center px-5 py-3 text-xs font-semibold uppercase tracking-wider text-white transition bg-red-600 rounded-xl hover:bg-red-700 shadow-sm disabled:opacity-50"
                         >
                             Delete
                         </button>

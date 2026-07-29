@@ -58,6 +58,18 @@ const menus = [
         route: 'admin.activities.index',
         component: 'Admin/Activities/Index',
     },
+    {
+        title: 'Support Chat',
+        icon: '💬',
+        route: 'admin.chat.index',
+        component: 'Admin/Chat/Index',
+    },
+    {
+        title: 'Failed Jobs',
+        icon: '⚠️',
+        route: 'admin.queue.failed',
+        component: 'Admin/Queue/FailedJobs',
+    },
 ]
 </script>
 
