@@ -1,49 +1,46 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
+import NotificationBell from '@/Components/NotificationBell.vue'
+import '../../css/userDashboard.css'
 </script>
 
 <template>
-    <div class="min-h-screen bg-stone-50">
-        <!-- Top Navbar -->
-        <nav class="bg-white border-b border-stone-100 sticky top-0 z-40">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-                <div class="flex items-center justify-between h-16">
-                    <!-- Logo -->
-                    <Link href="/" class="text-xl font-extrabold text-green-600 tracking-tight">
-                        🏔 AdventureX
-                    </Link>
+    <div class="layout">
+        <nav class="nav">
+            <div class="nav-inner">
+                <Link href="/" class="text-xl font-extrabold text-green-600 tracking-tight">
+                    🏔 AdventureX
+                </Link>
 
-                    <!-- Nav Links -->
-                    <div class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-600">
-                        <Link href="/" class="hover:text-green-700 transition">Home</Link>
-                        <Link href="/adventures" class="hover:text-green-700 transition">Explore</Link>
-                        <Link :href="route('user.bookings.index')" class="hover:text-green-700 transition">My Bookings</Link>
-                        <Link :href="route('user.favorites.index')" class="hover:text-green-700 transition">Favorites</Link>
-                        <Link :href="route('user.chat')" class="hover:text-green-700 transition">💬 Chat</Link>
-                    </div>
+                <div class="nav-center">
+                    <Link href="/" class="nav-link">Home</Link>
+                    <Link href="/adventures" class="nav-link">Explore</Link>
+                    <Link :href="route('user.bookings.index')" class="nav-link">My Bookings</Link>
+                    <Link :href="route('user.favorites.index')" class="nav-link">Favorites</Link>
+                    <Link :href="route('user.chat')" class="nav-link">💬 Chat</Link>
+                </div>
 
-                    <!-- User Dropdown -->
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm font-semibold text-gray-700 hidden sm:flex items-center gap-1">
-                            John
-                            <span class="text-base">👤</span>
-                        </span>
+                <div class="nav-auth">
+                    <NotificationBell :notifications="$page.props.auth?.user?.notifications || []" />
+
+                    <div class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">
+                        <span>John Doe</span>
+                        <span class="text-base">👤</span>
+                        <span class="text-xs">▾</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Mobile Nav -->
-            <div class="lg:hidden border-t border-stone-100 px-4 py-2 flex justify-around text-xs font-semibold text-gray-600">
-                <Link href="/" class="hover:text-green-700">Home</Link>
-                <Link href="/adventures" class="hover:text-green-700">Explore</Link>
-                <Link :href="route('user.bookings.index')" class="hover:text-green-700">My Bookings</Link>
-                <Link :href="route('user.favorites.index')" class="hover:text-green-700">Favorites</Link>
-                <Link :href="route('user.chat')" class="hover:text-green-700">💬 Chat</Link>
+            <div class="nav-mobile">
+                <Link href="/" class="nav-mobile-link">Home</Link>
+                <Link href="/adventures" class="nav-mobile-link">Explore</Link>
+                <Link :href="route('user.bookings.index')" class="nav-mobile-link">My Bookings</Link>
+                <Link :href="route('user.favorites.index')" class="nav-mobile-link">Favorites</Link>
+                <Link :href="route('user.chat')" class="nav-mobile-link">💬 Chat</Link>
             </div>
         </nav>
 
-        <!-- Content Area -->
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8">
+        <main class="layout-main">
             <slot />
         </main>
     </div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAdventureRequest;
+use App\Http\Requests\UpdateAdventureRequest;
 use App\Models\Adventure;
 use App\Models\AdventureImage;
 use App\Models\Category;
@@ -142,7 +144,7 @@ class AdventureController extends Controller
             }
         }
 
-        return redirect()->route('adventures.index');
+        return redirect()->route('admin.adventures.index');
     }
 
     /**
@@ -187,12 +189,28 @@ class AdventureController extends Controller
     /**
      * Admin: Display adventure listing.
      */
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
-        $adventures = Adventure::with('category')->latest()->paginate(10);
+        $query = Adventure::query()
+            ->with('category');
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%'.$request->search.'%')
+                  ->orWhere('location', 'like', '%'.$request->search.'%');
+            });
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        $adventures = $query->latest()->paginate(10)->withQueryString();
 
         return Inertia::render('Admin/Adventures/Index', [
             'adventures' => $adventures,
+            'categories' => Category::orderBy('name')->get(),
+            'filters' => $request->only(['search', 'category']),
         ]);
     }
 
@@ -251,7 +269,7 @@ class AdventureController extends Controller
             }
         }
 
-        return redirect()->route('adventures.index')->with('success', 'Adventure updated successfully!');
+        return redirect()->route('admin.adventures.index')->with('success', 'Adventure updated successfully!');
     }
 
     public function destroy(Adventure $adventure)
@@ -260,9 +278,13 @@ class AdventureController extends Controller
             Storage::disk('public')->delete($adventure->image);
         }
 
+        foreach ($adventure->images as $image) {
+            Storage::disk('public')->delete($image->image);
+        }
+
         $adventure->delete();
 
-        return redirect()->route('adventures.index')->with('success', 'Adventure deleted successfully.');
+        return redirect()->route('admin.adventures.index')->with('success', 'Adventure deleted successfully.');
     }
 
     public function destroyImage(Adventure $adventure, AdventureImage $image)

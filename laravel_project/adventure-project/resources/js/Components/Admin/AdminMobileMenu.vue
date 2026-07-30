@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage, router } from '@inertiajs/vue3';
 import NotificationBell from '@/Components/NotificationBell.vue';
+import { useTheme } from '@/Composables/useTheme';
 
 const menuOpen = ref(false);
 const page = usePage();
+const { darkMode, toggleTheme } = useTheme();
 
 const menus = [
     {
@@ -58,10 +60,14 @@ const menus = [
         route: 'admin.queue.failed',
     },
 ];
+
+const handleLogout = () => {
+    router.post('/logout')
+}
 </script>
 
 <template>
-    <div class="lg:hidden">
+    <div class="md:hidden">
         <div class="flex items-center justify-between bg-slate-900 text-white px-4 py-3">
             <h1 class="text-xl font-bold">🏕 Adventure Admin</h1>
             <NotificationBell :notifications="page.props.auth?.user?.notifications || []" />
@@ -80,6 +86,24 @@ const menus = [
                 <span class="text-xl">{{ menu.icon }}</span>
                 <span class="font-medium">{{ menu.title }}</span>
             </Link>
+
+            <div class="pt-4 mt-4 border-t border-slate-700 space-y-1">
+                <button
+                    @click="toggleTheme"
+                    class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition"
+                >
+                    <span class="text-xl">{{ darkMode ? '☀️' : '🌙' }}</span>
+                    <span class="font-medium">{{ darkMode ? 'Light Mode' : 'Dark Mode' }}</span>
+                </button>
+
+                <button
+                    @click="handleLogout"
+                    class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-red-900/30 hover:text-red-400 transition"
+                >
+                    <span class="text-xl">🚪</span>
+                    <span class="font-medium">Logout</span>
+                </button>
+            </div>
         </div>
     </div>
 </template>

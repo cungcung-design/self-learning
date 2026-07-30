@@ -12,7 +12,6 @@ class HomeController extends Controller
     {
         $adventures = Adventure::with('category')->latest()->take(6)->get();
 
-        // Attach is_favorited flag if user is logged in
         if (auth()->check()) {
             $userFavIds = Favorite::where('user_id', auth()->id())
                 ->whereIn('adventure_id', $adventures->pluck('id'))
@@ -27,7 +26,7 @@ class HomeController extends Controller
         }
 
         return Inertia::render('User/Home', [
-            'adventures' => $adventures,
+            'adventures' => $adventures->values()->all(),
         ]);
     }
 }

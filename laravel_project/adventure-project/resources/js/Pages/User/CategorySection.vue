@@ -2,9 +2,9 @@
 </script>
 
 <template>
-    <section class="py-20 bg-stone-50">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl font-extrabold text-center mb-12 text-slate-900 tracking-tight">
+    <section class="section cat-section ">
+        <div class="container px">
+            <h2 class="text-4xl font-extrabold text-center mb-12 text-slate-900 tracking-tight cat-text">
                 Explore by Category
             </h2>
             <div class="grid md:grid-cols-4 gap-6">
@@ -32,4 +32,3 @@
         </div>
     </section>
 </template>
-

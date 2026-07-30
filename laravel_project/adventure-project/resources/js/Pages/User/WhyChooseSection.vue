@@ -2,8 +2,8 @@
 </script>
 
 <template>
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
+    <section class="section bg-white">
+        <div class="container">
             <h2 class="text-4xl font-extrabold text-center mb-12 text-slate-900 tracking-tight">
                 Why Choose Us
             </h2>
@@ -33,4 +33,3 @@
         </div>
     </section>
 </template>
-

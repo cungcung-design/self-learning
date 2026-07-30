@@ -2,8 +2,8 @@
 </script>
 
 <template>
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
+    <section class="section sat-section ">
+        <div class="container">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center">
                     <p class="text-5xl font-extrabold text-green-700 mb-2">50+</p>
@@ -25,4 +25,3 @@
         </div>
     </section>
 </template>
-

@@ -67,8 +67,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Adventure Management (Admin CRUD)
     Route::get('/adventures', [AdventureController::class, 'adminIndex'])->name('adventures.index');
-    Route::get('/adventures/{adventure}', [AdventureController::class, 'adminShow'])->name('adventures.show');
     Route::resource('adventures', AdventureController::class)->except(['index', 'show']);
+    Route::get('/adventures/{adventure}', [AdventureController::class, 'adminShow'])->name('adventures.show');
 
     // Adventure Image Management
     Route::delete('/adventures/{adventure}/images/{image}', [AdventureController::class, 'destroyImage'])->name('adventures.images.destroy');

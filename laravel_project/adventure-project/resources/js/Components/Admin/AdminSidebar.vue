@@ -1,9 +1,11 @@
 <script setup>
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage, router } from '@inertiajs/vue3'
 import { computed } from 'vue'
 import NotificationBell from '@/Components/NotificationBell.vue'
+import { useTheme } from '@/Composables/useTheme'
 
 const page = usePage()
+const { darkMode, toggleTheme } = useTheme()
 
 const isActive = (routeName) => route().current(routeName)
 
@@ -71,10 +73,14 @@ const menus = [
         component: 'Admin/Queue/FailedJobs',
     },
 ]
+
+const handleLogout = () => {
+    router.post('/logout')
+}
 </script>
 
 <template>
-    <aside class="w-64 min-h-screen bg-slate-900 text-white">
+    <aside class="w-64 min-h-screen bg-slate-900 text-white h-full flex flex-col ">
 
         <!-- Logo -->
         <div class="px-6 py-8 border-b border-slate-700 flex items-center justify-between">
@@ -85,7 +91,7 @@ const menus = [
         </div>
 
         <!-- Navigation -->
-        <nav class="mt-6 space-y-1 px-3">
+        <nav class="mt-6 space-y-1 px-3 ">
 
             <Link
                 v-for="menu in menus"
@@ -109,14 +115,28 @@ const menus = [
 
 
         <!-- Bottom -->
-        <div class="absolute bottom-0 w-64 border-t border-slate-700 p-6">
-            <p class="text-sm text-slate-400">
-                Adventure Explorer
-            </p>
+        <div class=" bottom-0 w-64 border-t border-slate-700 p-6 space-y-3">
+            <button
+                @click="toggleTheme"
+                class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition"
+            >
+                <span class="text-lg">
+                    {{ darkMode ? '☀️' : '🌙' }}
+                </span>
+                <span class="font-medium">
+                    {{ darkMode ? 'Light Mode' : 'Dark Mode' }}
+                </span>
+            </button>
 
-            <p class="text-xs text-slate-500">
-                Admin Panel v1.0
-            </p>
+            <button
+                @click="handleLogout"
+                class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-red-900/30 hover:text-red-400 transition"
+            >
+                <span class="text-lg">🚪</span>
+                <span class="font-medium">Logout</span>
+            </button>
+
+
         </div>
 
     </aside>

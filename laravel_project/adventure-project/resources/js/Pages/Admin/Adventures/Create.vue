@@ -1,6 +1,7 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { useForm, ref } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 const props = defineProps({
     categories: Array,
@@ -29,7 +30,7 @@ const handleGalleryImages = (e) => {
 };
 
 const submit = () => {
-    form.post("/adventures", {
+    form.post("/admin/adventures", {
         onSuccess: () => {
             galleryPreviews.value = [];
         },
