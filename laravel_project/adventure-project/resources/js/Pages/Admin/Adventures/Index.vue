@@ -85,7 +85,7 @@ watch([search, category], () => {
                                 </td>
                                 <td class="py-4 px-6">
                                     <div class="font-bold text-gray-900 dark:text-white">{{ adventure.title }}</div>
-                                    <div class="text-xs text-gray-400">📍 {{ adventure.location }}</div>
+                                    <div class="text-xs text-gray-400">{{ adventure.location }}</div>
                                 </td>
                                 <td class="py-4 px-6">
                                     <span class="bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-semibold px-2.5 py-1 rounded-full">

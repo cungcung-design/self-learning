@@ -41,25 +41,24 @@ function reset() {
 
 <template>
     <MainLayout>
-        <!-- Hero Header -->
-        <section class="relative bg-gradient-to-r from-green-800 to-green-600 text-white py-20 mb-12 overflow-hidden">
+        <!-- Hero Header with Search Overlay -->
+        <section class="relative bg-gradient-to-r from-green-800 to-green-600 text-white pt-32 pb-12 overflow-hidden">
             <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
             <div class="relative max-w-7xl mx-auto px-6 text-center">
                 <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
                     Explore Adventures
                 </h1>
                 <p class="text-base md:text-lg text-green-100 max-w-xl mx-auto">
-                    Find your next unforgettable outdoor experience.
+                    Discover breathtaking destinations and experience unforgettable moments.
                 </p>
             </div>
-        </section>
 
-        <div class="max-w-7xl mx-auto px-6 pb-20">
-            <!-- Filter & Search Toolbar -->
-            <form
-                @submit.prevent="filter"
-                class="bg-white p-6 md:p-8 rounded-3xl shadow-md border border-stone-100 mb-12 space-y-6"
-            >
+            <!-- Search & Filter Overlay -->
+            <div class="absolute bottom-0 left-0 w-full flex justify-center pb-6">
+                <form
+                    @submit.prevent="filter"
+                    class="bg-white text-gray-800 w-full max-w-5xl mx-4 md:mx-0 rounded-2xl shadow-xl border border-stone-100 p-4 md:p-6 space-y-4"
+                >
                 <!-- Search Input Row -->
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
@@ -164,7 +163,10 @@ function reset() {
                     </PrimaryButton>
                 </div>
             </form>
+            </div>
+        </section>
 
+        <div class="max-w-7xl mx-auto px-6 pb-20 -mt-8">
             <!-- Results Count -->
             <div v-if="adventures.total !== undefined" class="mb-6">
                 <p class="text-sm font-medium text-gray-500">

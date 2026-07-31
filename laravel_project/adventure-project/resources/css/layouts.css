@@ -171,7 +171,6 @@
 /* ============================= */
 
 .section {
-  margin-top: 5rem;
   padding: 4rem 0;
   text-align: center;
 }
@@ -182,6 +181,7 @@
 
 .cat-section {
   padding: 2rem 0;
+  margin-top: -120px;
 }
 
 .cat-section .grid > div {
@@ -275,11 +275,6 @@
   background-size: cover;
   background-position: center;
 }
-.home-text{
-  margin-left: -400px;
-
-}
-
 /* Dark overlay for hero background image */
 .hero-sec::before {
   content: '';
@@ -688,6 +683,133 @@
 }
 
 /* ============================= */
+/* Admin Edit Form               */
+/* ============================= */
+
+.admin-edit {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.admin-edit-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.admin-edit-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.dark .admin-edit-title {
+  color: #f3f4f6;
+}
+
+.admin-edit-subtitle {
+  font-size: 0.9375rem;
+  color: #6b7280;
+}
+
+.dark .admin-edit-subtitle {
+  color: #9ca3af;
+}
+
+.admin-edit-form {
+  padding: 2rem;
+}
+
+.admin-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.dark .admin-label {
+  color: #9ca3af;
+}
+
+.admin-error {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.admin-section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.dark .admin-section-title {
+  color: #f3f4f6;
+}
+
+.admin-photo-current {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-photo-preview {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-photo-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  background: #1f2937;
+  color: white;
+  border-radius: 0.375rem;
+}
+
+.admin-file-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+.dark .admin-file-input {
+  background: #111827;
+  border-color: #374151;
+  color: #9ca3af;
+}
+
+.admin-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dark .admin-actions {
+  border-top-color: #374151;
+}
+
+/* ============================= */
 /* Container                     */
 /* ============================= */
 
@@ -700,360 +822,10 @@
 /* Adventure Detail Page         */
 /* ============================= */
 
-.adventure-detail {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-}
-
-/* Breadcrumb */
-.adventure-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 2rem;
-}
-
-.adventure-breadcrumb a {
-  color: #059669;
-  text-decoration: none;
-}
-
-.adventure-breadcrumb a:hover {
-  color: #047857;
-}
-
-.adventure-breadcrumb span {
-  color: #9ca3af;
-}
-
-/* Main three-column layout: large image | thumbnails | booking */
-.adventure-grid {
-  display: grid;
-  grid-template-columns: 1fr auto 380px;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-/* Left column */
-.adventure-left {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* Large feature image */
-.adventure-gallery-main {
-  width: 100%;
-  height: 450px;
-  border-radius: 1rem;
-  overflow: hidden;
-  background: #f3f4f6;
-}
-
-.adventure-gallery-main img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Thumbnails stacked on the right */
-.adventure-gallery-thumbs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.adventure-gallery-thumbs img {
-  width: 100%;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  opacity: 0.85;
-  transition: opacity 0.2s;
-  border: 2px solid transparent;
-}
-
-.adventure-gallery-thumbs img:hover {
-  opacity: 1;
-}
-
-.adventure-gallery-thumbs img.active {
-  opacity: 1;
-  border-color: #059669;
-}
-
-/* Title, location, rating below gallery */
-.adventure-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.adventure-title {
-  font-size: 1.875rem;
-  font-weight: 800;
-  color: #1e293b;
-}
-
-.dark .adventure-title {
-  color: #f3f4f6;
-}
-
-.adventure-location {
-  font-size: 0.875rem;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.adventure-rating {
-  font-size: 0.875rem;
-  color: #4b5563;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.adventure-rating strong {
-  color: #1e293b;
-}
-
-.dark .adventure-rating strong {
-  color: #f3f4f6;
-}
-
-/* Info badges row */
-.adventure-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  padding: 1rem 0;
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.adventure-badges span {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #4b5563;
-  font-weight: 500;
-}
-
-/* About section */
-.adventure-about {
-  margin-top: 2rem;
-}
-
-.adventure-about h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
-}
-
-.dark .adventure-about h2 {
-  color: #f3f4f6;
-}
-
-.adventure-about p {
-  font-size: 0.9375rem;
-  color: #6b7280;
-  line-height: 1.7;
-}
-
-/* Right booking sidebar */
-.booking-sidebar {
-  background: white;
-  border-radius: 1rem;
-  border: 1px solid #e7e5e4;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  padding: 1.5rem;
-  position: sticky;
-  top: 5rem;
-}
-
-.dark .booking-sidebar {
-  background: #1f2937;
-  border-color: #374151;
-}
-
-.booking-price {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 1.5rem;
-}
-
-.dark .booking-price {
-  color: #f3f4f6;
-}
-
-.booking-price strong {
-  color: #059669;
-}
-
-.dark .booking-price strong {
-  color: #34d399;
-}
-
-.booking-field {
-  margin-bottom: 1.25rem;
-}
-
-.booking-field label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
-}
-
-.booking-field input,
-.booking-field select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  color: #1e293b;
-  background: white;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.dark .booking-field input,
-.dark .booking-field select {
-  background: #111827;
-  border-color: #374151;
-  color: #f3f4f6;
-}
-
-.booking-field input:focus,
-.booking-field select:focus {
-  border-color: #059669;
-}
-
-/* Participants counter */
-.participants-counter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  padding: 0.5rem;
-}
-
-.dark .participants-counter {
-  border-color: #374151;
-}
-
-.participants-counter button {
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f3f4f6;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.dark .participants-counter button {
-  background: #374151;
-  color: #f3f4f6;
-}
-
-.participants-counter button:hover {
-  background: #e5e7eb;
-}
-
-.dark .participants-counter button:hover {
-  background: #4b5563;
-}
-
-.participants-counter span {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #1e293b;
-}
-
-.dark .participants-counter span {
-  color: #f3f4f6;
-}
-
-/* Book Now button */
-.btn-book {
-  display: block;
-  width: 100%;
-  padding: 0.875rem;
-  background: #059669;
-  color: white;
-  text-align: center;
-  border-radius: 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin-top: 1.5rem;
-}
-
-.btn-book:hover {
-  background: #047857;
-}
-
-/* Favorite button */
-.btn-favorite {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.75rem;
-  background: transparent;
-  color: #6b7280;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 0.75rem;
-}
-
-.btn-favorite:hover {
-  background: #f9fafb;
-  color: #4b5563;
-}
-
-.dark .btn-favorite {
-  border-color: #374151;
-  color: #9ca3af;
-}
-
-.dark .btn-favorite:hover {
-  background: #1f2937;
-  color: #d1d5db;
-}
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .adventure-grid {
+  .adventure-gallery-layout {
     grid-template-columns: 1fr;
   }
 
@@ -1063,12 +835,21 @@
 }
 
 @media (max-width: 640px) {
-  .adventure-gallery-main {
+  .adventure-gallery-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .image-gallery {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .main-image {
     height: 250px;
   }
 
-  .adventure-gallery-thumbs img {
-    height: 60px;
+  .side-images {
+    height: 250px;
   }
 
   .adventure-title {

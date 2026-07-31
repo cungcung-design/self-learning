@@ -1,7 +1,7 @@
 <script setup>
-import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { useForm, Link, router } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { useForm, Link, router } from '@inertiajs/vue3';
+import { ref, onBeforeUnmount } from 'vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 const props = defineProps({
     adventure: Object,
@@ -9,163 +9,242 @@ const props = defineProps({
 });
 
 const form = useForm({
-    category_id: props.adventure.category_id || "",
-    title: props.adventure.title || "",
-    description: props.adventure.description || "",
-    location: props.adventure.location || "",
-    google_maps_url: props.adventure.google_maps_url || "",
-    price: props.adventure.price || "",
-    difficulty: props.adventure.difficulty || "",
-    duration: props.adventure.duration || "",
-    max_people: props.adventure.max_people || "",
+    title: props.adventure.title || '',
+    category_id: props.adventure.category_id || '',
+    price: props.adventure.price || '',
+    location: props.adventure.location || '',
+    duration: props.adventure.duration || '',
+    description: props.adventure.description || '',
     image: null,
-    _method: "PUT",
+    images: [],
+    _method: 'PUT',
 });
 
-const galleryFiles = ref([]);
-const galleryPreviews = ref([]);
+const previewImages = ref([]);
+const previewCover = ref(null);
 
-const handleGalleryImages = (e) => {
+const handleGalleryChange = (e) => {
+    previewImages.value.forEach((url) => URL.revokeObjectURL(url));
+    previewImages.value = [];
+
     const files = Array.from(e.target.files);
-    galleryFiles.value = files;
-    galleryPreviews.value = files.map((file) => URL.createObjectURL(file));
+    form.images = files;
+    previewImages.value = files.map((file) => URL.createObjectURL(file));
+};
+
+const onCoverChange = (e) => {
+    if (previewCover.value) {
+        URL.revokeObjectURL(previewCover.value);
+    }
+    const file = e.target.files[0];
+    form.image = file;
+    previewCover.value = file ? URL.createObjectURL(file) : null;
+};
+
+onBeforeUnmount(() => {
+    previewImages.value.forEach((url) => URL.revokeObjectURL(url));
+    if (previewCover.value) {
+        URL.revokeObjectURL(previewCover.value);
+    }
+});
+
+// Helper function to reliably resolve image paths
+const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http') || path.startsWith('blob:')) {
+        return path;
+    }
+    // If path already includes storage/, don't duplicate it
+    if (path.startsWith('storage/')) {
+        return `/${path}`;
+    }
+    return `/storage/${path}`;
 };
 
 const submit = () => {
-    if (galleryFiles.value.length) {
-        form.images = galleryFiles.value;
-    }
-
-    form.post(route("admin.adventures.update", props.adventure.id), {
+    form.post(route('admin.adventures.update', props.adventure.id), {
         onSuccess: () => {
-            galleryFiles.value = [];
-            galleryPreviews.value = [];
+            previewCover.value = null;
+            router.visit(route('admin.adventures.index'));
         },
     });
 };
 
-const deleteImage = (imageId) => {
-    if (confirm("Are you sure you want to delete this image?")) {
-        router.delete(
-            route("admin.adventures.images.destroy", [props.adventure.id, imageId]),
-            {
-                preserveScroll: true,
-            }
-        );
-    }
-};
-
-const setCover = (imageId) => {
-    router.post(
-        route("admin.adventures.images.cover", [props.adventure.id, imageId]),
-        {},
-        {
+const deleteThumbnail = (imageId) => {
+    if (confirm('Delete this side image?')) {
+        router.delete(route('adventures.images.destroy', [props.adventure.id, imageId]), {
             preserveScroll: true,
-        }
-    );
+        });
+    }
 };
 </script>
 
 <template>
     <AdminLayout>
-        <div class="section">
-            <div class="container">
-                <div class="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 class="dashboard-title">Edit Adventure</h1>
-                        <p class="dashboard-subtitle">Update package details, pricing, and destination media.</p>
-                    </div>
-                    <Link href="/admin/adventures" class="btn btn-secondary">
-                        ← Back to List
-                    </Link>
+        <div class="max-w-6xl mx-auto space-y-6 pb-10 text-sm">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-800">
+                <div>
+                    <h1 class="text-xl font-black text-gray-900 dark:text-white">
+                        Edit Adventure <span class="text-xs text-gray-400 font-normal">#{{ adventure.id }}</span>
+                    </h1>
                 </div>
+                <Link href="/admin/adventures" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-semibold">
+                    ← Back
+                </Link>
+            </div>
 
-                <form @submit.prevent="submit" class="card space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Adventure Title</label>
-                            <input v-model="form.title" type="text" class="input-field" placeholder="e.g., Mount Kinabalu Trek" />
-                            <div v-if="form.errors.title" class="text-red-500 text-xs mt-1">{{ form.errors.title }}</div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Category</label>
-                            <select v-model="form.category_id" class="input-field">
-                                <option value="" disabled>Select category</option>
-                                <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-                            </select>
-                            <div v-if="form.errors.category_id" class="text-red-500 text-xs mt-1">{{ form.errors.category_id }}</div>
-                        </div>
-                    </div>
+            <!-- Form -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+                <form @submit.prevent="submit" class="space-y-4">
 
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Location</label>
-                            <input v-model="form.location" type="text" class="input-field" placeholder="Sabah, Malaysia" />
-                            <div v-if="form.errors.location" class="text-red-500 text-xs mt-1">{{ form.errors.location }}</div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Google Maps URL</label>
-                            <input v-model="form.google_maps_url" type="url" class="input-field" placeholder="https://maps.google.com/..." />
-                            <div v-if="form.errors.google_maps_url" class="text-red-500 text-xs mt-1">{{ form.errors.google_maps_url }}</div>
-                        </div>
-                    </div>
-
-                    <div class="grid md:grid-cols-4 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Price (RM)</label>
-                            <input v-model="form.price" type="number" step="0.01" class="input-field" placeholder="350" />
-                            <div v-if="form.errors.price" class="text-red-500 text-xs mt-1">{{ form.errors.price }}</div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Duration (Days)</label>
-                            <input v-model="form.duration" type="number" class="input-field" placeholder="3" />
-                            <div v-if="form.errors.duration" class="text-red-500 text-xs mt-1">{{ form.errors.duration }}</div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Max People</label>
-                            <input v-model="form.max_people" type="number" class="input-field" placeholder="10" />
-                            <div v-if="form.errors.max_people" class="text-red-500 text-xs mt-1">{{ form.errors.max_people }}</div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Difficulty Level</label>
-                            <select v-model="form.difficulty" class="input-field">
-                                <option value="" disabled>Select difficulty</option>
-                                <option value="Easy">Easy</option>
-                                <option value="Moderate">Moderate</option>
-                                <option value="Hard">Hard</option>
-                                <option value="Extreme">Extreme</option>
-                            </select>
-                            <div v-if="form.errors.difficulty" class="text-red-500 text-xs mt-1">{{ form.errors.difficulty }}</div>
-                        </div>
-                    </div>
-
+                    <!-- Title -->
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Description</label>
-                        <textarea v-model="form.description" rows="4" class="input-field" placeholder="Write a captivating summary of the adventure..."></textarea>
-                        <div v-if="form.errors.description" class="text-red-500 text-xs mt-1">{{ form.errors.description }}</div>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Title</label>
+                        <input type="text" v-model="form.title" class="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-green-500" required />
                     </div>
 
-                    <div class="divider"></div>
-
-                    <h3 class="text-lg font-bold text-gray-800">Adventure Photo</h3>
-                    <div v-if="adventure.image" class="mb-4">
-                        <img :src="'/storage/' + adventure.image" class="w-32 h-32 object-cover rounded-2xl shadow-md border border-gray-200" />
-                        <span class="inline-block mt-2 text-xs font-bold px-2 py-1 bg-gray-900 text-white rounded-md">Current</span>
+                    <!-- Category & Price -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Category</label>
+                            <select v-model="form.category_id" class="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-green-500" required>
+                                <option value="" disabled>Select</option>
+                                <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Price (RM)</label>
+                            <input type="number" step="0.01" v-model="form.price" class="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-green-500" required />
+                        </div>
                     </div>
+
+                    <!-- Location & Duration -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Location</label>
+                            <input type="text" v-model="form.location" class="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-green-500" required />
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Duration</label>
+                            <input type="text" v-model="form.duration" class="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-green-500" required />
+                        </div>
+                    </div>
+
+                    <!-- Description -->
                     <div>
-                        <label class="block text-sm font-semibold mb-2">Replace Photo</label>
-                        <input type="file" @input="form.image = $event.target.files[0]" class="w-full p-2 border rounded" accept="image/*" />
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Description</label>
+                        <textarea v-model="form.description" rows="3" class="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-green-500" required></textarea>
+                    </div>
+
+<!-- Main Cover Image -->
+                    <div class="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-xl space-y-2">
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500">Main Cover Image</label>
+
+                        <div v-if="previewCover || adventure.image" class="flex items-center gap-3">
+                            <img
+                                :src="previewCover || getImageUrl(adventure.image)"
+                                class="w-28 h-20 rounded-lg object-cover border border-gray-200 dark:border-gray-700 shadow-sm"
+                                alt="Cover Preview"
+                            />
+                            <span class="text-[11px] text-gray-400">
+                                {{ previewCover ? 'New cover preview' : 'Current active cover photo' }}
+                            </span>
+                        </div>
+
+                        <input type="file" @change="onCoverChange" class="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-green-50 file:text-green-700 dark:file:bg-green-900/30 dark:file:text-green-400 cursor-pointer" />
                         <div v-if="form.errors.image" class="text-red-500 text-xs mt-1">{{ form.errors.image }}</div>
                     </div>
+<!-- Gallery Side Images -->
+<div class="p-3 bg-gray-50 dark:bg-gray-900/40 rounded-xl space-y-3">
+    <div class="flex justify-between items-center">
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500">
+            Gallery Side Images (Multiple)
+        </label>
 
-                    <div class="flex justify-end gap-3 pt-4">
-                        <Link href="/admin/adventures" class="btn btn-secondary">Cancel</Link>
-                        <button type="submit" :disabled="form.processing" class="btn btn-primary">
-                            {{ form.processing ? "Saving..." : "Save Updates" }}
-                        </button>
+        <span class="text-[10px] bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-bold px-2 py-0.5 rounded-full">
+            {{ (adventure.images?.length || 0) + previewImages.length }} Active
+        </span>
+    </div>
+
+    <!-- slider images -->
+    <div
+        v-if="adventure.images?.length || previewImages.length"
+        class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 gap-2"
+    >
+        <div
+            v-for="img in adventure.images"
+            :key="img.id"
+            class="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm"
+        >
+            <img
+                :src="getImageUrl(img.image)"
+                class="w-full h-20 object-cover"
+                alt="Side Image"
+            />
+
+            <button
+                type="button"
+                @click="deleteThumbnail(img.id)"
+                class="absolute top-1 right-1 bg-red-600 text-white p-1 rounded text-[9px] shadow opacity-80 hover:opacity-100 transition"
+            >
+                ❌
+            </button>
+        </div>
+
+        <div
+            v-for="(preview, index) in previewImages"
+            :key="index"
+            class="relative group rounded-lg overflow-hidden border border-blue-300 bg-white dark:bg-gray-800 shadow-sm"
+        >
+            <img
+                :src="preview"
+                class="w-full h-20 object-cover"
+                alt="New preview"
+            />
+            <div class="absolute top-1 left-1 bg-blue-600 text-white p-0.5 rounded text-[8px] font-bold">
+                NEW
+            </div>
+        </div>
+    </div>
+
+    <p
+        v-if="!adventure.images?.length && !previewImages.length"
+        class="text-[11px] text-gray-400 italic"
+    >
+        No side images uploaded yet.
+    </p>
+
+    <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
+        <input
+            type="file"
+            multiple
+            @change="handleGalleryChange"
+            class="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900/30 dark:file:text-blue-400 cursor-pointer"
+        />
+
+        <span class="text-[10px] text-gray-400 mt-1 block">
+            Hold Ctrl or Cmd to select multiple files to upload simultaneously.
+        </span>
+
+        <div
+            v-if="form.errors.images"
+            class="text-red-500 text-xs mt-1"
+        >
+            {{ form.errors.images }}
+        </div>
+    </div>
+</div>
+                    <!-- Actions -->
+                    <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <Link href="/admin/adventures" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-semibold">Cancel</Link>
+                        <button type="submit" :disabled="form.processing" class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-sm transition disabled:opacity-50">Save</button>
                     </div>
+
                 </form>
             </div>
+
         </div>
     </AdminLayout>
 </template>
