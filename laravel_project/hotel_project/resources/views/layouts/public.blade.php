@@ -4,7 +4,7 @@
     @include('home.css', ['title' => $title ?? null])
     @stack('styles')
 </head>
-<body class="main-layout">
+<body class="main-layout{{ request()->routeIs('home.public') ? ' is-home' : '' }}">
     <div class="loader_bg">
         <div class="loader"><img src="{{ asset('images/loading.gif') }}" alt="Loading" /></div>
     </div>
