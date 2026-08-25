@@ -16,8 +16,8 @@
             </div>
         </div>
 
-        <form class="hero-search" action="{{ route('rooms.index') }}" method="get">
-            <div class="hero-search__amenities">
+        <form class="hero-form" action="{{ route('rooms.index') }}" method="get">
+            <div class="hero-form__amenities">
                 <h2>Amenities</h2>
                 <ul>
                     <li>
@@ -47,7 +47,7 @@
                 </ul>
             </div>
 
-            <div class="hero-search__stay">
+            <div class="hero-form__stay">
                 <h2>Find Your Stay</h2>
                 <p>Check-in - Check-out</p>
                 <div class="hero-field hero-field--range">
@@ -71,9 +71,9 @@
                 </label>
             </div>
 
-            <div class="hero-search__destinations">
+            <div class="hero-form__destinations">
                 <h2>Top Destinations</h2>
-                <div class="hero-search__thumbs">
+                <div class="hero-form__thumbs">
                     <img src="{{ asset('images/gallery1.jpg') }}" alt="">
                     <img src="{{ asset('images/gallery2.jpg') }}" alt="">
                     <img src="{{ asset('images/gallery3.jpg') }}" alt="">
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <button class="hero-search__submit" type="submit" aria-label="Search rooms">
+            <button class="hero-form__submit" type="submit" aria-label="Search rooms">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
             </button>
         </form>

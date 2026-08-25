@@ -112,26 +112,30 @@
     background: var(--studio-green-dark);
     color: #fff !important;
 }
-
 .hero-studio {
-    padding: 8px 0 72px;
+    width: 100%;
+    margin-bottom: 80px; /* Adjust this value (e.g., 60px, 100px, 120px) to fit your layout */
 }
-
 .hero-studio__shell {
-    width: min(1180px, calc(100% - 40px));
+    /* Increase this from its current value (e.g., 1200px or 1400px) to your desired width */
+    max-width: 1600px; /* Or 100% / 1800px depending on how wide you want it */
+    width: 95%;        /* Ensures it scales nicely with a bit of breathing room on smaller screens */
     margin: 0 auto;
-    position: relative;
-    padding-bottom: 52px;
+    padding: 0 2rem;   /* Adjust padding if needed */
 }
 
 .hero-studio__card {
     display: grid;
     grid-template-columns: minmax(280px, 0.92fr) 1.08fr;
-    min-height: 430px;
+    min-height: 520px; /* Reduced from 600px (adjust between 500px - 540px) */
     background: linear-gradient(180deg, var(--studio-mint) 0%, var(--studio-mint-2) 55%, #ffffff 100%);
     border-radius: 36px;
     overflow: hidden;
     box-shadow: var(--studio-shadow);
+}
+
+.hero-studio__visual {
+    min-height: 520px;
 }
 
 .hero-studio__copy {
@@ -182,9 +186,6 @@
     flex-shrink: 0;
 }
 
-.hero-studio__visual {
-    min-height: 430px;
-}
 
 .hero-studio__visual img {
     width: 100%;
@@ -193,11 +194,14 @@
     display: block;
 }
 
-.hero-search {
+.hero-form {
     position: absolute;
-    left: 28px;
-    right: 28px;
-    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 24px; /* Lowered from 60px (adjust to 0px, 16px, or 32px as needed) */
+    width: calc(100% - 120px);
+    max-width: 1200px;
+
     display: grid;
     grid-template-columns: 1.15fr 1.05fr 0.9fr auto;
     gap: 22px;
@@ -209,7 +213,7 @@
     z-index: 3;
 }
 
-.hero-search h2 {
+.hero-form h2 {
     font-size: 15px;
     font-weight: 800;
     color: var(--studio-text);
@@ -218,14 +222,14 @@
     letter-spacing: -0.02em;
 }
 
-.hero-search__stay p {
+.hero-form__stay p {
     margin: -8px 0 10px;
     color: #9aa3a0;
     font-size: 11px;
     font-weight: 500;
 }
 
-.hero-search__amenities ul {
+.hero-form__amenities ul {
     display: flex;
     gap: 14px;
     list-style: none;
@@ -233,7 +237,7 @@
     padding: 0;
 }
 
-.hero-search__amenities li {
+.hero-form__amenities li {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -312,12 +316,12 @@
     flex-shrink: 0;
 }
 
-.hero-search__thumbs {
+.hero-form__thumbs {
     display: flex;
     gap: 8px;
 }
 
-.hero-search__thumbs img {
+.hero-form__thumbs img {
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -326,7 +330,7 @@
     box-shadow: 0 0 0 1px #eee;
 }
 
-.hero-search__submit {
+.hero-form__submit {
     width: 64px;
     height: 64px;
     border: 0;
@@ -340,12 +344,12 @@
     flex-shrink: 0;
 }
 
-.hero-search__submit svg {
+.hero-form__submit svg {
     width: 24px;
     height: 24px;
 }
 
-.hero-search__submit:hover {
+.hero-form__submit:hover {
     background: var(--studio-green-dark);
     color: #fff;
 }
@@ -434,7 +438,7 @@
         height: 280px;
     }
 
-    .hero-search {
+    .hero-form {
         position: relative;
         left: 0;
         right: 0;
@@ -443,7 +447,7 @@
         padding: 20px;
     }
 
-    .hero-search__submit {
+    .hero-form__submit {
         grid-column: 2;
         justify-self: end;
         align-self: end;
@@ -480,13 +484,13 @@
         min-height: 220px;
     }
 
-    .hero-search {
+    .hero-form {
         grid-template-columns: 1fr;
         border-radius: 20px;
         gap: 18px;
     }
 
-    .hero-search__submit {
+    .hero-form__submit {
         grid-column: 1;
         width: 100%;
         border-radius: 16px;
@@ -494,7 +498,7 @@
         justify-self: stretch;
     }
 
-    .hero-search__amenities ul {
+    .hero-form__amenities ul {
         justify-content: space-between;
     }
 }
@@ -504,7 +508,7 @@
         font-size: 28px;
     }
 
-    .hero-search__amenities li {
+    .hero-form__amenities li {
         min-width: 0;
         font-size: 10px;
     }

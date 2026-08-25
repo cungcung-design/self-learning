@@ -1,5 +1,5 @@
 <x-public-layout>
-    @include('home.slider')
+    @include('home.hero-section')
     @include('home.about')
     @include('home.room')
     @include('home.gallery')
