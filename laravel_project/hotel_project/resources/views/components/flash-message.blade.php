@@ -1,5 +1,5 @@
 @if (session('message') || session('error') || $errors->any())
-    <div class="container">
+    <div class="container px-3">
         @if (session('message'))
             <div class="alert alert-success site-alert" role="status">{{ session('message') }}</div>
         @endif

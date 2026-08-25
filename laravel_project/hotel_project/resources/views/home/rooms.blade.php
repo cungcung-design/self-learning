@@ -9,17 +9,17 @@
             <div class="filter-card hotel-form mb-5">
                 <form action="{{ route('rooms.index') }}" method="get">
                     <div class="row align-items-end">
-                        <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-xl-0">
                             <label for="start_date">Check-in</label>
                             <input id="start_date" class="form-control" type="date" name="start_date"
                                 min="{{ date('Y-m-d') }}" value="{{ $filters['start_date'] ?? '' }}">
                         </div>
-                        <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-xl-0">
                             <label for="end_date">Check-out</label>
                             <input id="end_date" class="form-control" type="date" name="end_date"
                                 min="{{ date('Y-m-d') }}" value="{{ $filters['end_date'] ?? '' }}">
                         </div>
-                        <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-xl-0">
                             <label for="room_type">Room type</label>
                             <select id="room_type" class="form-control" name="room_type">
                                 <option value="">Any type</option>
@@ -30,7 +30,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-12 col-sm-6 col-xl-3">
                             <button class="btn btn-hotel btn-block" type="submit">Search rooms</button>
                             @if (! empty($searching))
                                 <a href="{{ route('rooms.index') }}" class="d-block mt-2 text-center">Clear filters</a>

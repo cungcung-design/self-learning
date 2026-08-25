@@ -24,8 +24,8 @@
                 <span>/ night</span>
             </div>
             <p>{{ \Illuminate\Support\Str::limit($room->room_description, 110) }}</p>
-            <div class="mt-auto d-flex align-items-center justify-content-between">
-                <a href="{{ route('rooms.show', $query) }}" class="text-dark font-weight-bold">Details</a>
+            <div class="room-card__actions">
+                <a href="{{ route('rooms.show', $query) }}" class="room-card__details">Details</a>
                 <a class="btn btn-hotel" href="{{ route('rooms.show', $query) }}">Book now</a>
             </div>
         </div>

@@ -5,10 +5,10 @@
             <p>Questions about dates, rooms, or arriving late? Send a message and we will reply by email.</p>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                 @include('home.partials.contact-form')
             </div>
-            <div class="col-md-6">
+            <div class="col-12 col-lg-6">
                 <div class="map_main">
                     <div class="map-responsive">
                         <iframe src="{{ config('hotel.map_embed') }}" width="600" height="400"

@@ -6,10 +6,10 @@
             </nav>
 
             <div class="row">
-                <div class="col-lg-7">
+                <div class="col-12 col-lg-7 mb-4 mb-lg-0">
                     <div class="detail-card">
                         <img src="{{ $room->imageUrl() }}" alt="{{ $room->room_name }}" class="detail-image">
-                        <div class="p-4 p-md-5">
+                        <div class="detail-card__body">
                             <div class="mb-3">
                                 <span class="chip">{{ $room->typeLabel() }}</span>
                                 @if ($room->hasWifi())
@@ -32,7 +32,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-5">
+                <div class="col-12 col-lg-5">
                     <div class="booking-card hotel-form">
                         <h4 class="font-weight-bold mb-3">Reserve this room</h4>
 
@@ -49,12 +49,12 @@
 
                             <form action="{{ route('rooms.show', $room) }}" method="GET">
                                 <div class="row">
-                                    <div class="mb-3 col-md-6">
+                                    <div class="mb-3 col-12 col-sm-6">
                                         <label for="guest_start_date">Check-in</label>
                                         <input id="guest_start_date" type="date" name="start_date" class="form-control"
                                             min="{{ date('Y-m-d') }}" value="{{ request('start_date') }}">
                                     </div>
-                                    <div class="mb-3 col-md-6">
+                                    <div class="mb-3 col-12 col-sm-6">
                                         <label for="guest_end_date">Check-out</label>
                                         <input id="guest_end_date" type="date" name="end_date" class="form-control"
                                             min="{{ date('Y-m-d') }}" value="{{ request('end_date') }}">
@@ -97,7 +97,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="mb-3 col-md-6">
+                                    <div class="mb-3 col-12 col-sm-6">
                                         <label for="start_date">Check-in</label>
                                         <input id="start_date" type="date" name="start_date"
                                             class="form-control @error('start_date') is-invalid @enderror"
@@ -107,7 +107,7 @@
                                             <span class="field-error">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="mb-3 col-md-6">
+                                    <div class="mb-3 col-12 col-sm-6">
                                         <label for="end_date">Check-out</label>
                                         <input id="end_date" type="date" name="end_date"
                                             class="form-control @error('end_date') is-invalid @enderror"

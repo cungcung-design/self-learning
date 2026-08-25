@@ -28,10 +28,10 @@
     <div class="booking_ocline">
         <div class="container">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-lg-5 col-md-7">
                     <div class="book_room">
                         <h1>Check room availability</h1>
-                        <p class="text-white mb-3">Choose your dates and we will show rooms that are still free.</p>
+                        <p class="book_room__intro">Choose your dates and we will show rooms that are still free.</p>
                         @include('home.partials.availability-form')
                     </div>
                 </div>

@@ -2,7 +2,7 @@
     <div class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-lg-4 footer-col">
                     <h3>Contact</h3>
                     <ul class="conta">
                         <li><i class="fa fa-map-marker" aria-hidden="true"></i> {{ config('hotel.address') }}</li>
@@ -13,7 +13,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-lg-4 footer-col">
                     <h3>Explore</h3>
                     <ul class="link_menu">
                         <li class="{{ request()->routeIs('home.public') ? 'active' : '' }}">
@@ -25,7 +25,7 @@
                         <li><a href="{{ route('contact.show') }}">Contact</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-lg-4 footer-col">
                     <h3>Stay details</h3>
                     <ul class="conta">
                         <li>Check-in from {{ config('hotel.check_in') }}</li>
