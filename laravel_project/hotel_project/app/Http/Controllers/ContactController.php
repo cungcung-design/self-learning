@@ -12,6 +12,8 @@ class ContactController extends Controller
     {
         Contact::query()->create($request->validated());
 
-        return back()->with('message', 'Your message has been sent successfully!');
+        return back()
+            ->withFragment('contact')
+            ->with('message', 'Your message has been sent successfully. Our team will get back to you shortly.');
     }
 }

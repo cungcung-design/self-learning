@@ -12,6 +12,8 @@
             </div>
         @endsession
 
+        <p class="mb-4 text-sm text-gray-600">Sign in to book a room or manage your stays at {{ config('hotel.name') }}.</p>
+
         <form method="POST" action="{{ route('login') }}">
             @csrf
 

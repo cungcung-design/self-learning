@@ -15,25 +15,44 @@ class Gallery extends Model
 
     public function imageUrl(): string
     {
-        $path = str_starts_with((string) $this->image, 'admin/')
-            ? $this->image
-            : 'admin/img/gallery/'.$this->image;
-
-        if (is_file(public_path($path))) {
-            return asset($path);
+        foreach ($this->candidatePaths() as $path) {
+            if (is_file(public_path($path))) {
+                return asset($path);
+            }
         }
 
-        return asset('images/gallery1.jpg');
+        return asset('images/blog1.jpg');
     }
 
     public function imagePath(): ?string
     {
-        if (! $this->image) {
-            return null;
+        foreach ($this->candidatePaths() as $path) {
+            if (is_file(public_path($path))) {
+                return $path;
+            }
         }
 
-        return str_starts_with($this->image, 'admin/')
-            ? $this->image
-            : 'admin/img/gallery/'.$this->image;
+        return $this->image ?: null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function candidatePaths(): array
+    {
+        $image = (string) $this->image;
+
+        if ($image === '') {
+            return [];
+        }
+
+        if (str_contains($image, '/')) {
+            return [$image];
+        }
+
+        return [
+            'admin/img/gallery/'.$image,
+            'images/'.$image,
+        ];
     }
 }

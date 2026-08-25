@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('admin.sidebar', function ($view) {
             $view->with('pendingBookingCount', Booking::query()->where('status', Booking::STATUS_PENDING)->count());
-            $view->with('openMessageCount', Contact::query()->count());
+            $view->with('openMessageCount', Contact::query()->unreplied()->count());
         });
     }
 }

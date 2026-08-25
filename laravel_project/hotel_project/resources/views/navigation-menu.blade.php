@@ -3,7 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}">
+                    <a href="{{ route('home.public') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
@@ -12,8 +12,8 @@
                     <x-nav-link href="{{ route('home.public') }}" :active="request()->routeIs('home.public')">
                         {{ __('Website') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home') || request()->routeIs('dashboard')">
-                        {{ __('Home') }}
+                    <x-nav-link href="{{ route('rooms.index') }}" :active="request()->routeIs('rooms.*')">
+                        {{ __('Rooms') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('bookings.index') }}" :active="request()->routeIs('bookings.*')">
                         {{ __('My Bookings') }}
@@ -113,8 +113,11 @@
 
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
-                {{ __('Home') }}
+            <x-responsive-nav-link href="{{ route('home.public') }}" :active="request()->routeIs('home.public')">
+                {{ __('Website') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('rooms.index') }}" :active="request()->routeIs('rooms.*')">
+                {{ __('Rooms') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('bookings.index') }}" :active="request()->routeIs('bookings.*')">
                 {{ __('My Bookings') }}

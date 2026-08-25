@@ -18,10 +18,13 @@ class MessageController extends Controller
         $messages = Contact::query()
             ->when($request->filled('q'), function ($query) use ($request) {
                 $search = '%'.$request->string('q').'%';
-                $query->where('name', 'like', $search)
-                    ->orWhere('email', 'like', $search)
-                    ->orWhere('message', 'like', $search);
+                $query->where(function ($inner) use ($search) {
+                    $inner->where('name', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhere('message', 'like', $search);
+                });
             })
+            ->when($request->string('status') === 'open', fn ($query) => $query->unreplied())
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -38,6 +41,8 @@ class MessageController extends Controller
     {
         Notification::route('mail', $contact->email)
             ->notify(new ContactReplyNotification($contact, $request->validated()));
+
+        $contact->markReplied();
 
         return redirect()
             ->route('admin.messages.index')

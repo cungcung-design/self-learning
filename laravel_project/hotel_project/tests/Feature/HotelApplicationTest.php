@@ -249,6 +249,42 @@ class HotelApplicationTest extends TestCase
         $response->assertSee($available->room_name);
     }
 
+    public function test_guests_can_view_public_pages(): void
+    {
+        $room = Room::factory()->create(['room_name' => 'Harbour Suite']);
+
+        $this->get(route('about'))->assertOk()->assertSee('About');
+        $this->get(route('gallery'))->assertOk();
+        $this->get(route('contact.show'))->assertOk()->assertSee('Send a message');
+        $this->get(route('rooms.index'))->assertOk()->assertSee('Harbour Suite');
+        $this->get(route('rooms.show', $room))
+            ->assertOk()
+            ->assertSee('Harbour Suite')
+            ->assertSee('Log in to book')
+            ->assertDontSee('Request booking');
+    }
+
+    public function test_room_listing_hides_unavailable_rooms(): void
+    {
+        Room::factory()->create(['room_name' => 'Open Garden Room']);
+        $booked = Room::factory()->create(['room_name' => 'Taken Lake Room']);
+
+        Booking::factory()->create([
+            'room_id' => $booked->id,
+            'start_date' => now()->addDays(2)->toDateString(),
+            'end_date' => now()->addDays(5)->toDateString(),
+            'status' => Booking::STATUS_APPROVED,
+        ]);
+
+        $this->get(route('rooms.index', [
+            'start_date' => now()->addDays(3)->toDateString(),
+            'end_date' => now()->addDays(4)->toDateString(),
+        ]))
+            ->assertOk()
+            ->assertSee('Open Garden Room')
+            ->assertDontSee('Taken Lake Room');
+    }
+
     public function test_admins_can_reply_to_contact_messages(): void
     {
         Notification::fake();
@@ -261,5 +297,7 @@ class HotelApplicationTest extends TestCase
             'body' => 'Thanks for getting in touch. We have availability next weekend.',
             'end_line' => 'Kind regards',
         ])->assertRedirect(route('admin.messages.index'));
+
+        $this->assertNotNull($contact->fresh()->replied_at);
     }
 }

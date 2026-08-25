@@ -4,11 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Booking;
 use App\Models\Contact;
+use App\Models\Gallery;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Hotel Admin',
                 'phone' => '0100000000',
                 'usertype' => User::TYPE_ADMIN,
-                'password' => Hash::make('password'),
+                'password' => 'password',
             ]
         );
 
@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Guest User',
                 'phone' => '0111111111',
                 'usertype' => User::TYPE_USER,
-                'password' => Hash::make('password'),
+                'password' => 'password',
             ]
         );
 
@@ -102,6 +102,12 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0122223333',
                 'message' => 'Do you offer airport transfer for late-night arrivals?',
             ]);
+        }
+
+        if (Gallery::query()->count() === 0) {
+            foreach (['images/blog1.jpg', 'images/blog2.jpg', 'images/blog3.jpg', 'images/about.png'] as $image) {
+                Gallery::query()->create(['image' => $image]);
+            }
         }
     }
 }

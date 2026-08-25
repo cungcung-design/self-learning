@@ -27,6 +27,10 @@
             <form method="GET" action="{{ route('admin.messages.index') }}" class="form-inline">
                 <input type="text" name="q" class="form-control form-control-sm mr-2" placeholder="Search messages"
                     value="{{ request('q') }}">
+                <select name="status" class="form-control form-control-sm mr-2">
+                    <option value="">All</option>
+                    <option value="open" @selected(request('status') === 'open')>Unreplied</option>
+                </select>
                 <button class="btn btn-sm btn-primary" type="submit">Search</button>
             </form>
         </div>
@@ -40,6 +44,7 @@
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Message</th>
+                            <th>Status</th>
                             <th>Reply</th>
                         </tr>
                     </thead>
@@ -55,6 +60,13 @@
                                     {{ $contact->message }}
                                 </td>
                                 <td>
+                                    @if ($contact->isReplied())
+                                        <span class="badge badge-success">Replied</span>
+                                    @else
+                                        <span class="badge badge-warning">New</span>
+                                    @endif
+                                </td>
+                                <td>
                                     <a href="{{ route('admin.messages.reply', $contact) }}" class="btn btn-success btn-sm">
                                         Reply Email
                                     </a>
@@ -62,7 +74,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="empty-state">No messages available yet.</td>
+                                <td colspan="6" class="empty-state">No messages available yet.</td>
                             </tr>
                         @endforelse
                     </tbody>

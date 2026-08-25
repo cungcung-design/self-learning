@@ -1,58 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    @include('home.css')
-    <style>
-        .bookings-wrap {
-            padding: 80px 0;
-            background: #f8f9fa;
-            min-height: 70vh;
-        }
-
-        .booking-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
-        .status-pill {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-approved { background: #d4edda; color: #155724; }
-        .status-rejected { background: #f8d7da; color: #721c24; }
-        .status-cancelled { background: #e2e3e5; color: #383d41; }
-    </style>
-</head>
-
-<body class="main-layout">
-    <header>
-        @include('home.header')
-    </header>
-
-    <div class="bookings-wrap">
+<x-public-layout title="My Bookings">
+    <section class="page-section">
         <div class="container">
-            <div class="mb-4 d-flex justify-content-between align-items-center">
+            <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap">
                 <div>
-                    <h2 style="font-weight: 700;">My Bookings</h2>
-                    <p class="text-muted mb-0">Track, review, and cancel upcoming stays.</p>
+                    <h1 class="h2 font-weight-bold mb-1">My bookings</h1>
+                    <p class="text-muted mb-0">Track upcoming stays and cancel a pending request before check-in.</p>
                 </div>
-                <a href="{{ url('/#rooms') }}" class="btn btn-dark">Book another room</a>
+                <a href="{{ route('rooms.index') }}" class="btn btn-hotel mt-3 mt-md-0">Book another room</a>
             </div>
 
-            @include('components.flash-message')
-
             @forelse ($bookings as $booking)
-                <div class="booking-card">
+                <div class="booking-list-card p-4 mb-3">
                     <div class="row align-items-center">
                         <div class="col-md-2 mb-3 mb-md-0">
                             <img src="{{ $booking->room?->imageUrl() ?? asset('images/room1.jpg') }}"
@@ -89,9 +47,10 @@
                     </div>
                 </div>
             @empty
-                <div class="booking-card text-center">
-                    <p class="mb-3">You have not booked a room yet.</p>
-                    <a href="{{ url('/#rooms') }}" class="btn btn-dark">Browse rooms</a>
+                <div class="empty-state">
+                    <h3>No bookings yet</h3>
+                    <p>When you request a room, it will appear here until the hotel confirms, rejects, or you cancel it.</p>
+                    <a href="{{ route('rooms.index') }}" class="btn btn-hotel">Browse rooms</a>
                 </div>
             @endforelse
 
@@ -99,9 +58,5 @@
                 {{ $bookings->links() }}
             </div>
         </div>
-    </div>
-
-    @include('home.footer')
-</body>
-
-</html>
+    </section>
+</x-public-layout>

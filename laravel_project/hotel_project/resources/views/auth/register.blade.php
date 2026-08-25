@@ -6,6 +6,8 @@
 
         <x-validation-errors class="mb-4" />
 
+        <p class="mb-4 text-sm text-gray-600">Create an account to request rooms and track your bookings.</p>
+
         <form method="POST" action="{{ route('register') }}">
             @csrf
 

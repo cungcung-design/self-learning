@@ -8,11 +8,16 @@ use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\RoomController;
 use App\Models\Contact;
 use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home.public');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/gallery', [PageController::class, 'gallery'])->name('gallery');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact.show');
 
 Route::get('/home', [HomeController::class, 'redirectAuthenticated'])
     ->middleware('auth')
@@ -22,7 +27,8 @@ Route::get('/dashboard', [HomeController::class, 'redirectAuthenticated'])
     ->middleware('auth')
     ->name('dashboard');
 
-Route::get('/rooms/{room}', [HomeController::class, 'showRoom'])->name('rooms.show');
+Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
+Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
 
 Route::post('/rooms/{room}/bookings', [BookingController::class, 'store'])
     ->middleware(['auth', 'throttle:bookings'])

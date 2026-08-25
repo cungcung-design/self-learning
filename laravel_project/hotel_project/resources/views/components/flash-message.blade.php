@@ -1,21 +1,21 @@
-@if (session('message'))
-    <div class="alert alert-success mx-3 mt-3">
-        {{ session('message') }}
-    </div>
-@endif
+@if (session('message') || session('error') || $errors->any())
+    <div class="container">
+        @if (session('message'))
+            <div class="alert alert-success site-alert" role="status">{{ session('message') }}</div>
+        @endif
 
-@if (session('error'))
-    <div class="alert alert-danger mx-3 mt-3">
-        {{ session('error') }}
-    </div>
-@endif
+        @if (session('error'))
+            <div class="alert alert-danger site-alert" role="alert">{{ session('error') }}</div>
+        @endif
 
-@if ($errors->any())
-    <div class="alert alert-danger mx-3 mt-3">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+        @if ($errors->any())
+            <div class="alert alert-danger site-alert" role="alert">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </div>
 @endif
