@@ -1,105 +1,81 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\RoomController as AdminRoomController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
+use App\Models\Contact;
+use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', [HomeController::class, 'index'])->name('home.public');
 
-// Public Homepage
-Route::get('/', [AdminController::class, 'home'])
-    ->name('home_public');
-
-
-// Login Home Route
-Route::get('/home', [AdminController::class, 'index'])
+Route::get('/home', [HomeController::class, 'redirectAuthenticated'])
     ->middleware('auth')
     ->name('home');
 
-// User room details page should remain at /room_details/{id}
+Route::get('/dashboard', [HomeController::class, 'redirectAuthenticated'])
+    ->middleware('auth')
+    ->name('dashboard');
 
+Route::get('/rooms/{room}', [HomeController::class, 'showRoom'])->name('rooms.show');
 
+Route::post('/rooms/{room}/bookings', [BookingController::class, 'store'])
+    ->middleware(['auth', 'throttle:bookings'])
+    ->name('bookings.store');
 
-// User can view room details
-Route::get('/room_details/{id}', [UserController::class, 'room_details'])
-    ->name('room_details');
+Route::middleware('auth')->group(function () {
+    Route::get('/my-bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::post('/my-bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+});
 
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:contact')
+    ->name('contact.store');
 
-// User booking
-Route::post('/add_booking/{id}', [UserController::class, 'add_booking'])
-    ->name('add_booking')
-    ->middleware('auth');
+Route::middleware(['auth', 'admin'])->prefix('panel')->name('admin.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/rooms', [AdminRoomController::class, 'index'])->name('rooms.index');
+    Route::get('/rooms/create', [AdminRoomController::class, 'create'])->name('rooms.create');
+    Route::post('/rooms', [AdminRoomController::class, 'store'])->name('rooms.store');
+    Route::get('/rooms/{room}/edit', [AdminRoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/rooms/{room}', [AdminRoomController::class, 'update'])->name('rooms.update');
+    Route::delete('/rooms/{room}', [AdminRoomController::class, 'destroy'])->name('rooms.destroy');
 
-// Contact form
-Route::post('/contact', [UserController::class, 'contact'])
-    ->name('contact');
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+    Route::post('/bookings/{booking}/approve', [AdminBookingController::class, 'approve'])->name('bookings.approve');
+    Route::post('/bookings/{booking}/reject', [AdminBookingController::class, 'reject'])->name('bookings.reject');
+    Route::post('/bookings/{booking}/email', [AdminBookingController::class, 'sendEmail'])->name('bookings.email');
+    Route::delete('/bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('bookings.destroy');
 
+    Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
+    Route::post('/gallery', [GalleryController::class, 'store'])->name('gallery.store');
+    Route::delete('/gallery/{gallery}', [GalleryController::class, 'destroy'])->name('gallery.destroy');
 
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{contact}/reply', [MessageController::class, 'reply'])->name('messages.reply');
+    Route::post('/messages/{contact}/reply', [MessageController::class, 'sendReply'])->name('messages.send');
+});
 
-// Admin Routes
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::get('/room_details/{room}', function (Room $room) {
+    return redirect()->route('rooms.show', $room);
+});
 
+Route::redirect('/create_room', '/panel/rooms/create');
+Route::redirect('/view_room', '/panel/rooms');
+Route::redirect('/view_booking', '/panel/bookings');
+Route::redirect('/view_gallery', '/panel/gallery');
+Route::redirect('/view_message', '/panel/messages');
 
-    // Room Management
+Route::get('/edit_room/{room}', function (Room $room) {
+    return redirect()->route('admin.rooms.edit', $room);
+});
 
-    Route::get('/create_room', [AdminController::class, 'create_room'])
-        ->name('create_room');
-
-    Route::post('/add_room', [AdminController::class, 'add_room'])
-        ->name('add_room');
-
-    Route::get('/view_room', [AdminController::class, 'view_room'])
-        ->name('view_room');
-
-    Route::get('/edit_room/{id}', [AdminController::class, 'edit_room'])
-        ->name('edit_room');
-
-    Route::post('/update_room/{id}', [AdminController::class, 'update_room'])
-        ->name('update_room');
-
-    Route::get('/delete_room/{id}', [AdminController::class, 'delete_room'])
-        ->name('delete_room');
-
-
-
-    // Booking Management
-
-    Route::get('/view_booking', [AdminController::class, 'view_booking'])
-        ->name('view_booking');
-
-    Route::get('/delete_booking/{id}', [AdminController::class, 'delete_booking'])
-        ->name('delete_booking');
-
-    Route::get('/approve_booking/{id}', [AdminController::class, 'approve_booking'])
-        ->name('approve_booking');
-
-    Route::get('/reject_booking/{id}', [AdminController::class, 'reject_booking'])
-        ->name('reject_booking');
-
-
-
-    // Gallery Management
-
-    Route::get('/view_gallery', [AdminController::class, 'view_gallery'])
-        ->name('view_gallery');
-
-    Route::post('/upload_gallery', [AdminController::class, 'upload_gallery'])
-        ->name('upload_gallery');
-
-    Route::get('/delete_gallery/{id}', [AdminController::class, 'delete_gallery'])
-        ->name('delete_gallery');
-
-
-
-    // Message Management
-
-    Route::get('/view_message', [AdminController::class, 'view_message'])
-        ->name('view_message');
-
-    Route::get('/reply_email/{id}', [AdminController::class, 'reply_email'])
-        ->name('reply_email');
-
-    Route::post('/send_email/{id}', [AdminController::class, 'send_email'])
-        ->name('send_email');
-
+Route::get('/reply_email/{contact}', function (Contact $contact) {
+    return redirect()->route('admin.messages.reply', $contact);
 });

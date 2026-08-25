@@ -1,4 +1,3 @@
-         <!-- header inner -->
          <div class="header">
              <div class="container">
                  <div class="row">
@@ -6,7 +5,9 @@
                          <div class="full">
                              <div class="center-desk">
                                  <div class="logo">
-                                     <a href="index.html"><img src="images/logo.png" alt="#" /></a>
+                                     <a href="{{ route('home.public') }}">
+                                         <img src="{{ asset('images/logo.png') }}" alt="Hotel logo" />
+                                     </a>
                                  </div>
                              </div>
                          </div>
@@ -20,39 +21,47 @@
                              </button>
                              <div class="collapse navbar-collapse" id="navbarsExample04">
                                  <ul class="mr-auto navbar-nav">
-                                     <li class="nav-item active">
-                                         <a class="nav-link" href="index.html">Home</a>
+                                     <li class="nav-item {{ request()->routeIs('home.public') ? 'active' : '' }}">
+                                         <a class="nav-link" href="{{ route('home.public') }}">Home</a>
                                      </li>
                                      <li class="nav-item">
-                                         <a class="nav-link" href="about.html">About</a>
+                                         <a class="nav-link" href="{{ url('/#about') }}">About</a>
                                      </li>
                                      <li class="nav-item">
-                                         <a class="nav-link" href="room.html">Our room</a>
+                                         <a class="nav-link" href="{{ url('/#rooms') }}">Our room</a>
                                      </li>
                                      <li class="nav-item">
-                                         <a class="nav-link" href="gallery.html">Gallery</a>
+                                         <a class="nav-link" href="{{ url('/#gallery') }}">Gallery</a>
                                      </li>
-
                                      <li class="nav-item">
-                                         <a class="nav-link" href="contact.html">Contact Us</a>
+                                         <a class="nav-link" href="{{ url('/#contact') }}">Contact Us</a>
                                      </li>
-                                     @auth
-                                         <x-app-layout>
-
-                                         </x-app-layout>
-                                     @else
-                                         <li class="nav-item" style="margin-right: 15px;">
-                                             {{-- Avoid route() calls here because your auth routes may be customized.
-                                                  Fallback to common Fortify/Jetstream endpoints. --}}
-                                             <a class="btn btn-success" href="/login">Login</a>
-                                         </li>
-
-                                         <li class="nav-item">
-                                             <a class="btn btn-primary" href="/register">Register</a>
-                                         </li>
-                                     @endauth
-
-
+                                      @auth
+                                          <li class="nav-item {{ request()->routeIs('bookings.index') ? 'active' : '' }}">
+                                              <a class="nav-link" href="{{ route('bookings.index') }}">My Bookings</a>
+                                          </li>
+                                          @if (Auth::user()->isAdmin())
+                                              <li class="nav-item">
+                                                  <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin</a>
+                                              </li>
+                                          @endif
+                                          <li class="nav-item">
+                                              <a class="nav-link" href="{{ route('profile.show') }}">{{ Auth::user()->name }}</a>
+                                          </li>
+                                          <li class="nav-item">
+                                              <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                                  @csrf
+                                                  <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                                              </form>
+                                          </li>
+                                      @else
+                                          <li class="nav-item" style="margin-right: 15px;">
+                                              <a class="btn btn-success" href="{{ route('login') }}">Login</a>
+                                          </li>
+                                          <li class="nav-item">
+                                              <a class="btn btn-primary" href="{{ route('register') }}">Register</a>
+                                          </li>
+                                      @endauth
                                  </ul>
                              </div>
                          </nav>

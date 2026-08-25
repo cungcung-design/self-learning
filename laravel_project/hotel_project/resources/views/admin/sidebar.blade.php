@@ -1,40 +1,51 @@
 <div class="d-flex align-items-stretch">
-    <!-- Sidebar Navigation-->
     <nav id="sidebar">
-        <!-- Sidebar Header-->
         <div class="sidebar-header d-flex align-items-center">
-            <div class="avatar"><img src="admin/img/avatar-6.jpg" alt="..." class="img-fluid rounded-circle"></div>
+            <div class="avatar">
+                <img src="{{ asset('admin/img/avatar-6.jpg') }}" alt="Admin avatar" class="img-fluid rounded-circle">
+            </div>
             <div class="title">
-                <h1 class="h5">Mark Stephen</h1>
-                <p>Web Designer</p>
+                <h1 class="h5">{{ Auth::user()->name }}</h1>
+                <p>Administrator</p>
             </div>
         </div>
-        <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
+        <span class="heading">Main</span>
         <ul class="list-unstyled">
-            <li class="active"><a href="index.html"> <i class="icon-home"></i>Home </a></li>
-
-            <li class="dropdown">
-                <a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse" class="dropdown-toggle">
-                    <i class="icon-windows"></i>Hotel Room
+            <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}">
+                    <i class="icon-home"></i> Dashboard
                 </a>
-                <ul id="exampledropdownDropdown" class="list-unstyled submenu">
-                    <li><a href="{{ route('create_room') }}">Add Rooms</a></li>
-                    <li><a href="{{ route('view_room') }}">View Rooms</a></li>
-                    <li><a href="#">Booked Rooms </a></li>
+            </li>
+            <li class="dropdown {{ request()->routeIs('admin.rooms.*') ? 'active' : '' }}">
+                <a href="#roomMenu" aria-expanded="{{ request()->routeIs('admin.rooms.*') ? 'true' : 'false' }}"
+                    data-toggle="collapse" class="dropdown-toggle">
+                    <i class="icon-windows"></i> Hotel Rooms
+                </a>
+                <ul id="roomMenu" class="list-unstyled submenu collapse {{ request()->routeIs('admin.rooms.*') ? 'show' : '' }}">
+                    <li><a href="{{ route('admin.rooms.create') }}">Add Room</a></li>
+                    <li><a href="{{ route('admin.rooms.index') }}">View Rooms</a></li>
                 </ul>
             </li>
-            <li>
-                <a href="{{ route('view_booking') }}"> <i class="icon-home"></i> Bookings </a>
+            <li class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.bookings.index') }}">
+                    <i class="icon-padnote"></i> Bookings
+                    @if (($pendingBookingCount ?? 0) > 0)
+                        <span class="badge badge-warning float-right">{{ $pendingBookingCount }}</span>
+                    @endif
+                </a>
             </li>
-            <li>
-                <a href="{{ route('view_gallery') }}"> <i class="icon-home"></i> Gallery </a>
+            <li class="{{ request()->routeIs('admin.gallery.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.gallery.index') }}">
+                    <i class="icon-picture"></i> Gallery
+                </a>
             </li>
-<li>
-    <a href="{{ route('view_message') }}"> 
-        <i class="bi bi-envelope"></i> Messages 
-    </a>
-</li>
-
-        </ul><span class="heading">Extras</span>
-
+            <li class="{{ request()->routeIs('admin.messages.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.messages.index') }}">
+                    <i class="icon-mail"></i> Messages
+                    @if (($openMessageCount ?? 0) > 0)
+                        <span class="badge badge-info float-right">{{ $openMessageCount }}</span>
+                    @endif
+                </a>
+            </li>
+        </ul>
     </nav>

@@ -1,4 +1,4 @@
-  <div class="gallery">
+  <div class="gallery" id="gallery">
       <div class="container">
           <div class="row">
               <div class="col-md-12">
@@ -8,18 +8,21 @@
               </div>
           </div>
           <div class="row">
-              @foreach ($gallery as $item)
+              @forelse ($gallery as $item)
                   <div class="col-md-3 col-sm-6">
                       <div class="gallery_img">
-                          <img src="{{ asset('admin/img/gallery/' . $item->image) }}" alt="Gallery image"
+                          <img src="{{ $item->imageUrl() }}" alt="Gallery image"
                               style="width:100%; height:auto;" />
                       </div>
                   </div>
-              @endforeach
+              @empty
+                  <div class="col-12 text-center">
+                      <p>Gallery photos will appear here soon.</p>
+                  </div>
+              @endforelse
           </div>
       </div>
   </div>
-  <!-- blog -->
   <div class="blog">
       <div class="container">
           <div class="row">
@@ -34,7 +37,7 @@
               <div class="col-md-4">
                   <div class="blog_box">
                       <div class="blog_img">
-                          <figure><img src="images/blog1.jpg" alt="#" /></figure>
+                          <figure><img src="{{ asset('images/blog1.jpg') }}" alt="Blog post" /></figure>
                       </div>
                       <div class="blog_room">
                           <h3>Bed Room</h3>
@@ -47,7 +50,7 @@
               <div class="col-md-4">
                   <div class="blog_box">
                       <div class="blog_img">
-                          <figure><img src="images/blog2.jpg" alt="#" /></figure>
+                          <figure><img src="{{ asset('images/blog2.jpg') }}" alt="Blog post" /></figure>
                       </div>
                       <div class="blog_room">
                           <h3>Bed Room</h3>
@@ -60,7 +63,7 @@
               <div class="col-md-4">
                   <div class="blog_box">
                       <div class="blog_img">
-                          <figure><img src="images/blog3.jpg" alt="#" /></figure>
+                          <figure><img src="{{ asset('images/blog3.jpg') }}" alt="Blog post" /></figure>
                       </div>
                       <div class="blog_room">
                           <h3>Bed Room</h3>

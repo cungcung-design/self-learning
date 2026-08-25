@@ -2,61 +2,50 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
     @include('home.css')
 </head>
 
 <body class="main-layout">
-    <!-- loader  -->
     <div class="loader_bg">
-        <div class="loader"><img src="images/loading.gif" alt="#" /></div>
+        <div class="loader"><img src="{{ asset('images/loading.gif') }}" alt="Loading" /></div>
     </div>
-    <!-- end loader -->
 
-    <!-- header -->
     <header>
         @include('home.header')
     </header>
-    <!-- end header -->
 
-    <!-- banner -->
+    @include('components.flash-message')
+
     @include('home.slider')
-    <!-- end banner -->
 
-    <!-- about -->
     @include('home.about')
-    <!-- end about -->
 
-    <!-- our_room -->
-    @if (isset($rooms) || isset($room))
-        @include('home.room')
-    @endif
-    <!-- end our_room -->
+    @include('home.room')
 
-    <!-- gallery -->
     @include('home.gallery')
-    <!-- end gallery -->
 
-    <!-- contact -->
     @include('home.contact')
-    <!-- end contact -->
 
-    <!-- footer -->
     @include('home.footer')
-    <!-- end footer -->
 
     <script>
-        $(window).scroll(function() {
-            sessionStorage.setItem('scrollTop', $(this).scrollTop());
+        $(document).ready(function() {
+            @if (! empty($searching))
+                sessionStorage.removeItem('scrollTop');
+                if ($('#rooms').length) {
+                    $('html, body').animate({
+                        scrollTop: $('#rooms').offset().top - 20
+                    }, 400);
+                }
+            @else
+                if (sessionStorage.getItem('scrollTop') !== null) {
+                    $(window).scrollTop(sessionStorage.getItem('scrollTop'));
+                }
+            @endif
         });
 
-        $(document).ready(function() {
-            if (sessionStorage.getItem('scrollTop') !== null) {
-                $(window).scrollTop(sessionStorage.getItem('scrollTop'));
-            }
+        $(window).scroll(function() {
+            sessionStorage.setItem('scrollTop', $(this).scrollTop());
         });
     </script>
 </body>

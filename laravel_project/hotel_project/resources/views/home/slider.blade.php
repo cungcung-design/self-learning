@@ -7,15 +7,13 @@
             </ol>
             <div class="carousel-inner">
                <div class="carousel-item active">
-                  <img class="first-slide" src="images/banner1.jpg" alt="First slide">
-                  <div class="container">
-                  </div>
+                  <img class="first-slide" src="{{ asset('images/banner1.jpg') }}" alt="Hotel banner">
                </div>
                <div class="carousel-item">
-                  <img class="second-slide" src="images/banner2.jpg" alt="Second slide">
+                  <img class="second-slide" src="{{ asset('images/banner2.jpg') }}" alt="Hotel banner">
                </div>
                <div class="carousel-item">
-                  <img class="third-slide" src="images/banner3.jpg" alt="Third slide">
+                  <img class="third-slide" src="{{ asset('images/banner3.jpg') }}" alt="Hotel banner">
                </div>
             </div>
             <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
@@ -33,20 +31,33 @@
                   <div class="col-md-5">
                      <div class="book_room">
                         <h1>Book a Room Online</h1>
-                        <form class="book_now">
+                        <form class="book_now" action="{{ route('home.public') }}" method="get">
                            <div class="row">
                               <div class="col-md-12">
                                  <span>Arrival</span>
-                                 <img class="date_cua" src="images/date.png">
-                                 <input class="online_book" placeholder="dd/mm/yyyy" type="date" name="dd/mm/yyyy">
+                                 <img class="date_cua" src="{{ asset('images/date.png') }}" alt="">
+                                 <input class="online_book" type="date" name="start_date" min="{{ date('Y-m-d') }}"
+                                    value="{{ $filters['start_date'] ?? '' }}">
                               </div>
                               <div class="col-md-12">
                                  <span>Departure</span>
-                                 <img class="date_cua" src="images/date.png">
-                                 <input class="online_book" placeholder="dd/mm/yyyy" type="date" name="dd/mm/yyyy">
+                                 <img class="date_cua" src="{{ asset('images/date.png') }}" alt="">
+                                 <input class="online_book" type="date" name="end_date" min="{{ date('Y-m-d') }}"
+                                    value="{{ $filters['end_date'] ?? '' }}">
                               </div>
                               <div class="col-md-12">
-                                 <button class="book_btn">Book Now</button>
+                                 <span>Room type</span>
+                                 <select class="online_book" name="room_type" style="height: 50px;">
+                                    <option value="">Any type</option>
+                                    @foreach (\App\Models\Room::TYPES as $type)
+                                        <option value="{{ $type }}" @selected(($filters['room_type'] ?? '') === $type)>
+                                            {{ ucfirst($type) }}
+                                        </option>
+                                    @endforeach
+                                 </select>
+                              </div>
+                              <div class="col-md-12">
+                                 <button class="book_btn" type="submit">Check Availability</button>
                               </div>
                            </div>
                         </form>
