@@ -37,15 +37,13 @@
                 </ul>
                 <div class="studio-nav__cta">
                     @auth
-                        <a class="studio-login" href="{{ route('profile.show') }}">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z"/></svg>
-                            {{ Auth::user()->name }}
+                        <a class="studio-user-menu" href="{{ route('profile.show') }}">
+                            <span class="studio-avatar">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                            <span class="studio-user-name">{{ Auth::user()->name }}</span>
                         </a>
                     @else
-                        <a class="studio-login" href="{{ route('login') }}">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z"/></svg>
-                            Login
-                        </a>
+                        <a class="studio-btn-login" href="{{ route('login') }}">Log In</a>
+                        <a class="studio-btn-register" href="{{ route('register') }}">Sign Up</a>
                     @endauth
                 </div>
             </div>

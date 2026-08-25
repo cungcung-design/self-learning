@@ -119,6 +119,108 @@ button,
     display: inline-flex;
 }
 
+/* Right-side auth CTA */
+.studio-nav__cta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    padding: 4px 0;
+}
+
+.studio-nav__links {
+    flex: 1 1 auto;
+    justify-content: center;
+    margin: 0 !important;
+}
+
+.studio-btn-login {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    border: 1.5px solid #111111;
+    border-radius: 8px;
+    color: #111111;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    text-decoration: none;
+    background: transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.studio-btn-login:hover,
+.studio-btn-login:focus {
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
+}
+
+.studio-btn-register {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    background: #111111;
+    border: 1.5px solid #111111;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.studio-btn-register:hover,
+.studio-btn-register:focus {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+.studio-user-menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #111111;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.studio-user-menu:hover,
+.studio-user-menu:focus {
+    background: #f3f4f6;
+    color: #111111;
+}
+
+.studio-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #111111;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.studio-user-name {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .site-alert {
     max-width: 1140px;
     margin: 16px 15px 0;
@@ -726,6 +828,62 @@ ul.link_menu li a {
     .hotel-navbar .nav-item-action form,
     .hotel-navbar .nav-item-action form .btn {
         width: 100%;
+    }
+
+    .studio-nav__cta {
+        margin-left: 0;
+        padding: 12px 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+    }
+
+    .studio-btn-login,
+    .studio-btn-register,
+    .studio-user-menu {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 16px;
+        font-size: 15px;
+    }
+
+    .studio-btn-login {
+        border-color: rgba(255, 255, 255, 0.8);
+        color: #fff;
+    }
+
+    .studio-btn-login:hover,
+    .studio-btn-login:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #fff;
+        color: #fff;
+    }
+
+    .studio-btn-register {
+        background: #fff;
+        border-color: #fff;
+        color: #111;
+    }
+
+    .studio-btn-register:hover,
+    .studio-btn-register:focus {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: rgba(255, 255, 255, 0.9);
+        color: #111;
+    }
+
+    .studio-user-menu {
+        color: #fff;
+    }
+
+    .studio-user-menu:hover,
+    .studio-user-menu:focus {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .studio-avatar {
+        background: #fff;
+        color: #111;
     }
 
     .banner .carousel-item img {

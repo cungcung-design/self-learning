@@ -117,34 +117,62 @@
     margin-bottom: 80px; /* Adjust this value (e.g., 60px, 100px, 120px) to fit your layout */
 }
 .hero-studio__shell {
-    /* Increase this from its current value (e.g., 1200px or 1400px) to your desired width */
-    max-width: 1600px; /* Or 100% / 1800px depending on how wide you want it */
-    width: 95%;        /* Ensures it scales nicely with a bit of breathing room on smaller screens */
+    max-width: 1750px; /* Increased from 1600px (or use 1800px) */
+    width: 98%;        /* Expanded from 95% for a wider fluid fit */
     margin: 0 auto;
-    padding: 0 2rem;   /* Adjust padding if needed */
+    padding: 0 1.5rem; /* Slightly reduced side gutters to give more inner room */
 }
-
+/* Card container */
 .hero-studio__card {
-    display: grid;
-    grid-template-columns: minmax(280px, 0.92fr) 1.08fr;
-    min-height: 520px; /* Reduced from 600px (adjust between 500px - 540px) */
-    background: linear-gradient(180deg, var(--studio-mint) 0%, var(--studio-mint-2) 55%, #ffffff 100%);
-    border-radius: 36px;
+    position: relative;
+    border-radius: 40px;
     overflow: hidden;
-    box-shadow: var(--studio-shadow);
+    min-height: 540px;
 }
 
+/* Background image fills entire card */
 .hero-studio__visual {
-    min-height: 520px;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
+.hero-studio__visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+}
+
+/* The Left-Side Color Blur/Fade Overlay */
+.hero-studio__card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none; /* Allows clicking through */
+    
+    /* Left mint color fading smoothly into total transparency */
+    background: linear-gradient(
+        90deg,
+        #e3f2ef 0%,
+        #e5f4f1 35%,
+        rgba(229, 244, 241, 0.9) 50%,
+        rgba(229, 244, 241, 0.4) 65%,
+        rgba(229, 244, 241, 0) 80%
+    );
+}
+
+/* Ensure text sits above the color overlay */
 .hero-studio__copy {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 56px 48px 88px 56px;
+    position: relative;
+    z-index: 3;
+    max-width: 580px;
+    padding: 60px 48px;
+    margin-top: 40px;
 }
-
 .hero-studio__copy h1 {
     font-family: Inter, sans-serif;
     font-size: clamp(34px, 4.2vw, 58px);
@@ -198,21 +226,21 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 24px; /* Lowered from 60px (adjust to 0px, 16px, or 32px as needed) */
-    width: calc(100% - 120px);
-    max-width: 1200px;
+    bottom: clamp(16px, 2vw, 24px);
+    width: calc(100% - 80px); /* Slightly narrower (between 60px and 120px) */
+    max-width: 1280px;        /* Scaled down from 1350px */
 
     display: grid;
-    grid-template-columns: 1.15fr 1.05fr 0.9fr auto;
-    gap: 22px;
+    grid-template-columns: minmax(140px, 1.15fr) minmax(140px, 1.05fr) minmax(140px, 0.9fr) minmax(56px, 64px);
+    gap: clamp(10px, 1.5vw, 22px);
     align-items: center;
     background: #fff;
     border-radius: 28px;
-    padding: 22px 22px 22px 28px;
+    padding: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) clamp(18px, 2.5vw, 28px);
     box-shadow: 0 16px 40px rgba(20, 40, 35, 0.12);
     z-index: 3;
+    overflow: hidden;
 }
-
 .hero-form h2 {
     font-size: 15px;
     font-weight: 800;
