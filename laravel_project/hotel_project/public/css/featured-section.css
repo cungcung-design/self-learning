@@ -33,16 +33,7 @@
   letter-spacing: -0.5px;
 }
 
-.featured-section .title-wrapper::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 28px;
-  height: 3px;
-  background-color: #15803d;
-  border-radius: 2px;
-}
+
 
 .featured-section .view-all {
   display: inline-flex;
@@ -126,7 +117,7 @@
 }
 
 .featured-section .wishlist-btn:hover {
-  color: #e11d48;
+  color: #15803d;
   transform: scale(1.08);
 }
 

@@ -16,74 +16,80 @@
             </div>
         </div>
 
-        <form class="hero-form" action="{{ route('rooms.index') }}" method="get">
-            <div class="hero-form__amenities">
-                <h2>Amenities</h2>
-                <ul>
-                    <li>
-                        <span class="hero-icon hero-icon--pool">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 16.5c1.1.6 2.4.6 3.5 0 .5-.27 1-.4 1.5-.4s1 .13 1.5.4c1.1.6 2.4.6 3.5 0 .5-.27 1-.4 1.5-.4s1 .13 1.5.4c1.1.6 2.4.6 3.5 0V19c-1.1.6-2.4.6-3.5 0-.5-.27-1-.4-1.5-.4s-1 .13-1.5.4c-1.1.6-2.4.6-3.5 0-.5-.27-1-.4-1.5-.4s-1 .13-1.5.4c-1.1.6-2.4.6-3.5 0v-2.5zm0-3c1.1.6 2.4.6 3.5 0 .5-.27 1-.4 1.5-.4s1 .13 1.5.4c1.1.6 2.4.6 3.5 0 .5-.27 1-.4 1.5-.4s1 .13 1.5.4c1.1.6 2.4.6 3.5 0V16c-1.1.6-2.4.6-3.5 0-.5-.27-1-.4-1.5-.4s-1 .13-1.5.4c-1.1.6-2.4.6-3.5 0-.5-.27-1-.4-1.5-.4s-1 .13-1.5.4c-1.1.6-2.4.6-3.5 0v-2.5zM7.2 11.2c.7-2.3 2.3-4.1 4.3-5.2.4 1.4 1.6 2.5 3.1 2.7-.6 1.1-1.5 2-2.6 2.5H7.2z"/></svg>
-                        </span>
-                        Pool
-                    </li>
-                    <li>
-                        <span class="hero-icon hero-icon--wifi">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 18.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-4.2-3.1 1.5 1.5A5 5 0 0 1 12 16a5 5 0 0 1 2.7.9l1.5-1.5A7.1 7.1 0 0 0 12 14a7.1 7.1 0 0 0-4.2 1.4zm-3-3 1.4 1.5A9.4 9.4 0 0 1 12 12a9.4 9.4 0 0 1 5.8 2l1.4-1.5A11.4 11.4 0 0 0 12 10a11.4 11.4 0 0 0-7.2 2.4z"/></svg>
-                        </span>
-                        Free Wi-Fi
-                    </li>
-                    <li>
-                        <span class="hero-icon hero-icon--ac">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2v3.2l2.2-1.3 1 1.8-2.2 1.2A5 5 0 0 1 17 11h3v2h-3a5 5 0 0 1-3.9 4.1l2.1 1.2-1 1.8-2.2-1.3V22h-2v-3.2l-2.2 1.3-1-1.8 2.2-1.2A5 5 0 0 1 7 13H4v-2h3a5 5 0 0 1 3.9-4.1L8.8 5.7l1-1.8L12 5.2V2zm0 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
-                        </span>
-                        AC
-                    </li>
-                    <li>
-                        <span class="hero-icon hero-icon--breakfast">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 18h16v2H4v-2zm8-15c3.9 0 7 2.5 7 6.2V14H5V9.2C5 5.5 8.1 3 12 3zm0 2C9.4 5 7 6.6 7 9.2V12h10V9.2C17 6.6 14.6 5 12 5z"/></svg>
-                        </span>
-                        Breakfast
-                    </li>
-                </ul>
-            </div>
-
-            <div class="hero-form__stay">
-                <h2>Find Your Stay</h2>
-                <p>Check-in - Check-out</p>
-                <div class="hero-field hero-field--range">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 2h2v2h6V2h2v2h3v16H4V4h3V2zm11 8H6v8h12v-8z"/></svg>
-                    <input type="date" name="start_date" min="{{ date('Y-m-d') }}"
-                        value="{{ $filters['start_date'] ?? '' }}" aria-label="Check-in date">
-                    <span class="hero-field__dash">&ndash;</span>
-                    <input type="date" name="end_date" min="{{ date('Y-m-d') }}"
-                        value="{{ $filters['end_date'] ?? '' }}" aria-label="Check-out date">
-                </div>
-                <label class="hero-field">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3.3 0-8 1.7-8 5v1h16v-1c0-3.3-4.7-5-8-5z"/></svg>
-                    <select name="room_type" aria-label="Room type">
-                        <option value="">Any room type</option>
-                        @foreach (\App\Models\Room::TYPES as $type)
-                            <option value="{{ $type }}" @selected(($filters['room_type'] ?? '') === $type)>
-                                {{ ucfirst($type) }} room
-                            </option>
-                        @endforeach
-                    </select>
-                </label>
-            </div>
-
-            <div class="hero-form__destinations">
-                <h2>Top Destinations</h2>
-                <div class="hero-form__thumbs">
-                    <img src="{{ asset('images/gallery1.jpg') }}" alt="">
-                    <img src="{{ asset('images/gallery2.jpg') }}" alt="">
-                    <img src="{{ asset('images/gallery3.jpg') }}" alt="">
-                    <img src="{{ asset('images/gallery4.jpg') }}" alt="">
-                </div>
-            </div>
-
-            <button class="hero-form__submit" type="submit" aria-label="Search rooms">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
-            </button>
-        </form>
+<form class="hero-form" action="{{ route('rooms.index') }}" method="get">
+    <!-- 1. Amenities Section -->
+    <div class="hero-form__col hero-form__amenities">
+        <h2 class="hero-form__title">Amenities</h2>
+        <ul>
+            <li>
+                <span class="hero-icon hero-icon--pool">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 18V9m0 0c-3 0-5.5-2-5.5-5 3.5 0 5.5 2 5.5 5zm0 0c3 0 5.5-2 5.5-5-3.5 0-5.5 2-5.5 5zM4 20c2-1 4-1 6 0s4 1 6 0 3-.5 4 0"/></svg>
+                </span>
+                <span>Pool</span>
+            </li>
+            <li>
+                <span class="hero-icon hero-icon--wifi">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+                </span>
+                <span>Free Wi-Fi</span>
+            </li>
+            <li>
+                <span class="hero-icon hero-icon--ac">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3zM12 18a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0v-1a3 3 0 0 0-3-3zM2 12a3 3 0 0 0 3 3h1a3 3 0 0 0 0-6H5a3 3 0 0 0-3 3zM18 12a3 3 0 0 0 3 3h1a3 3 0 0 0 0-6h-1a3 3 0 0 0-3 3z"/></svg>
+                </span>
+                <span>AC</span>
+            </li>
+            <li>
+                <span class="hero-icon hero-icon--breakfast">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 18h16M7 14h10l-1-4H8l-1 4zM10 6c0-1.5 2-2 2-2s2 .5 2 2"/></svg>
+                </span>
+                <span>Breakfast</span>
+            </li>
+        </ul>
     </div>
+
+    <!-- 2. Find Your Stay Section -->
+    <div class="hero-form__col hero-form__stay">
+        <h2 class="hero-form__title">Find Your Stay</h2>
+        <span class="hero-form__subtitle">Check-in &ndash; Check-out</span>
+
+        <div class="hero-field hero-field--pill">
+            <svg class="hero-field__icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+            <div class="hero-field__dates">
+                <input type="date" name="start_date" min="{{ date('Y-m-d') }}" value="{{ $filters['start_date'] ?? '' }}" aria-label="Check-in date">
+                <span class="hero-field__dash">&ndash;</span>
+                <input type="date" name="end_date" min="{{ date('Y-m-d') }}" value="{{ $filters['end_date'] ?? '' }}" aria-label="Check-out date">
+            </div>
+        </div>
+
+        <label class="hero-field hero-field--plain">
+            <svg class="hero-field__icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            <select name="room_type" aria-label="Guests and rooms">
+                <option value="">2 Guests, 1 Room</option>
+                @foreach (\App\Models\Room::TYPES as $type)
+                    <option value="{{ $type }}" @selected(($filters['room_type'] ?? '') === $type)>
+                        {{ ucfirst($type) }} room
+                    </option>
+                @endforeach
+            </select>
+        </label>
+    </div>
+
+    <!-- 3. Top Destinations Section + Search Submit -->
+    <div class="hero-form__col hero-form__destinations">
+        <div class="hero-destinations__header">
+            <h2 class="hero-form__title">Top Destinations</h2>
+            <button class="hero-form__submit" type="submit" aria-label="Search rooms">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/><path stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg>
+            </button>
+        </div>
+        <div class="hero-form__thumbs">
+            <img src="{{ asset('images/gallery1.jpg') }}" alt="Destination 1">
+            <img src="{{ asset('images/gallery2.jpg') }}" alt="Destination 2">
+            <img src="{{ asset('images/gallery3.jpg') }}" alt="Destination 3">
+            <img src="{{ asset('images/gallery4.jpg') }}" alt="Destination 4">
+        </div>
+    </div>
+</form>    
+</div>
 </section>

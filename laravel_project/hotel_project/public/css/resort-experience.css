@@ -42,16 +42,6 @@
   letter-spacing: -0.5px;
 }
 
-.resort-experience .title-wrapper::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 0;
-  width: 26px;
-  height: 3.5px;
-  background-color: #15803d;
-  border-radius: 2px;
-}
 
 .resort-experience .features-list {
   display: flex;
