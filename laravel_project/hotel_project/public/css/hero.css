@@ -120,7 +120,7 @@
     max-width: 1750px; /* Increased from 1600px (or use 1800px) */
     width: 98%;        /* Expanded from 95% for a wider fluid fit */
     margin: 0 auto;
-    padding: 0 1.5rem; /* Slightly reduced side gutters to give more inner room */
+    padding: 0 1.5rem; 
 }
 /* Card container */
 .hero-studio__card {
