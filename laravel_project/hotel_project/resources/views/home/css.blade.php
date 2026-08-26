@@ -7,10 +7,16 @@
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
       <link rel="stylesheet" href="{{ asset('css/style.css') }}">
       <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
       <link rel="stylesheet" href="{{ asset('css/hotel.css') }}">
       <link rel="stylesheet" href="{{ asset('css/hero.css') }}">
+      <link rel="stylesheet" href="{{ asset('css/featured-section.css') }}">
+      <link rel="stylesheet" href="{{ asset('css/resort-experience.css') }}">
+      <link rel="stylesheet" href="{{ asset('css/summer-discount.css') }}">
+      <link rel="stylesheet" href="{{ asset('css/trusted-section.css') }}">
+      <link rel="stylesheet" href="{{ asset('css/footer-section.css') }}">
       <link rel="icon" href="{{ asset('images/fevicon.png') }}" type="image/gif" />
       <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">

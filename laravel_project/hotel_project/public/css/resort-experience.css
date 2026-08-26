@@ -1,0 +1,222 @@
+.resort-experience * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.resort-experience .experiences-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 50px;
+  padding: 60px 20px;
+}
+
+/* Left Content Section */
+.resort-experience .content-side {
+  flex: 0 0 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.resort-experience .title-wrapper {
+  position: relative;
+  margin-bottom: 36px;
+}
+
+.resort-experience .title-wrapper h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.resort-experience .title-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 26px;
+  height: 3.5px;
+  background-color: #15803d;
+  border-radius: 2px;
+}
+
+.resort-experience .features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.resort-experience .feature-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.resort-experience .icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #e6f4ea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.resort-experience .icon-circle svg {
+  width: 22px;
+  height: 22px;
+  stroke: #166534;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.resort-experience .feature-text h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.resort-experience .feature-text p {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.resort-experience .cta-btn {
+  align-self: flex-start;
+  background-color: #eaf6ee;
+  color: #15803d;
+  border: 1px solid #cce8d6;
+  padding: 13px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.resort-experience .cta-btn:hover {
+  background-color: #15803d;
+  color: #ffffff;
+  border-color: #15803d;
+}
+
+/* Right Media Showcase */
+.resort-experience .media-side {
+  flex: 1;
+  position: relative;
+  height: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15);
+  background-color: #0f172a;
+}
+
+.resort-experience .main-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+.resort-experience .media-side:hover .main-bg {
+  transform: scale(1.03);
+}
+
+/* Video Play Button */
+.resort-experience .play-button {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, background-color 0.25s ease;
+  z-index: 2;
+}
+
+.resort-experience .play-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.resort-experience .play-button svg {
+  width: 26px;
+  height: 26px;
+  fill: #ffffff;
+  margin-left: 3px;
+}
+
+/* Thumbnail Previews Grid */
+.resort-experience .thumbnails-bar {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  z-index: 3;
+}
+
+.resort-experience .thumb-item {
+  height: 80px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  background-color: #000;
+}
+
+.resort-experience .thumb-item:hover {
+  transform: translateY(-2px);
+  border-color: #ffffff;
+}
+
+
+
+.resort-experience .thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .resort-experience .experiences-container {
+    flex-direction: column;
+  }
+  .resort-experience .content-side {
+    width: 100%;
+  }
+  .resort-experience .media-side {
+    width: 100%;
+    height: 360px;
+  }
+}

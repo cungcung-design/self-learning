@@ -1,0 +1,122 @@
+.trusted-section * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.trusted-section {
+  padding: 30px 20px;
+}
+
+/* Outer Card Container */
+.trusted-section .trusted-card {
+  background: #ffffff;
+  border: 1px solid #edf2f7;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Top Title */
+.trusted-section .card-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0b1320;
+  letter-spacing: -0.2px;
+  margin-bottom: 22px;
+}
+
+/* Stats Grid */
+.trusted-section .stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  align-items: center;
+}
+
+/* Individual Stat Item */
+.trusted-section .stat-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  position: relative;
+}
+
+/* Subtle Vertical Divider between columns */
+.trusted-section .stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 32px;
+  background-color: #f1f5f9;
+}
+
+/* Custom Line SVG Icons */
+.trusted-section .stat-icon {
+  width: 32px;
+  height: 32px;
+  stroke: #166534;
+  stroke-width: 1.9;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* Text details */
+.trusted-section .stat-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
+.trusted-section .stat-value {
+  font-size: 19px;
+  font-weight: 800;
+  color: #0b1320;
+  letter-spacing: -0.5px;
+  margin-bottom: 3px;
+}
+
+.trusted-section .stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .trusted-section .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 0;
+  }
+
+  .trusted-section .stat-item:not(:last-child)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .trusted-section .stats-row {
+    grid-template-columns: 1fr;
+    gap: 18px 0;
+  }
+
+  .trusted-section .stat-item {
+    justify-content: flex-start;
+    padding-left: 20%;
+  }
+}

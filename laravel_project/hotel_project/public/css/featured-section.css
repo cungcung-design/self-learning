@@ -1,0 +1,193 @@
+.featured-section {
+  width: 98%;
+  max-width: 1750px;
+  margin: 0 auto;
+  padding: 60px 1.5rem;
+}
+
+.featured-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.featured-section .title-wrapper {
+  position: relative;
+}
+
+.featured-section .title-wrapper h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.featured-section .title-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 28px;
+  height: 3px;
+  background-color: #15803d;
+  border-radius: 2px;
+}
+
+.featured-section .view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #15803d;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.featured-section .view-all:hover {
+  color: #166534;
+}
+
+.featured-section .cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.featured-section .stay-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+
+.featured-section .image-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.featured-section .image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.featured-section .stay-card:hover .image-container img {
+  transform: scale(1.04);
+}
+
+.featured-section .badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background-color: #15803d;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 8px;
+  letter-spacing: 0.2px;
+}
+
+.featured-section .wishlist-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.featured-section .wishlist-btn:hover {
+  color: #e11d48;
+  transform: scale(1.08);
+}
+
+.featured-section .wishlist-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.featured-section .card-body {
+  padding: 20px;
+}
+
+.featured-section .title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.featured-section .stay-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.featured-section .rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.featured-section .rating-star {
+  width: 15px;
+  height: 15px;
+  fill: #f59e0b;
+  stroke: #f59e0b;
+}
+
+.featured-section .location-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+.featured-section .location-row svg {
+  width: 14px;
+  height: 14px;
+  color: #15803d;
+}
+
+.featured-section .price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.featured-section .price {
+  font-size: 18px;
+  font-weight: 800;
+  color: #15803d;
+}
+
+.featured-section .unit {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+}

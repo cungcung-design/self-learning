@@ -1,5 +1,10 @@
 <x-public-layout>
     @include('home.hero-section')
+    @include('home.featured-section')
+    @include('home.resort-experience')
+    @include('home.summer-discount')
+    @include('home.trusted-section')
+    @include('home.footer-section')
     @include('home.about')
     @include('home.room')
     @include('home.gallery')
