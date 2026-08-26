@@ -15,7 +15,7 @@
 
     @include('home.footer-section')
 
-    <script src="{{ asset('js/jquery-3.0.0.min.js') }}"></script>
+    <script src="{{ asset('admin/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
     @stack('scripts')
 </body>

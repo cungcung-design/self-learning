@@ -20,6 +20,8 @@
   .resort-experience .experiences-container {
     max-width: none;
     width: 100%;
+    padding: 48px 20px;
+    gap: 36px;
   }
 }
 
@@ -208,12 +210,53 @@
 @media (max-width: 900px) {
   .resort-experience .experiences-container {
     flex-direction: column;
+    align-items: stretch;
+    padding: 36px 16px;
+    gap: 28px;
   }
   .resort-experience .content-side {
+    flex: 1 1 auto;
     width: 100%;
+  }
+  .resort-experience .title-wrapper h2 {
+    font-size: 24px;
   }
   .resort-experience .media-side {
     width: 100%;
     height: 360px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .resort-experience .experiences-container {
+    padding: 28px 12px;
+  }
+  .resort-experience .title-wrapper {
+    margin-bottom: 24px;
+  }
+  .resort-experience .title-wrapper h2 {
+    font-size: 22px;
+  }
+  .resort-experience .media-side {
+    height: 260px;
+    border-radius: 16px;
+  }
+  .resort-experience .thumbnails-bar {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    gap: 8px;
+  }
+  .resort-experience .thumb-item {
+    height: 52px;
+    border-radius: 8px;
+  }
+  .resort-experience .play-button {
+    width: 52px;
+    height: 52px;
+  }
+  .resort-experience .cta-btn {
+    width: 100%;
+    text-align: center;
   }
 }

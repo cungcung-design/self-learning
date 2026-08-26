@@ -447,6 +447,17 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    .hero-studio__copy {
+        padding: 48px 36px 160px 48px;
+        max-width: 520px;
+    }
+
+    .hero-form {
+        width: calc(100% - 48px);
+    }
+}
+
 @media (min-width: 1200px) {
     .studio-nav {
         display: grid !important;
@@ -485,6 +496,16 @@
 }
 
 @media (max-width: 1199.98px) {
+    .studio-header.header {
+        min-height: 0;
+        padding: 12px 0 !important;
+    }
+
+    .studio-logo {
+        margin-top: 0;
+        font-size: 24px;
+    }
+
     .studio-nav .navbar-collapse {
         background: #fff;
         border-radius: 16px;
@@ -493,6 +514,7 @@
         box-shadow: var(--studio-shadow);
         position: static !important;
         width: 100% !important;
+        z-index: 20;
     }
 
     .studio-nav__links {
@@ -505,11 +527,45 @@
     .studio-nav .nav-link {
         margin: 0 !important;
         min-height: 44px;
+        width: 100%;
     }
 
     .studio-nav__cta {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
         margin: 12px 0 0;
         width: 100%;
+        padding: 12px 0 0;
+        border-bottom: 0;
+    }
+
+    .studio-nav .studio-btn-login,
+    .studio-nav .studio-btn-register,
+    .studio-nav .studio-user-menu {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .studio-nav .studio-btn-login {
+        border-color: #111111;
+        color: #111111;
+        background: transparent;
+    }
+
+    .studio-nav .studio-btn-register {
+        background: #111111;
+        border-color: #111111;
+        color: #fff;
+    }
+
+    .studio-nav .studio-user-menu {
+        color: #111111;
+    }
+
+    .studio-nav .studio-user-name {
+        max-width: none;
     }
 
     .studio-login {
@@ -517,47 +573,70 @@
         justify-content: center;
     }
 
+    .hero-studio {
+        margin-bottom: 48px;
+    }
+
+    .hero-studio__shell {
+        width: 100%;
+        padding: 0 20px;
+        padding-bottom: 0;
+    }
+
     .hero-studio__card {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         min-height: 0;
+        border-radius: 28px;
     }
 
     .hero-studio__copy {
-        padding: 40px 32px 28px 0;
+        padding: 36px 28px 24px;
+        margin-top: 0;
+        max-width: none;
     }
 
     .hero-studio__visual {
+        position: relative;
+        inset: auto;
+        width: 100%;
         min-height: 280px;
         height: 280px;
     }
 
     .hero-form {
         position: relative;
-        left: 0;
-        right: 0;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        transform: none;
+        width: 100%;
+        max-width: none;
         margin-top: 16px;
         grid-template-columns: 1fr 1fr;
         padding: 20px;
     }
 
-    .hero-form__submit {
-        grid-column: 2;
-        justify-self: end;
-        align-self: end;
+    .hero-form__col:not(:last-child)::after {
+        display: none;
     }
 
-    .hero-studio__shell {
-        padding-bottom: 0;
+    .hero-form__submit {
+        grid-column: auto;
+        justify-self: end;
+        align-self: end;
     }
 }
 
 @media (max-width: 767.98px) {
     .hero-studio {
-        padding-bottom: 40px;
+        margin-bottom: 32px;
+        padding-bottom: 8px;
     }
 
     .hero-studio__shell {
-        width: min(1180px, calc(100% - 24px));
+        width: 100%;
+        padding: 0 16px;
     }
 
     .hero-studio__card {
@@ -565,11 +644,16 @@
     }
 
     .hero-studio__copy {
-        padding: 28px 22px 20px 0;
+        padding: 28px 20px 20px;
     }
 
     .hero-studio__copy h1 {
         font-size: 32px;
+    }
+
+    .hero-studio__copy p {
+        font-size: 15px;
+        margin-bottom: 20px;
     }
 
     .hero-studio__visual {
@@ -581,6 +665,7 @@
         grid-template-columns: 1fr;
         border-radius: 20px;
         gap: 18px;
+        padding: 18px;
     }
 
     .hero-form__submit {
@@ -593,12 +678,52 @@
 
     .hero-form__amenities ul {
         justify-content: space-between;
+        gap: 4px;
+    }
+
+    .hero-field--pill {
+        height: auto;
+        min-height: 40px;
+        padding: 6px 10px;
+    }
+
+    .hero-field__dates {
+        min-width: 0;
     }
 }
 
 @media (max-width: 399.98px) {
+    .studio-logo {
+        font-size: 20px;
+        max-width: calc(100% - 56px);
+        overflow-wrap: anywhere;
+    }
+
+    .hero-studio__shell {
+        padding: 0 12px;
+    }
+
+    .hero-studio__copy {
+        padding: 22px 16px 16px;
+    }
+
     .hero-studio__copy h1 {
-        font-size: 28px;
+        font-size: 26px;
+    }
+
+    .hero-studio__badge {
+        font-size: 12px;
+        padding: 8px 12px 8px 10px;
+    }
+
+    .hero-studio__visual {
+        height: 180px;
+        min-height: 180px;
+    }
+
+    .hero-form {
+        padding: 14px;
+        border-radius: 16px;
     }
 
     .hero-form__amenities li {
@@ -611,9 +736,21 @@
         height: 38px;
     }
 
+    .hero-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .hero-field--pill,
     .hero-field--range {
         flex-wrap: wrap;
         height: auto;
         padding: 8px 12px;
+    }
+
+    .hero-form__thumbs img {
+        width: 36px;
+        height: 36px;
+        max-width: 36px;
     }
 }

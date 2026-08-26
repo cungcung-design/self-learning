@@ -26,6 +26,10 @@
 }
 
 @media (max-width: 1199.98px) {
+  .summer-discount {
+    padding: 30px 20px;
+  }
+
   .summer-discount .banner {
     max-width: none;
     width: 100%;
@@ -223,17 +227,46 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .summer-discount .banner {
+    height: auto;
+    min-height: 0;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .summer-discount .banner-left {
+    flex: 1 1 220px;
+    min-width: 0;
+    gap: 20px;
+  }
+
+  .summer-discount .img-wrapper {
+    width: 160px;
+  }
+
+  .summer-discount .discount-voucher {
+    margin-right: 0;
+  }
+}
+
 @media (max-width: 768px) {
+  .summer-discount {
+    padding: 24px 16px;
+  }
+
   .summer-discount .banner {
     height: auto;
     flex-direction: column;
-    padding: 24px;
+    padding: 20px;
     gap: 20px;
   }
   .summer-discount .banner-left {
     flex-direction: column;
     text-align: center;
     gap: 14px;
+    width: 100%;
   }
   .summer-discount .content {
     align-items: center;
@@ -247,5 +280,20 @@
   }
   .summer-discount .discount-voucher {
     margin-right: 0;
+  }
+}
+
+@media (max-width: 399.98px) {
+  .summer-discount {
+    padding: 20px 12px;
+  }
+
+  .summer-discount .title {
+    font-size: 18px;
+  }
+
+  .summer-discount .discount-voucher {
+    width: 100%;
+    max-width: 172px;
   }
 }
