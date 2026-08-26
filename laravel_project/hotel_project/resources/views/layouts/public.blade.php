@@ -5,10 +5,6 @@
     @stack('styles')
 </head>
 <body class="main-layout{{ request()->routeIs('home.public') ? ' is-home' : '' }}">
-    <div class="loader_bg">
-        <div class="loader"><img src="{{ asset('images/loading.gif') }}" alt="Loading" /></div>
-    </div>
-
     <header>
         @include('home.header')
     </header>
@@ -17,7 +13,10 @@
 
     {{ $slot }}
 
-    @include('home.footer')
+    @include('home.footer-section')
+
+    <script src="{{ asset('js/jquery-3.0.0.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

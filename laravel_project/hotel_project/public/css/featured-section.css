@@ -46,6 +46,11 @@
   transition: color 0.2s;
 }
 
+.featured-section .view-all svg {
+  width: 16px;
+  height: 16px;
+}
+
 .featured-section .view-all:hover {
   color: #166534;
 }
