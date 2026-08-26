@@ -1,8 +1,18 @@
 .featured-section {
-  width: 98%;
-  max-width: 1750px;
+  padding: 60px 0;
+}
+
+.featured-section .container {
+  max-width: 1280px;
+  width: calc(100% - 80px);
   margin: 0 auto;
-  padding: 60px 1.5rem;
+}
+
+@media (max-width: 1199.98px) {
+  .featured-section .container {
+    max-width: none;
+    width: 100%;
+  }
 }
 
 .featured-section .section-header {
