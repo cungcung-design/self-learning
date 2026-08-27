@@ -75,7 +75,7 @@
 
     <!-- Right Column (Image Showcase) -->
     <div class="media-side">
-      <img id="mainDisplayImg" class="main-bg" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80" alt="Resort Sunset View">
+      <img id="mainDisplayImg" class="main-bg" src="https://i.pinimg.com/1200x/48/46/41/4846415c90104b50a7241fabff61b092.jpg" alt="Resort Sunset View">
       
       <!-- Video Play Icon -->
       <button class="play-button" aria-label="Play video">

@@ -4,7 +4,7 @@
     <!-- Left Section -->
     <div class="banner-left">
       <div class="img-wrapper">
-<img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80" alt="Summer Escape Offer">      </div>
+<img src="https://i.pinimg.com/736x/42/20/83/42208381981c235fc03d3d59ab250fa0.jpg" alt="Summer Escape Offer">      </div>
 
       <div class="content">
         <h3 class="title">Summer Escape Offer</h3>
