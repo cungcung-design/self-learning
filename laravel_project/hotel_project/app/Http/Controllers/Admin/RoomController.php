@@ -18,6 +18,7 @@ class RoomController extends Controller
     public function index(Request $request): View
     {
         $rooms = Room::query()
+            ->with(['hotel', 'primaryImage'])
             ->when($request->filled('q'), function ($query) use ($request) {
                 $search = '%'.$request->string('q').'%';
                 $query->where(function ($inner) use ($search) {
@@ -25,16 +26,36 @@ class RoomController extends Controller
                         ->orWhere('room_type', 'like', $search);
                 });
             })
+            ->when($request->filled('hotel_id'), function ($query) use ($request) {
+                $query->where('hotel_id', $request->integer('hotel_id'));
+            })
+            ->when($request->filled('room_type'), function ($query) use ($request) {
+                $query->where('room_type', $request->string('room_type'));
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $query->where('is_available', $request->boolean('status'));
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.view_room', compact('rooms'));
+        return view('admin.view_room', [
+            'rooms' => $rooms,
+            'hotels' => \App\Models\Hotel::query()->orderBy('name')->get(),
+        ]);
+    }
+
+    public function show(Room $room): View
+    {
+        return view('admin.show_room', compact('room'));
     }
 
     public function create(): View
     {
-        return view('admin.create_room');
+        return view('admin.create_room', [
+            'hotels' => \App\Models\Hotel::query()->orderBy('name')->get(),
+            'amenities' => \App\Models\Amenity::query()->orderBy('name')->get(),
+        ]);
     }
 
     public function store(StoreRoomRequest $request): RedirectResponse
@@ -43,9 +64,12 @@ class RoomController extends Controller
 
         $room = Room::query()->create($data);
 
+        if ($request->filled('amenity_ids')) {
+            $room->roomAmenities()->sync($request->input('amenity_ids', []));
+        }
+
         if ($request->hasFile('room_images')) {
             $primaryIndex = (int) $request->input('primary_image_index', 0);
-            $maxSort = 0;
             foreach ($request->file('room_images') as $index => $file) {
                 if (!$file) {
                     continue;
@@ -73,7 +97,11 @@ class RoomController extends Controller
 
     public function edit(Room $room): View
     {
-        return view('admin.edit_room', compact('room'));
+        return view('admin.edit_room', [
+            'room' => $room->load(['roomImages', 'roomAmenities']),
+            'hotels' => \App\Models\Hotel::query()->orderBy('name')->get(),
+            'amenities' => \App\Models\Amenity::query()->orderBy('name')->get(),
+        ]);
     }
 
     public function update(UpdateRoomRequest $request, Room $room): RedirectResponse
@@ -89,6 +117,12 @@ class RoomController extends Controller
         }
 
         $room->update($data);
+
+        if ($request->filled('amenity_ids')) {
+            $room->roomAmenities()->sync($request->input('amenity_ids', []));
+        } else {
+            $room->roomAmenities()->detach();
+        }
 
         if ($request->filled('delete_image_ids')) {
             foreach ($request->input('delete_image_ids', []) as $imageId) {
@@ -142,6 +176,7 @@ class RoomController extends Controller
 
         $this->images->delete($room->room_image);
         $room->roomImages()->delete();
+        $room->roomAmenities()->detach();
         $room->delete();
 
         return back()->with('message', 'Room deleted successfully!');

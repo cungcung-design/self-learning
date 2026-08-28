@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Support\PublicImage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Hotel extends Model
 {
@@ -13,6 +16,9 @@ class Hotel extends Model
         'description',
         'price',
         'location',
+        'contact_info',
+        'check_in_time',
+        'check_out_time',
         'rating',
         'image',
         'status',
@@ -36,13 +42,27 @@ class Hotel extends Model
         return $this->belongsToMany(Amenity::class, 'hotel_amenity');
     }
 
+    public function hotelImages(): HasMany
+    {
+        return $this->hasMany(HotelImage::class)->orderBy('sort_order');
+    }
+
+    public function primaryImage(): HasOne
+    {
+        return $this->hasOne(HotelImage::class)->where('is_primary', true);
+    }
+
+    public function rooms(): HasMany
+    {
+        return $this->hasMany(Room::class);
+    }
+
     public function imageUrl(): string
     {
-        if ($this->image && is_file(public_path($this->image))) {
-            return asset($this->image);
-        }
-
-        return asset('images/room1.jpg');
+        return PublicImage::url(
+            $this->primaryImage?->image_url ?: $this->image,
+            'images/gallery1.jpg'
+        );
     }
 
     public function scopeActive($query)

@@ -6,10 +6,10 @@ use App\Support\PublicImage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class RoomImage extends Model
+class HotelImage extends Model
 {
     protected $fillable = [
-        'room_id',
+        'hotel_id',
         'image_url',
         'is_primary',
         'sort_order',
@@ -22,13 +22,13 @@ class RoomImage extends Model
         ];
     }
 
-    public function room(): BelongsTo
+    public function hotel(): BelongsTo
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(Hotel::class);
     }
 
     public function imageUrl(): string
     {
-        return PublicImage::url($this->image_url);
+        return PublicImage::url($this->image_url, 'images/gallery1.jpg');
     }
 }

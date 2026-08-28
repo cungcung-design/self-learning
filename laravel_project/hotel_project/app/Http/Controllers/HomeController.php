@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchRoomsRequest;
+use App\Models\FeaturedCategory;
 use App\Models\Gallery;
 use App\Models\Room;
 use Illuminate\Http\RedirectResponse;
@@ -27,6 +28,7 @@ class HomeController extends Controller
             'gallery' => Gallery::query()->latest()->limit(8)->get(),
             'filters' => $request->only(['start_date', 'end_date', 'room_type']),
             'searching' => $searching,
+            'featuredCategories' => FeaturedCategory::query()->with('hotels')->get(),
         ]);
     }
 

@@ -18,6 +18,18 @@
                                 @csrf
 
                                 <div class="mb-4 form-group">
+                                    <label class="font-weight-bold" for="hotel_id">Hotel</label>
+                                    <select id="hotel_id" name="hotel_id" class="form-control">
+                                        <option value="">-- Select Hotel --</option>
+                                        @foreach ($hotels as $hotel)
+                                            <option value="{{ $hotel->id }}" @selected(old('hotel_id') == $hotel->id)>
+                                                {{ $hotel->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="mb-4 form-group">
                                     <label class="font-weight-bold" for="room_name">Room Name</label>
                                     <input id="room_name" type="text" name="room_name" class="form-control"
                                         value="{{ old('room_name') }}" placeholder="Enter room name" required>
@@ -29,14 +41,15 @@
                                         placeholder="Enter room description">{{ old('room_description') }}</textarea>
                                 </div>
 
-                                <div class="mb-4 form-group">
-                                    <label class="font-weight-bold" for="room_price">Room Price</label>
-                                    <input id="room_price" type="number" name="room_price" class="form-control"
-                                        value="{{ old('room_price') }}" placeholder="Enter room price" min="0"
-                                        step="0.01" required>
-                                </div>
-
                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4 form-group">
+                                            <label class="font-weight-bold" for="room_price">Room Price</label>
+                                            <input id="room_price" type="number" name="room_price" class="form-control"
+                                                value="{{ old('room_price') }}" placeholder="Enter room price" min="0"
+                                                step="0.01" required>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="mb-4 form-group">
                                             <label class="font-weight-bold" for="room_type">Room Type</label>
@@ -49,6 +62,9 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-4 form-group">
                                             <label class="font-weight-bold" for="room_wifi">Wi-Fi</label>
@@ -56,6 +72,49 @@
                                                 <option value="yes" @selected(old('room_wifi') === 'yes')>Yes</option>
                                                 <option value="no" @selected(old('room_wifi', 'no') === 'no')>No</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4 form-group">
+                                            <label class="font-weight-bold" for="is_available">Availability</label>
+                                            <select id="is_available" name="is_available" class="form-control">
+                                                <option value="1" @selected(old('is_available', '1') == '1')>Available</option>
+                                                <option value="0" @selected(old('is_available') == '0')>Unavailable</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4 form-group">
+                                            <label class="font-weight-bold" for="max_guests">Maximum Guests</label>
+                                            <input id="max_guests" type="number" name="max_guests" class="form-control"
+                                                value="{{ old('max_guests') }}" placeholder="e.g. 2" min="1">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4 form-group">
+                                            <label class="font-weight-bold" for="beds">Number of Beds</label>
+                                            <input id="beds" type="number" name="beds" class="form-control"
+                                                value="{{ old('beds') }}" placeholder="e.g. 1" min="1">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-4 form-group">
+                                            <label class="font-weight-bold" for="bed_type">Bed Type</label>
+                                            <input id="bed_type" type="text" name="bed_type" class="form-control"
+                                                value="{{ old('bed_type') }}" placeholder="e.g. King, Queen, Twin">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-4 form-group">
+                                            <label class="font-weight-bold" for="room_size">Room Size</label>
+                                            <input id="room_size" type="text" name="room_size" class="form-control"
+                                                value="{{ old('room_size') }}" placeholder="e.g. 25 sqm">
                                         </div>
                                     </div>
                                 </div>
@@ -72,6 +131,28 @@
                                     </div>
                                     <div id="image_previews" class="row mt-3"></div>
                                     <input type="hidden" name="primary_image_index" id="primary_image_index" value="0">
+                                </div>
+
+                                <div class="mb-4 form-group">
+                                    <label class="font-weight-bold">Amenities</label>
+                                    <div class="row">
+                                        @foreach ($amenities as $amenity)
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="amenity_ids[]" value="{{ $amenity->id }}"
+                                                        id="amenity_{{ $amenity->id }}"
+                                                        {{ in_array($amenity->id, old('amenity_ids', [])) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="amenity_{{ $amenity->id }}">
+                                                        {{ $amenity->name }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    @if ($amenities->isEmpty())
+                                        <p class="text-muted">No amenities available. Please create one first.</p>
+                                    @endif
                                 </div>
 
                                 <hr>
@@ -133,7 +214,13 @@
                     alert('You can upload a maximum of 10 images.');
                 }
                 renderPreviews();
-                fileInput.value = '';
+                syncFileInput();
+            }
+
+            function syncFileInput() {
+                const dataTransfer = new DataTransfer();
+                uploadedFiles.forEach((file) => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
             }
 
             function renderPreviews() {

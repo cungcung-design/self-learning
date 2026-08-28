@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Support\PublicImage;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -16,19 +19,31 @@ class Room extends Model
     public const TYPES = ['regular', 'premium', 'deluxe', 'suite'];
 
     protected $fillable = [
+        'hotel_id',
         'room_name',
         'room_description',
         'room_price',
         'room_wifi',
         'room_type',
         'room_image',
+        'max_guests',
+        'beds',
+        'bed_type',
+        'room_size',
+        'is_available',
     ];
 
     protected function casts(): array
     {
         return [
             'room_price' => 'decimal:2',
+            'is_available' => 'boolean',
         ];
+    }
+
+    public function hotel(): BelongsTo
+    {
+        return $this->belongsTo(Hotel::class);
     }
 
     public function bookings(): HasMany
@@ -46,6 +61,11 @@ class Room extends Model
         return $this->hasOne(RoomImage::class)->where('is_primary', true);
     }
 
+    public function roomAmenities(): BelongsToMany
+    {
+        return $this->belongsToMany(Amenity::class, 'room_amenity');
+    }
+
     public function hasWifi(): bool
     {
         return strtolower((string) $this->room_wifi) === 'yes';
@@ -58,17 +78,9 @@ class Room extends Model
 
     public function imageUrl(): string
     {
-        $primary = $this->primaryImage?->image_url;
-
-        if ($primary && is_file(public_path($primary))) {
-            return asset($primary);
-        }
-
-        if ($this->room_image && is_file(public_path($this->room_image))) {
-            return asset($this->room_image);
-        }
-
-        return asset('images/room1.jpg');
+        return PublicImage::url(
+            $this->primaryImage?->image_url ?: $this->room_image
+        );
     }
 
     public function scopeOfType(Builder $query, ?string $type): Builder

@@ -22,18 +22,37 @@
                             <h5 class="mb-0 fw-bold">Edit Room: {{ $room->room_name }}</h5>
                         </div>
                         <div class="p-4 card-body">
-                            <form action="{{ route('admin.rooms.update', $room) }}" method="POST"
+                            <form id="edit-room-form" action="{{ route('admin.rooms.update', $room) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
+                                        <label class="font-weight-bold" for="hotel_id">Hotel</label>
+                                        <select id="hotel_id" name="hotel_id" class="form-control">
+                                            <option value="">-- Select Hotel --</option>
+                                            @foreach ($hotels as $hotel)
+                                                <option value="{{ $hotel->id }}" @selected(old('hotel_id', $room->hotel_id) == $hotel->id)>
+                                                    {{ $hotel->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3 col-md-6">
                                         <label class="font-weight-bold" for="room_name">Room Name</label>
                                         <input id="room_name" type="text" name="room_name" class="form-control"
                                             value="{{ old('room_name', $room->room_name) }}" required>
                                     </div>
+                                </div>
 
+                                <div class="mb-3 col-md-12">
+                                    <label class="font-weight-bold" for="room_description">Room Description</label>
+                                    <textarea id="room_description" name="room_description" class="form-control" rows="4">{{ old('room_description', $room->room_description) }}</textarea>
+                                </div>
+
+                                <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label class="font-weight-bold" for="room_price">Room Price</label>
                                         <input id="room_price" type="number" name="room_price" class="form-control"
@@ -51,7 +70,9 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                </div>
 
+                                <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label class="font-weight-bold" for="room_wifi">Wi-Fi</label>
                                         <select id="room_wifi" name="room_wifi" class="form-control" required>
@@ -59,43 +80,66 @@
                                             <option value="no" @selected(old('room_wifi', $room->room_wifi) === 'no')>No</option>
                                         </select>
                                     </div>
-
-                                    <div class="mb-3 col-md-12">
-                                        <label class="font-weight-bold" for="room_description">Room Description</label>
-                                        <textarea id="room_description" name="room_description" class="form-control" rows="4">{{ old('room_description', $room->room_description) }}</textarea>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="font-weight-bold" for="is_available">Availability</label>
+                                        <select id="is_available" name="is_available" class="form-control">
+                                            <option value="1" @selected(old('is_available', $room->is_available) == '1')>Available</option>
+                                            <option value="0" @selected(old('is_available', $room->is_available) == '0')>Unavailable</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <div class="mb-4 form-group">
-                                    <label class="font-weight-bold">Room Images</label>
-                                    <div class="row" id="existing_images">
-                                        @forelse ($room->roomImages as $image)
-                                            <div class="col-md-3 col-sm-4 mb-3" data-image-id="{{ $image->id }}" draggable="true">
-                                                <div class="card {{ $image->is_primary ? 'border-primary' : '' }}">
-                                                    <img src="{{ asset($image->image_url) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Room image">
-                                                    <div class="card-body p-2 text-center">
-                                                        @if ($image->is_primary)
-                                                            <span class="badge badge-primary">Primary</span>
-                                                        @else
-                                                            <form action="{{ route('admin.rooms.images.primary', $image) }}" method="POST" class="d-inline" onsubmit="return confirm('Set this image as primary?')">
-                                                                @csrf
-                                                                <button type="submit" class="btn btn-sm btn-outline-primary">Set Primary</button>
-                                                            </form>
-                                                        @endif
-                                                        <br>
-                                                        <form action="{{ route('admin.rooms.images.destroy', $image) }}" method="POST" class="d-inline mt-1" onsubmit="return confirm('Delete this image? This cannot be undone.')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @empty
-                                            <p class="text-muted">No images uploaded yet.</p>
-                                        @endforelse
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label class="font-weight-bold" for="max_guests">Maximum Guests</label>
+                                        <input id="max_guests" type="number" name="max_guests" class="form-control"
+                                            value="{{ old('max_guests', $room->max_guests) }}" min="1">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="font-weight-bold" for="beds">Number of Beds</label>
+                                        <input id="beds" type="number" name="beds" class="form-control"
+                                            value="{{ old('beds', $room->beds) }}" min="1">
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label class="font-weight-bold" for="bed_type">Bed Type</label>
+                                        <input id="bed_type" type="text" name="bed_type" class="form-control"
+                                            value="{{ old('bed_type', $room->bed_type) }}" placeholder="e.g. King, Queen, Twin">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="font-weight-bold" for="room_size">Room Size</label>
+                                        <input id="room_size" type="text" name="room_size" class="form-control"
+                                            value="{{ old('room_size', $room->room_size) }}" placeholder="e.g. 25 sqm">
+                                    </div>
+                                </div>
+
+<div class="mb-4 form-group">
+    <label class="font-weight-bold">Room Images</label>
+    <div class="row" id="existing_images">
+        @forelse ($room->roomImages as $image)
+            <div class="col-md-3 col-sm-4 mb-3" data-image-id="{{ $image->id }}" draggable="true">
+                <div class="card h-100 {{ $image->is_primary ? 'border-primary' : '' }}">
+                    <img src="{{ $image->imageUrl() }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Room image">
+<div class="card-body p-2 px-3 d-flex align-items-center justify-content-between">
+    @if ($image->is_primary)
+        <span class="badge badge-primary py-2 px-3">Primary</span>
+    @else
+        <button type="submit" class="btn btn-sm btn-outline-primary" form="set-primary-room-image-{{ $image->id }}" onclick="return confirm('Set this image as primary?')">Set Primary</button>
+    @endif
+
+    <button type="submit" class="btn btn-sm btn-danger" form="delete-room-image-{{ $image->id }}" onclick="return confirm('Delete this image? This cannot be undone.')">Delete</button>
+</div>
+                </div>
+            </div>
+        @empty
+            <div class="col-12">
+                <p class="text-muted">No images uploaded yet.</p>
+            </div>
+        @endforelse
+    </div>
+</div>
 
                                 <div class="mb-4 form-group">
                                     <label class="font-weight-bold">Add More Images</label>
@@ -110,6 +154,25 @@
                                     <div id="image_previews" class="row mt-3"></div>
                                 </div>
 
+                                <div class="mb-4 form-group">
+                                    <label class="font-weight-bold">Amenities</label>
+                                    <div class="row">
+                                        @foreach ($amenities as $amenity)
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="amenity_ids[]" value="{{ $amenity->id }}"
+                                                        id="amenity_{{ $amenity->id }}"
+                                                        {{ $room->roomAmenities->contains('id', $amenity->id) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="amenity_{{ $amenity->id }}">
+                                                        {{ $amenity->name }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
                                 <hr>
 
                                 <div class="text-right">
@@ -117,6 +180,18 @@
                                     <button type="submit" class="px-5 btn btn-success fw-bold">Update Room</button>
                                 </div>
                             </form>
+
+                            @foreach ($room->roomImages as $image)
+                                @unless ($image->is_primary)
+                                    <form id="set-primary-room-image-{{ $image->id }}" action="{{ route('admin.rooms.images.primary', $image) }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                @endunless
+                                <form id="delete-room-image-{{ $image->id }}" action="{{ route('admin.rooms.images.destroy', $image) }}" method="POST" class="d-none">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -167,7 +242,13 @@
                     alert('You can upload a maximum of 10 images.');
                 }
                 renderPreviews();
-                fileInput.value = '';
+                syncFileInput();
+            }
+
+            function syncFileInput() {
+                const dataTransfer = new DataTransfer();
+                uploadedFiles.forEach((file) => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
             }
 
             function renderPreviews() {
@@ -204,6 +285,11 @@
                 item.setAttribute('draggable', 'true');
 
                 item.addEventListener('dragstart', function (e) {
+                    if (['BUTTON', 'A', 'INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.closest('button, a, input, textarea, select')) {
+                        e.preventDefault();
+                        return;
+                    }
+
                     draggedItem = this;
                     this.style.opacity = '0.4';
                     e.dataTransfer.effectAllowed = 'move';

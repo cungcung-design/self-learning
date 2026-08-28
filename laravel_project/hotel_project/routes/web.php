@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeaturedCategoryController as AdminFeaturedCategoryController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\HotelController as AdminHotelController;
+use App\Http\Controllers\Admin\HotelImageController as AdminHotelImageController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\RoomImageController as AdminRoomImageController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\RoomController;
 use App\Models\Amenity;
 use App\Models\Contact;
 use App\Models\FeaturedCategory;
+use App\Models\Hotel;
 use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 
@@ -56,21 +58,28 @@ Route::middleware(['auth', 'admin'])->prefix('panel')->name('admin.')->group(fun
     Route::get('/rooms', [AdminRoomController::class, 'index'])->name('rooms.index');
     Route::get('/rooms/create', [AdminRoomController::class, 'create'])->name('rooms.create');
     Route::post('/rooms', [AdminRoomController::class, 'store'])->name('rooms.store');
+    Route::get('/rooms/{room}', [AdminRoomController::class, 'show'])->name('rooms.show');
     Route::get('/rooms/{room}/edit', [AdminRoomController::class, 'edit'])->name('rooms.edit');
     Route::put('/rooms/{room}', [AdminRoomController::class, 'update'])->name('rooms.update');
     Route::delete('/rooms/{room}', [AdminRoomController::class, 'destroy'])->name('rooms.destroy');
 
     Route::post('/rooms/{room}/images', [AdminRoomImageController::class, 'store'])->name('rooms.images.store');
+    Route::post('/rooms/{room}/images/reorder', [AdminRoomImageController::class, 'reorder'])->name('rooms.images.reorder');
     Route::delete('/rooms/images/{roomImage}', [AdminRoomImageController::class, 'destroy'])->name('rooms.images.destroy');
     Route::post('/rooms/images/{roomImage}/primary', [AdminRoomImageController::class, 'setPrimary'])->name('rooms.images.primary');
-    Route::post('/rooms/images/reorder', [AdminRoomImageController::class, 'reorder'])->name('rooms.images.reorder');
 
     Route::get('/hotels', [AdminHotelController::class, 'index'])->name('hotels.index');
     Route::get('/hotels/create', [AdminHotelController::class, 'create'])->name('hotels.create');
     Route::post('/hotels', [AdminHotelController::class, 'store'])->name('hotels.store');
+    Route::get('/hotels/{hotel}', [AdminHotelController::class, 'show'])->name('hotels.show');
     Route::get('/hotels/{hotel}/edit', [AdminHotelController::class, 'edit'])->name('hotels.edit');
     Route::put('/hotels/{hotel}', [AdminHotelController::class, 'update'])->name('hotels.update');
     Route::delete('/hotels/{hotel}', [AdminHotelController::class, 'destroy'])->name('hotels.destroy');
+
+    Route::post('/hotels/{hotel}/images', [AdminHotelImageController::class, 'store'])->name('hotels.images.store');
+    Route::post('/hotels/{hotel}/images/reorder', [AdminHotelImageController::class, 'reorder'])->name('hotels.images.reorder');
+    Route::delete('/hotels/images/{hotelImage}', [AdminHotelImageController::class, 'destroy'])->name('hotels.images.destroy');
+    Route::post('/hotels/images/{hotelImage}/primary', [AdminHotelImageController::class, 'setPrimary'])->name('hotels.images.primary');
 
     Route::get('/featured-categories', [AdminFeaturedCategoryController::class, 'index'])->name('featured_categories.index');
     Route::get('/featured-categories/create', [AdminFeaturedCategoryController::class, 'create'])->name('featured_categories.create');
