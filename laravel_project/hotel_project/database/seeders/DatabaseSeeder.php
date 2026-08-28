@@ -7,6 +7,8 @@ use App\Models\Contact;
 use App\Models\Gallery;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\FeaturedCategory;
+use App\Models\Amenity;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -109,5 +111,36 @@ class DatabaseSeeder extends Seeder
                 Gallery::query()->create(['image' => $image]);
             }
         }
+
+        $featuredCategories = [
+            ['name' => 'Best Seller', 'slug' => 'best-seller'],
+            ['name' => 'Popular', 'slug' => 'popular'],
+            ['name' => 'Luxury', 'slug' => 'luxury'],
+        ];
+
+        foreach ($featuredCategories as $category) {
+            FeaturedCategory::query()->updateOrCreate(
+                ['slug' => $category['slug']],
+                $category
+            );
+        }
+
+        $amenities = [
+            ['name' => 'King Bed', 'slug' => 'king-bed', 'icon' => 'fa fa-bed'],
+            ['name' => 'Free Wi-Fi', 'slug' => 'free-wi-fi', 'icon' => 'fa fa-wifi'],
+            ['name' => 'Swimming Pool', 'slug' => 'swimming-pool', 'icon' => 'fa fa-tint'],
+            ['name' => 'Breakfast Included', 'slug' => 'breakfast-included', 'icon' => 'fa fa-coffee'],
+            ['name' => 'Air Conditioning', 'slug' => 'air-conditioning', 'icon' => 'fa fa-snowflake-o'],
+            ['name' => 'Free Parking', 'slug' => 'free-parking', 'icon' => 'fa fa-car'],
+            ['name' => 'Restaurant', 'slug' => 'restaurant', 'icon' => 'fa fa-cutlery'],
+        ];
+
+        foreach ($amenities as $amenity) {
+            Amenity::query()->updateOrCreate(
+                ['slug' => $amenity['slug']],
+                $amenity
+            );
+        }
     }
 }
+

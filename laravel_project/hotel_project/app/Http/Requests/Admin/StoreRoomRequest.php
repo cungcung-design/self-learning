@@ -22,6 +22,8 @@ class StoreRoomRequest extends FormRequest
             'room_wifi' => ['required', Rule::in(['yes', 'no'])],
             'room_type' => ['required', Rule::in(Room::TYPES)],
             'room_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
+            'room_images' => ['nullable', 'array', 'max:10'],
+            'room_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
         ];
     }
 

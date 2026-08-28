@@ -23,4 +23,9 @@ class PageController extends Controller
     {
         return view('home.contact_page');
     }
+
+    public function featured(): View
+    {
+        return view('home.featured_listing');
+    }
 }

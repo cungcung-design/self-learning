@@ -41,11 +41,30 @@ class RoomController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('room_image')) {
-            $data['room_image'] = $this->images->store($request->file('room_image'), 'admin/img/rooms');
-        }
+        $room = Room::query()->create($data);
 
-        Room::query()->create($data);
+        if ($request->hasFile('room_images')) {
+            $primaryIndex = (int) $request->input('primary_image_index', 0);
+            $maxSort = 0;
+            foreach ($request->file('room_images') as $index => $file) {
+                if (!$file) {
+                    continue;
+                }
+
+                $path = $this->images->store($file, 'admin/img/rooms');
+                $isPrimary = $index === $primaryIndex;
+
+                $room->roomImages()->create([
+                    'image_url' => $path,
+                    'is_primary' => $isPrimary,
+                    'sort_order' => $index + 1,
+                ]);
+
+                if ($isPrimary) {
+                    $room->update(['room_image' => $path]);
+                }
+            }
+        }
 
         return redirect()
             ->route('admin.rooms.index')
@@ -71,6 +90,41 @@ class RoomController extends Controller
 
         $room->update($data);
 
+        if ($request->filled('delete_image_ids')) {
+            foreach ($request->input('delete_image_ids', []) as $imageId) {
+                $image = $room->roomImages()->find($imageId);
+                if ($image) {
+                    $this->images->delete($image->image_url);
+                    $image->delete();
+                }
+            }
+        }
+
+        if ($request->hasFile('room_images')) {
+            $maxSort = $room->roomImages()->max('sort_order') ?? 0;
+            foreach ($request->file('room_images') as $index => $file) {
+                if (!$file) {
+                    continue;
+                }
+
+                $path = $this->images->store($file, 'admin/img/rooms');
+                $room->roomImages()->create([
+                    'image_url' => $path,
+                    'is_primary' => false,
+                    'sort_order' => $maxSort + $index + 1,
+                ]);
+            }
+        }
+
+        if ($request->filled('primary_image_id')) {
+            $primary = $room->roomImages()->find($request->input('primary_image_id'));
+            if ($primary) {
+                $room->roomImages()->update(['is_primary' => false]);
+                $primary->update(['is_primary' => true]);
+                $room->update(['room_image' => $primary->image_url]);
+            }
+        }
+
         return redirect()
             ->route('admin.rooms.index')
             ->with('message', 'Room updated successfully!');
@@ -82,7 +136,12 @@ class RoomController extends Controller
             return back()->with('error', 'This room cannot be deleted because it has bookings.');
         }
 
+        foreach ($room->roomImages as $image) {
+            $this->images->delete($image->image_url);
+        }
+
         $this->images->delete($room->room_image);
+        $room->roomImages()->delete();
         $room->delete();
 
         return back()->with('message', 'Room deleted successfully!');

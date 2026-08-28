@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Room extends Model
 {
@@ -35,6 +36,16 @@ class Room extends Model
         return $this->hasMany(Booking::class);
     }
 
+    public function roomImages(): HasMany
+    {
+        return $this->hasMany(RoomImage::class)->orderBy('sort_order');
+    }
+
+    public function primaryImage(): HasOne
+    {
+        return $this->hasOne(RoomImage::class)->where('is_primary', true);
+    }
+
     public function hasWifi(): bool
     {
         return strtolower((string) $this->room_wifi) === 'yes';
@@ -47,6 +58,12 @@ class Room extends Model
 
     public function imageUrl(): string
     {
+        $primary = $this->primaryImage?->image_url;
+
+        if ($primary && is_file(public_path($primary))) {
+            return asset($primary);
+        }
+
         if ($this->room_image && is_file(public_path($this->room_image))) {
             return asset($this->room_image);
         }

@@ -19,11 +19,41 @@
             <li class="dropdown {{ request()->routeIs('admin.rooms.*') ? 'active' : '' }}">
                 <a href="#roomMenu" aria-expanded="{{ request()->routeIs('admin.rooms.*') ? 'true' : 'false' }}"
                     data-toggle="collapse" class="dropdown-toggle">
-                    <i class="icon-windows"></i> Hotel Rooms
+                    <i class="icon-windows"></i> Rooms
                 </a>
                 <ul id="roomMenu" class="list-unstyled submenu collapse {{ request()->routeIs('admin.rooms.*') ? 'show' : '' }}">
                     <li><a href="{{ route('admin.rooms.create') }}">Add Room</a></li>
                     <li><a href="{{ route('admin.rooms.index') }}">View Rooms</a></li>
+                </ul>
+            </li>
+            <li class="dropdown {{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}">
+                <a href="#hotelMenu" aria-expanded="{{ request()->routeIs('admin.hotels.*') ? 'true' : 'false' }}"
+                    data-toggle="collapse" class="dropdown-toggle">
+                    <i class="fa fa-building"></i> Hotels
+                </a>
+                <ul id="hotelMenu" class="list-unstyled submenu collapse {{ request()->routeIs('admin.hotels.*') ? 'show' : '' }}">
+                    <li><a href="{{ route('admin.hotels.create') }}">Add Hotel</a></li>
+                    <li><a href="{{ route('admin.hotels.index') }}">View Hotels</a></li>
+                </ul>
+            </li>
+            <li class="dropdown {{ request()->routeIs('admin.featured_categories.*') ? 'active' : '' }}">
+                <a href="#featuredCategoryMenu" aria-expanded="{{ request()->routeIs('admin.featured_categories.*') ? 'true' : 'false' }}"
+                    data-toggle="collapse" class="dropdown-toggle">
+                    <i class="fa fa-star"></i> Featured Categories
+                </a>
+                <ul id="featuredCategoryMenu" class="list-unstyled submenu collapse {{ request()->routeIs('admin.featured_categories.*') ? 'show' : '' }}">
+                    <li><a href="{{ route('admin.featured_categories.create') }}">Add Category</a></li>
+                    <li><a href="{{ route('admin.featured_categories.index') }}">View Categories</a></li>
+                </ul>
+            </li>
+            <li class="dropdown {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}">
+                <a href="#amenityMenu" aria-expanded="{{ request()->routeIs('admin.amenities.*') ? 'true' : 'false' }}"
+                    data-toggle="collapse" class="dropdown-toggle">
+                    <i class="icon-check"></i> Amenities
+                </a>
+                <ul id="amenityMenu" class="list-unstyled submenu collapse {{ request()->routeIs('admin.amenities.*') ? 'show' : '' }}">
+                    <li><a href="{{ route('admin.amenities.create') }}">Add Amenity</a></li>
+                    <li><a href="{{ route('admin.amenities.index') }}">View Amenities</a></li>
                 </ul>
             </li>
             <li class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">

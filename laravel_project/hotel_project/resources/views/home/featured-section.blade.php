@@ -15,11 +15,11 @@
     <div class="cards-grid">
       
       <!-- Card 1 -->
-      <div class="stay-card">
+      <a href="{{ route('featured.index') }}" class="stay-card">
         <div class="image-container">
           <img src="https://i.pinimg.com/1200x/81/fd/06/81fd06dc0013600ec59ce2ed25d4a402.jpg" alt="Sunset Paradise Resort">
           <span class="badge">Bestseller</span>
-          <button class="wishlist-btn" type="button" aria-label="Add to wishlist">
+          <button class="wishlist-btn" type="button" aria-label="Add to wishlist" onclick="event.stopPropagation();">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </button>
         </div>
@@ -40,14 +40,14 @@
             <span class="unit">/ night</span>
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Card 2 -->
-      <div class="stay-card">
+      <a href="{{ route('featured.index') }}" class="stay-card">
         <div class="image-container">
           <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80" alt="Lagoon Water Villa">
           <span class="badge">Popular</span>
-          <button class="wishlist-btn" type="button" aria-label="Add to wishlist">
+          <button class="wishlist-btn" type="button" aria-label="Add to wishlist" onclick="event.stopPropagation();">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </button>
         </div>
@@ -68,14 +68,14 @@
             <span class="unit">/ night</span>
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- Card 3 -->
-      <div class="stay-card">
+      <a href="{{ route('featured.index') }}" class="stay-card">
         <div class="image-container">
           <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80" alt="Aegean Cliff Suites">
           <span class="badge">Luxury</span>
-          <button class="wishlist-btn" type="button" aria-label="Add to wishlist">
+          <button class="wishlist-btn" type="button" aria-label="Add to wishlist" onclick="event.stopPropagation();">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </button>
         </div>
@@ -96,7 +96,7 @@
             <span class="unit">/ night</span>
           </div>
         </div>
-      </div>
+      </a>
 
     </div>
   </div>

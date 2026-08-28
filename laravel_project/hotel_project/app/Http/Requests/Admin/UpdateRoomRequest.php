@@ -22,6 +22,11 @@ class UpdateRoomRequest extends FormRequest
             'room_wifi' => ['required', Rule::in(['yes', 'no'])],
             'room_type' => ['required', Rule::in(Room::TYPES)],
             'room_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
+            'room_images' => ['nullable', 'array', 'max:10'],
+            'room_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
+            'delete_image_ids' => ['nullable', 'array'],
+            'delete_image_ids.*' => ['integer', 'exists:room_images,id'],
+            'primary_image_id' => ['nullable', 'integer', 'exists:room_images,id'],
         ];
     }
 
