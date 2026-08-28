@@ -36,69 +36,75 @@
         gap: 36px;
         align-items: start;
       }
+/* ------------------------------------
+    Outer Shell & Shared Reset
+------------------------------------ */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr;
+  grid-template-rows: repeat(3, 105px);
+  gap: 8px;
+  margin-bottom: 24px;
+}
 
-      /* ------------------------------------
-         Left Column: Media & Details
-      ------------------------------------ */
-      .gallery-grid {
-        display: grid;
-        grid-template-columns: 1.6fr 1fr;
-        grid-template-rows: 155px 155px;
-        gap: 14px;
-        margin-bottom: 24px;
-        border-radius: 20px;
-        overflow: hidden;
-      }
+/* Ensure images fill containers without inheriting global radius */
+.gallery-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0 !important;
+}
 
-      .gallery-main {
-        grid-row: span 2;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 18px;
-      }
+/* 1. Main Left Image (Top-Left & Bottom-Left rounded only) */
+.gallery-main {
+  grid-column: 1 / 2;
+  grid-row: 1 / 4;
+  border-radius: 22px 0 0 22px;
+  overflow: hidden;
+}
 
-      .gallery-thumb-top {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        height: 100%;
-      }
+/* 2. Top-Right Image (Top-Right corner rounded ONLY) */
+.gallery-thumb-top-corner {
+  border-radius: 0 22px 0 0;
+  overflow: hidden;
+  height: 100%;
+}
+/* 3. Middle-Right Image (Completely sharp / rectangular) */
+.gallery-thumb-mid {
+  border-radius: 0;
+  overflow: hidden;
+  height: 100%;
+}
 
-      .gallery-thumb-top img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 14px;
-      }
+/* 4. Bottom-Right Image (Bottom-Right corner rounded ONLY) */
+.gallery-overlay-wrap {
+  position: relative;
+  border-radius: 0 0 22px 0;
+  overflow: hidden;
+  height: 100%;
+  cursor: pointer;
+}
 
-      .gallery-overlay-wrap {
-        position: relative;
-        height: 100%;
-        border-radius: 14px;
-        overflow: hidden;
-      }
+.gallery-overlay-wrap img {
+  filter: blur(14px) brightness(1.08);
+  transform: scale(1.15);
+}
 
-      .gallery-overlay-wrap img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: blur(4px) brightness(0.9);
-      }
+.gallery-overlay-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.45);
+}
 
-      .gallery-overlay-text {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13.5px;
-        font-weight: 700;
-        color: #334155;
-        background: rgba(255, 255, 255, 0.4);
-      }
 
-      /* Room Header & Badges */
+/* Room Header & Badges */
       .badges-row {
         display: flex;
         align-items: center;
@@ -533,19 +539,29 @@
 
         <!-- Left Column: Gallery & Property Overview -->
         <div class="room-details-left">
+<!-- Image Gallery Showcase -->
+<div class="gallery-grid">
+  <!-- Main Left Image -->
+  <div class="gallery-main">
+    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80" alt="Main Room View">
+  </div>
 
-          <!-- Image Gallery Showcase -->
-          <div class="gallery-grid">
-            <img class="gallery-main" src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80" alt="Main Suite View">
-            <div class="gallery-thumb-top">
-              <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80" alt="Resort Pool">
-              <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=400&q=80" alt="Room Bed View">
-            </div>
-            <div class="gallery-overlay-wrap">
-              <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80" alt="More Photos">
-              <div class="gallery-overlay-text">+12 Photos</div>
-            </div>
-          </div>
+  <!-- Top Right Image -->
+<div class="gallery-thumb-top-corner">
+    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=500&q=80" alt="Resort View">
+  </div>
+
+  <!-- Middle Right Image -->
+  <div class="gallery-item">
+    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=500&q=80" alt="Bed View">
+  </div>
+
+  <!-- Bottom Right (+Photos Overlay) -->
+  <div class="gallery-overlay-wrap">
+    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=500&q=80" alt="More Photos">
+    <div class="gallery-overlay-text">+12 Photos</div>
+  </div>
+</div>
 
           <!-- Badges, Title & Rating -->
           <div class="badges-row">
