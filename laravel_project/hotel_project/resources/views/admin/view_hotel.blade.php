@@ -119,11 +119,11 @@
                                                 <br>
                                                 @foreach ($hotel->featuredCategories as $category)
                                                     @if ($category->slug === 'luxury')
-                                                        <span class="badge badge-info badge-category">💎 {{ $category->name }}</span>
+                                                        <span class="badge badge-info badge-category"> {{ $category->name }}</span>
                                                     @elseif ($category->slug === 'popular')
-                                                        <span class="badge badge-warning badge-category">🔥 {{ $category->name }}</span>
+                                                        <span class="badge badge-warning badge-category">{{ $category->name }}</span>
                                                     @elseif ($category->slug === 'best-seller')
-                                                        <span class="badge badge-success badge-category">🏆 {{ $category->name }}</span>
+                                                        <span class="badge badge-success badge-category"> {{ $category->name }}</span>
                                                     @endif
                                                 @endforeach
                                             </td>

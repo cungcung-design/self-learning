@@ -45,11 +45,11 @@
                                 @forelse ($hotel->featuredCategories as $category)
                                     <span class="badge badge-info mr-1 mb-1">
                                         @if ($category->slug === 'luxury')
-                                            💎
+                                            
                                         @elseif ($category->slug === 'popular')
-                                            🔥
+                                            
                                         @elseif ($category->slug === 'best-seller')
-                                            🏆
+                                            
                                         @endif
                                         {{ $category->name }}
                                     </span>
