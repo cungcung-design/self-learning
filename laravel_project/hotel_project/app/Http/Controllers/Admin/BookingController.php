@@ -38,14 +38,14 @@ class BookingController extends Controller
     {
         $this->bookings->updateStatus($booking, Booking::STATUS_APPROVED);
 
-        return back()->with('message', 'Booking approved and the guest has been emailed.');
+        return back()->with('message', 'Changes saved successfully');
     }
 
     public function reject(Booking $booking): RedirectResponse
     {
         $this->bookings->updateStatus($booking, Booking::STATUS_REJECTED);
 
-        return back()->with('message', 'Booking rejected and the guest has been emailed.');
+        return back()->with('message', 'Changes saved successfully');
     }
 
     public function sendEmail(Booking $booking): RedirectResponse
@@ -53,18 +53,18 @@ class BookingController extends Controller
         $booking->loadMissing(['room', 'user']);
 
         if (! $booking->user && ! $booking->email) {
-            return back()->with('error', 'This booking does not have an email address.');
+            return back()->with('error', 'Unable to save changes. Please try again.');
         }
 
         $this->bookings->notifyGuest($booking, new BookingStatusNotification($booking));
 
-        return back()->with('message', 'Email sent successfully!');
+        return back()->with('message', 'Changes saved successfully');
     }
 
     public function destroy(Booking $booking): RedirectResponse
     {
         $booking->delete();
 
-        return back()->with('message', 'Booking deleted successfully!');
+        return back()->with('message', 'Changes saved successfully');
     }
 }

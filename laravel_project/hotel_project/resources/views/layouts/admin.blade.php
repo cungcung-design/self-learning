@@ -9,11 +9,11 @@
     @include('admin.sidebar')
 
     <div class="page-content">
-        @include('components.flash-message')
         @yield('content')
     </div>
 
     @include('admin.footer')
+    @include('components.flash-message')
     @yield('scripts')
 </body>
 </html>

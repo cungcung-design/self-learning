@@ -121,7 +121,10 @@
         @forelse ($room->roomImages as $image)
             <div class="col-md-3 col-sm-4 mb-3" data-image-id="{{ $image->id }}" draggable="true">
                 <div class="card h-100 {{ $image->is_primary ? 'border-primary' : '' }}">
-                    <img src="{{ $image->imageUrl() }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Room image">
+                    <img src="{{ $image->imageUrl() }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="{{ $room->room_name }} — {{ $image->featureLabel() }}">
+                    <div class="px-2 pt-2">
+                        <small class="text-muted">{{ $image->featureLabel() }}</small>
+                    </div>
 <div class="card-body p-2 px-3 d-flex align-items-center justify-content-between">
     @if ($image->is_primary)
         <span class="badge badge-primary py-2 px-3">Primary</span>
@@ -147,7 +150,7 @@
                                         style="border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; background: #fafafa;">
                                         <i class="fa fa-cloud-upload" style="font-size: 40px; color: #007bff;"></i>
                                         <p style="margin-top: 10px; margin-bottom: 0;">Drag & drop images here or click to browse</p>
-                                        <p class="text-muted" style="font-size: 12px;">You can upload up to 10 additional images.</p>
+                                        <p class="text-muted" style="font-size: 12px;">Upload bedroom, bathroom, shower, view, living area, or workspace photos. Up to 10 additional images.</p>
                                         <input type="file" name="room_images[]" multiple accept="image/*" id="room_images_input"
                                             style="display: none;">
                                     </div>
@@ -239,7 +242,9 @@
                 uploadedFiles = [...uploadedFiles, ...newFiles];
                 if (uploadedFiles.length > 10) {
                     uploadedFiles = uploadedFiles.slice(0, 10);
-                    alert('You can upload a maximum of 10 images.');
+                    if (window.showSiteToast) {
+                        window.showSiteToast('warning', 'You can upload a maximum of 10 images.');
+                    }
                 }
                 renderPreviews();
                 syncFileInput();

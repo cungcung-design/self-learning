@@ -22,7 +22,7 @@ class Admin
         if (! $request->user()->isAdmin()) {
             return redirect()
                 ->route('home.public')
-                ->with('error', 'You are not authorized to access the admin panel.');
+                ->with('error', 'Please log in to continue.');
         }
 
         return $next($request);

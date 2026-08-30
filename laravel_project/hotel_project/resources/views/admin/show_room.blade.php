@@ -109,20 +109,14 @@
                 <div class="card-body">
                     @if ($room->roomImages->isNotEmpty())
                         <div class="row">
-                            @foreach ($room->roomImages->take(6) as $image)
+                            @foreach ($room->roomImages as $image)
                                 <div class="col-md-2 col-sm-4 mb-3">
                                     <img src="{{ $image->imageUrl() }}" class="img-fluid rounded"
                                          style="height: 120px; object-fit: cover; width: 100%;"
-                                         alt="Room image">
+                                         alt="{{ $room->room_name }} — {{ $image->featureLabel() }}">
+                                    <small class="d-block text-muted mt-1">{{ $image->featureLabel() }}</small>
                                 </div>
                             @endforeach
-                            @if ($room->roomImages->count() > 6)
-                                <div class="col-md-2 col-sm-4 mb-3 d-flex align-items-center justify-content-center">
-                                    <a href="{{ route('admin.rooms.edit', $room) }}" class="btn btn-outline-primary">
-                                        +{{ $room->roomImages->count() - 6 }} More
-                                    </a>
-                                </div>
-                            @endif
                         </div>
                     @else
                         <p class="text-muted mb-0">No room images uploaded yet.</p>

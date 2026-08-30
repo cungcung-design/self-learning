@@ -16,6 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\Admin::class,
         ]);
 
+        $middleware->redirectGuestsTo(function () {
+            if (request()->routeIs('bookings.*')) {
+                session()->flash('error', 'Please log in to continue.');
+            }
+
+            return route('login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

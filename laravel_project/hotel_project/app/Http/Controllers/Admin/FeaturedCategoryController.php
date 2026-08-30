@@ -37,7 +37,7 @@ class FeaturedCategoryController extends Controller
 
         return redirect()
             ->route('admin.featured_categories.index')
-            ->with('message', 'Featured category created successfully!');
+            ->with('message', 'Changes saved successfully');
     }
 
     public function edit(FeaturedCategory $featuredCategory): View
@@ -51,13 +51,13 @@ class FeaturedCategoryController extends Controller
 
         return redirect()
             ->route('admin.featured_categories.index')
-            ->with('message', 'Featured category updated successfully!');
+            ->with('message', 'Changes saved successfully');
     }
 
     public function destroy(FeaturedCategory $featuredCategory): RedirectResponse
     {
         $featuredCategory->delete();
 
-        return back()->with('message', 'Featured category deleted successfully!');
+        return back()->with('message', 'Changes saved successfully');
     }
 }

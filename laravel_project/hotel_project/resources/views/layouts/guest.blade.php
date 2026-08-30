@@ -20,6 +20,8 @@
             {{ $slot }}
         </div>
 
+        @include('components.flash-message')
+
         @livewireScripts
     </body>
 </html>

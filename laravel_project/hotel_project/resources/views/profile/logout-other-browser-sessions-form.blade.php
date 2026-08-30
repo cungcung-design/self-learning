@@ -57,7 +57,7 @@
             </x-button>
 
             <x-action-message class="ms-3" on="loggedOut">
-                {{ __('Done.') }}
+                {{ __('Your changes have been saved') }}
             </x-action-message>
         </div>
 

@@ -20,7 +20,7 @@ class HotelController extends Controller
     public function index(Request $request): View
     {
         $hotels = Hotel::query()
-            ->with(['featuredCategories', 'hotelImages', 'rooms'])
+            ->with(['featuredCategories', 'hotelImages', 'primaryImage', 'rooms'])
             ->when($request->filled('q'), function ($query) use ($request) {
                 $search = '%'.$request->string('q').'%';
                 $query->where(function ($inner) use ($search) {
@@ -101,7 +101,7 @@ class HotelController extends Controller
 
         return redirect()
             ->route('admin.hotels.index')
-            ->with('message', 'Hotel created successfully!');
+            ->with('message', 'Hotel added successfully');
     }
 
     public function edit(Hotel $hotel): View
@@ -116,13 +116,42 @@ class HotelController extends Controller
     public function update(UpdateHotelRequest $request, Hotel $hotel): RedirectResponse
     {
         $data = $request->validated();
+        unset(
+            $data['hotel_images'],
+            $data['featured_category_ids'],
+            $data['amenity_ids'],
+            $data['delete_image_ids'],
+            $data['primary_image_id']
+        );
+
+        if (! is_string($data['image'] ?? null)) {
+            unset($data['image']);
+        }
 
         if ($request->hasFile('image')) {
-            $data['image'] = $this->images->replace(
-                $hotel->image,
-                $request->file('image'),
-                'admin/img/hotels'
-            );
+            $oldPath = $hotel->image;
+            $data['image'] = $this->images->store($request->file('image'), 'admin/img/hotels');
+
+            $primary = $hotel->hotelImages()->where('is_primary', true)->first()
+                ?? $hotel->hotelImages()->orderBy('sort_order')->first();
+
+            if ($primary) {
+                $oldPrimaryPath = $primary->image_url;
+                $primary->update([
+                    'image_url' => $data['image'],
+                    'is_primary' => true,
+                ]);
+                $hotel->hotelImages()->where('id', '!=', $primary->id)->update(['is_primary' => false]);
+                $this->images->delete($oldPrimaryPath);
+            } else {
+                $hotel->hotelImages()->create([
+                    'image_url' => $data['image'],
+                    'is_primary' => true,
+                    'sort_order' => 0,
+                ]);
+            }
+
+            $this->images->delete($oldPath);
         }
 
         $hotel->update($data);
@@ -176,7 +205,7 @@ class HotelController extends Controller
 
         return redirect()
             ->route('admin.hotels.index')
-            ->with('message', 'Hotel updated successfully!');
+            ->with('message', 'Hotel updated successfully');
     }
 
     public function destroy(Hotel $hotel): RedirectResponse
@@ -190,6 +219,6 @@ class HotelController extends Controller
         $hotel->amenities()->detach();
         $hotel->delete();
 
-        return back()->with('message', 'Hotel deleted successfully!');
+        return back()->with('message', 'Hotel deleted successfully');
     }
 }

@@ -14,6 +14,6 @@ class ContactController extends Controller
 
         return back()
             ->withFragment('contact')
-            ->with('message', 'Your message has been sent successfully. Our team will get back to you shortly.');
+            ->with('message', 'Your changes have been saved');
     }
 }

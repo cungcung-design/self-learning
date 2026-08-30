@@ -47,7 +47,9 @@ class RoomController extends Controller
 
     public function show(Room $room): View
     {
-        return view('admin.show_room', compact('room'));
+        return view('admin.show_room', [
+            'room' => $room->load(['hotel', 'roomImages', 'roomAmenities']),
+        ]);
     }
 
     public function create(): View
@@ -61,6 +63,7 @@ class RoomController extends Controller
     public function store(StoreRoomRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        unset($data['room_images'], $data['amenity_ids'], $data['room_image']);
 
         $room = Room::query()->create($data);
 
@@ -92,7 +95,7 @@ class RoomController extends Controller
 
         return redirect()
             ->route('admin.rooms.index')
-            ->with('message', 'Room created successfully!');
+            ->with('message', 'Room added successfully');
     }
 
     public function edit(Room $room): View
@@ -107,13 +110,36 @@ class RoomController extends Controller
     public function update(UpdateRoomRequest $request, Room $room): RedirectResponse
     {
         $data = $request->validated();
+        unset($data['room_images'], $data['amenity_ids'], $data['delete_image_ids'], $data['primary_image_id']);
+
+        if (! is_string($data['room_image'] ?? null)) {
+            unset($data['room_image']);
+        }
 
         if ($request->hasFile('room_image')) {
-            $data['room_image'] = $this->images->replace(
-                $room->room_image,
-                $request->file('room_image'),
-                'admin/img/rooms'
-            );
+            $oldPath = $room->room_image;
+            $data['room_image'] = $this->images->store($request->file('room_image'), 'admin/img/rooms');
+
+            $primary = $room->roomImages()->where('is_primary', true)->first()
+                ?? $room->roomImages()->orderBy('sort_order')->first();
+
+            if ($primary) {
+                $oldPrimaryPath = $primary->image_url;
+                $primary->update([
+                    'image_url' => $data['room_image'],
+                    'is_primary' => true,
+                ]);
+                $room->roomImages()->where('id', '!=', $primary->id)->update(['is_primary' => false]);
+                $this->images->delete($oldPrimaryPath);
+            } else {
+                $room->roomImages()->create([
+                    'image_url' => $data['room_image'],
+                    'is_primary' => true,
+                    'sort_order' => 0,
+                ]);
+            }
+
+            $this->images->delete($oldPath);
         }
 
         $room->update($data);
@@ -136,17 +162,24 @@ class RoomController extends Controller
 
         if ($request->hasFile('room_images')) {
             $maxSort = $room->roomImages()->max('sort_order') ?? 0;
+            $hasPrimary = $room->roomImages()->where('is_primary', true)->exists();
             foreach ($request->file('room_images') as $index => $file) {
                 if (!$file) {
                     continue;
                 }
 
                 $path = $this->images->store($file, 'admin/img/rooms');
+                $isPrimary = ! $hasPrimary && $index === 0;
                 $room->roomImages()->create([
                     'image_url' => $path,
-                    'is_primary' => false,
+                    'is_primary' => $isPrimary,
                     'sort_order' => $maxSort + $index + 1,
                 ]);
+
+                if ($isPrimary) {
+                    $room->update(['room_image' => $path]);
+                    $hasPrimary = true;
+                }
             }
         }
 
@@ -161,7 +194,7 @@ class RoomController extends Controller
 
         return redirect()
             ->route('admin.rooms.index')
-            ->with('message', 'Room updated successfully!');
+            ->with('message', 'Room updated successfully');
     }
 
     public function destroy(Room $room): RedirectResponse
@@ -179,6 +212,6 @@ class RoomController extends Controller
         $room->roomAmenities()->detach();
         $room->delete();
 
-        return back()->with('message', 'Room deleted successfully!');
+        return back()->with('message', 'Room deleted successfully');
     }
 }

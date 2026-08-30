@@ -10,8 +10,8 @@ use App\Models\Gallery;
 use App\Models\Hotel;
 use App\Models\HotelImage;
 use App\Models\Room;
-use App\Models\RoomImage;
 use App\Models\User;
+use App\Support\RoomFeatureGallery;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
@@ -81,30 +81,18 @@ class DatabaseSeeder extends Seeder
         }
 
         $hotelImages = [
-            'images/banner1.jpg',
-            'images/banner2.jpg',
-            'images/banner3.jpg',
-            'images/gallery1.jpg',
-            'images/gallery2.jpg',
-            'images/gallery3.jpg',
-            'images/gallery4.jpg',
-            'images/gallery5.jpg',
-            'images/gallery6.jpg',
-            'images/gallery7.jpg',
-            'images/gallery8.jpg',
-        ];
-
-        $roomImages = [
-            'images/room1.jpg',
-            'images/room2.jpg',
-            'images/room3.jpg',
-            'images/room4.jpg',
-            'images/room5.jpg',
-            'images/room6.jpg',
-            'images/hero-villa.jpg',
-            'images/gallery1.jpg',
-            'images/gallery2.jpg',
-            'images/gallery3.jpg',
+            'images/hotels/oceanview-1.jpg',
+            'images/hotels/oceanview-2.jpg',
+            'images/hotels/royal-1.jpg',
+            'images/hotels/royal-2.jpg',
+            'images/hotels/grandbay-1.jpg',
+            'images/hotels/sunset-1.jpg',
+            'images/hotels/harbour-1.jpg',
+            'images/hotels/palmgrove-1.jpg',
+            'images/hotels/citylight-1.jpg',
+            'images/hotels/heritage-1.jpg',
+            'images/hotels/keto-1.jpg',
+            'images/hotels/serenity-1.jpg',
         ];
 
         $hotelsData = [
@@ -549,30 +537,14 @@ class DatabaseSeeder extends Seeder
                     $roomData
                 );
 
-                if ($room->roomImages()->count() === 0) {
-                    $primaryRoomImage = $roomImages[array_rand($roomImages)];
-                    $room->roomImages()->create([
-                        'image_url' => $primaryRoomImage,
-                        'is_primary' => true,
-                        'sort_order' => 1,
-                    ]);
-                    $room->update(['room_image' => $primaryRoomImage]);
-
-                    $extraRoomImages = array_diff($roomImages, [$primaryRoomImage]);
-                    shuffle($extraRoomImages);
-                    $sortOrder = 2;
-                    foreach (array_slice($extraRoomImages, 0, 3) as $imagePath) {
-                        $room->roomImages()->create([
-                            'image_url' => $imagePath,
-                            'is_primary' => false,
-                            'sort_order' => $sortOrder++,
-                        ]);
-                    }
-                }
-
                 $room->roomAmenities()->sync(
                     Amenity::query()->whereIn('slug', $roomAmenitySlugs)->pluck('id')->toArray()
                 );
+
+                if ($room->roomImages()->count() === 0) {
+                    $room->load('roomAmenities');
+                    RoomFeatureGallery::sync($room);
+                }
             }
         }
 

@@ -26,7 +26,7 @@ class GalleryController extends Controller
             'image' => $this->images->store($request->file('image'), 'admin/img/gallery'),
         ]);
 
-        return back()->with('message', 'Image uploaded successfully!');
+        return back()->with('message', 'Changes saved successfully');
     }
 
     public function destroy(Gallery $gallery): RedirectResponse
@@ -34,6 +34,6 @@ class GalleryController extends Controller
         $this->images->delete($gallery->imagePath());
         $gallery->delete();
 
-        return back()->with('message', 'Image deleted successfully!');
+        return back()->with('message', 'Photo removed successfully');
     }
 }

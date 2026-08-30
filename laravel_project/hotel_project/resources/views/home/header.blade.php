@@ -12,15 +12,15 @@
                     <li class="nav-item {{ request()->routeIs('home.public') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('home.public') }}">Home</a>
                     </li>
+                    <li class="nav-item {{ request()->routeIs('featured.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('featured.index') }}">Hotels</a>
+                    </li>
                     <li class="nav-item {{ request()->routeIs('about') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('about') }}">About</a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('rooms.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('rooms.index') }}">Rooms</a>
-                    </li>
-                    <li class="nav-item {{ request()->routeIs('gallery') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('gallery') }}">Gallery</a>
-                    </li>
+                    
+                  
+                   
                     <li class="nav-item {{ request()->routeIs('contact.show') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('contact.show') }}">Contact</a>
                     </li>

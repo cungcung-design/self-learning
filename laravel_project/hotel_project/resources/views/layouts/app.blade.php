@@ -33,6 +33,8 @@
             </main>
         </div>
 
+        @include('components.flash-message')
+
         @stack('modals')
 
         @livewireScripts

@@ -78,9 +78,20 @@ class Room extends Model
 
     public function imageUrl(): string
     {
-        return PublicImage::url(
-            $this->primaryImage?->image_url ?: $this->room_image
-        );
+        foreach ([$this->room_image, $this->primaryImage?->image_url] as $path) {
+            if (! $path) {
+                continue;
+            }
+
+            if (PublicImage::isRemote($path) || PublicImage::existingPath($path)) {
+                $url = PublicImage::url($path);
+                $version = $this->updated_at?->timestamp;
+
+                return $version ? $url.'?v='.$version : $url;
+            }
+        }
+
+        return PublicImage::url(null);
     }
 
     public function scopeOfType(Builder $query, ?string $type): Builder

@@ -42,11 +42,11 @@ class HotelImageController extends Controller
         }
 
         if ($uploaded === []) {
-            return response()->json(['message' => 'No valid images were uploaded.'], 422);
+            return response()->json(['message' => 'Photo upload failed. Please try again.'], 422);
         }
 
         return response()->json([
-            'message' => 'Images uploaded successfully.',
+            'message' => 'Hotel image updated successfully',
             'images' => $uploaded,
         ]);
     }
@@ -69,7 +69,7 @@ class HotelImageController extends Controller
             }
         }
 
-        return back()->with('message', 'Image deleted successfully.');
+        return back()->with('message', 'Photo removed successfully');
     }
 
     public function setPrimary(HotelImage $hotelImage): RedirectResponse
@@ -79,7 +79,7 @@ class HotelImageController extends Controller
         $hotelImage->update(['is_primary' => true]);
         $hotel->update(['image' => $hotelImage->image_url]);
 
-        return back()->with('message', 'Primary image updated successfully.');
+        return back()->with('message', 'Hotel image updated successfully');
     }
 
     public function reorder(Request $request, Hotel $hotel): \Symfony\Component\HttpFoundation\Response
@@ -99,9 +99,9 @@ class HotelImageController extends Controller
         }
 
         if ($request->wantsJson()) {
-            return response()->json(['message' => 'Image order updated successfully.']);
+            return response()->json(['message' => 'Changes saved successfully']);
         }
 
-        return back()->with('message', 'Image order updated successfully.');
+        return back()->with('message', 'Changes saved successfully');
     }
 }

@@ -125,7 +125,7 @@
                                         style="border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; background: #fafafa;">
                                         <i class="fa fa-cloud-upload" style="font-size: 40px; color: #007bff;"></i>
                                         <p style="margin-top: 10px; margin-bottom: 0;">Drag & drop images here or click to browse</p>
-                                        <p class="text-muted" style="font-size: 12px;">You can upload up to 10 images. Click on an image to set it as primary.</p>
+                                        <p class="text-muted" style="font-size: 12px;">Upload bedroom, bathroom, shower, view, living area, or workspace photos. Up to 10 images. Click an image to set it as primary.</p>
                                         <input type="file" name="room_images[]" multiple accept="image/*" id="room_images_input"
                                             style="display: none;">
                                     </div>
@@ -211,7 +211,9 @@
                 uploadedFiles = [...uploadedFiles, ...newFiles];
                 if (uploadedFiles.length > 10) {
                     uploadedFiles = uploadedFiles.slice(0, 10);
-                    alert('You can upload a maximum of 10 images.');
+                    if (window.showSiteToast) {
+                        window.showSiteToast('warning', 'You can upload a maximum of 10 images.');
+                    }
                 }
                 renderPreviews();
                 syncFileInput();

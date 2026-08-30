@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Amenity;
 use App\Models\Booking;
 use App\Models\Contact;
+use App\Models\FeaturedCategory;
+use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\User;
 use App\Notifications\BookingReceivedNotification;
@@ -262,6 +265,166 @@ class HotelApplicationTest extends TestCase
             ->assertSee('Harbour Suite')
             ->assertSee('Log in to book')
             ->assertDontSee('Request booking');
+    }
+
+    public function test_featured_listings_loop_hotels_from_the_database(): void
+    {
+        $hotel = Hotel::query()->create([
+            'name' => 'Palm Grove Test Hotel',
+            'slug' => 'palm-grove-test-hotel',
+            'price' => 199,
+            'location' => 'Penang',
+            'rating' => 4.6,
+            'status' => 'active',
+        ]);
+        $room = Room::factory()->create([
+            'hotel_id' => $hotel->id,
+            'room_name' => 'Palm Grove King',
+        ]);
+
+        $this->get(route('featured.index'))
+            ->assertOk()
+            ->assertSee('Palm Grove Test Hotel')
+            ->assertSee('Penang')
+            ->assertSee(route('rooms.show', $room), false)
+            ->assertDontSee('Grand Metro City Hotel');
+    }
+
+    public function test_featured_listings_carousel_uses_hotel_data(): void
+    {
+        foreach (range(1, 7) as $index) {
+            Hotel::query()->create([
+                'name' => sprintf('Carousel Hotel %02d', $index),
+                'slug' => 'carousel-hotel-'.$index,
+                'price' => 120 + $index,
+                'location' => 'Kuala Lumpur',
+                'rating' => 4.0,
+                'status' => 'active',
+            ]);
+        }
+
+        $this->get(route('featured.index'))
+            ->assertOk()
+            ->assertSee('Carousel Hotel 01')
+            ->assertSee('Carousel Hotel 07')
+            ->assertSee('Showing 1–4 of 7 stays')
+            ->assertSee('data-carousel-prev', false)
+            ->assertSee('data-carousel-next', false)
+            ->assertSee('data-hotel-carousel', false);
+    }
+
+    public function test_featured_listings_category_filter_returns_json_fragment(): void
+    {
+        $category = FeaturedCategory::query()->create([
+            'name' => 'Beachfront',
+            'slug' => 'beachfront',
+        ]);
+        $matched = Hotel::query()->create([
+            'name' => 'Shoreline Test Hotel',
+            'slug' => 'shoreline-test-hotel',
+            'location' => 'Langkawi',
+            'price' => 180,
+            'rating' => 4.5,
+            'status' => 'active',
+        ]);
+        $matched->featuredCategories()->attach($category);
+        Hotel::query()->create([
+            'name' => 'City Center Test Hotel',
+            'slug' => 'city-center-test-hotel',
+            'location' => 'Kuala Lumpur',
+            'price' => 150,
+            'rating' => 4.2,
+            'status' => 'active',
+        ]);
+
+        $response = $this->getJson(route('featured.index', ['category' => 'beachfront']));
+
+        $response->assertOk()
+            ->assertJsonPath('title', 'Beachfront Hotels')
+            ->assertJsonPath('count', 1);
+
+        $html = (string) $response->json('html');
+        $this->assertStringContainsString('Shoreline Test Hotel', $html);
+        $this->assertStringContainsString('Langkawi', $html);
+        $this->assertStringNotContainsString('City Center Test Hotel', $html);
+    }
+
+    public function test_featured_listings_empty_category_returns_empty_state(): void
+    {
+        FeaturedCategory::query()->create([
+            'name' => 'Quiet Retreats',
+            'slug' => 'quiet-retreats',
+        ]);
+
+        $response = $this->getJson(route('featured.index', ['category' => 'quiet-retreats']));
+
+        $response->assertOk()->assertJsonPath('count', 0);
+        $this->assertStringContainsString(
+            'No hotels are available in this collection yet.',
+            (string) $response->json('html')
+        );
+    }
+
+    public function test_room_details_loop_room_data_from_the_database(): void
+    {
+        $hotel = Hotel::query()->create([
+            'name' => 'Harbour View Hotel',
+            'slug' => 'harbour-view-hotel',
+            'location' => 'Penang',
+            'rating' => 4.7,
+            'check_in_time' => '15:00',
+            'check_out_time' => '11:00',
+            'status' => 'active',
+        ]);
+        $room = Room::factory()->create([
+            'hotel_id' => $hotel->id,
+            'room_name' => 'Harbour Suite',
+            'room_description' => 'A bright harbour-facing suite.',
+            'room_price' => 275,
+            'room_type' => 'suite',
+            'max_guests' => 3,
+            'beds' => 2,
+            'bed_type' => 'King + Twin',
+            'room_size' => '48 sqm',
+            'room_wifi' => 'yes',
+        ]);
+        $amenity = Amenity::query()->create([
+            'name' => 'Sea View',
+            'slug' => 'sea-view',
+            'icon' => 'fa fa-eye',
+        ]);
+        $room->roomAmenities()->attach($amenity->id);
+        foreach (['images/rooms/king-1.jpg', 'images/rooms/family-1.jpg', 'images/rooms/family-2.jpg', 'images/rooms/ocean-1.jpg', 'images/rooms/features/bath-1.jpg', 'images/rooms/features/shower-1.jpg'] as $index => $path) {
+            $room->roomImages()->create([
+                'image_url' => $path,
+                'is_primary' => $index === 0,
+                'sort_order' => $index + 1,
+            ]);
+        }
+
+        $this->actingAs(User::factory()->create())
+            ->get(route('rooms.show', $room))
+            ->assertOk()
+            ->assertSee('Harbour Suite')
+            ->assertSee('Harbour View Hotel')
+            ->assertSee('Penang')
+            ->assertSee('A bright harbour-facing suite.')
+            ->assertSee('$275')
+            ->assertSee('3 guests')
+            ->assertSee('2 beds')
+            ->assertSee('King + Twin')
+            ->assertSee('48 sqm')
+            ->assertSee('Sea View')
+            ->assertSee('15:00')
+            ->assertSee('11:00')
+            ->assertSee('Harbour Suite — Main bedroom')
+            ->assertSee('Harbour Suite — Bathroom')
+            ->assertSee('shower-1.jpg')
+            ->assertSee('Request booking')
+            ->assertDontSee('Log in to book')
+            ->assertDontSee('Virtual')
+            ->assertDontSee('Price & Task history')
+            ->assertDontSee('A comfortable hotel room with carefully selected photos');
     }
 
     public function test_room_listing_hides_unavailable_rooms(): void

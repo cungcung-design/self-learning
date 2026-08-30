@@ -210,7 +210,9 @@
                 uploadedFiles = [...uploadedFiles, ...newFiles];
                 if (uploadedFiles.length > 10) {
                     uploadedFiles = uploadedFiles.slice(0, 10);
-                    alert('You can upload a maximum of 10 images.');
+                    if (window.showSiteToast) {
+                        window.showSiteToast('warning', 'You can upload a maximum of 10 images.');
+                    }
                 }
                 renderPreviews();
                 syncFileInput();

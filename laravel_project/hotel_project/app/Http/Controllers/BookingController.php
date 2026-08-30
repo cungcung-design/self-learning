@@ -33,14 +33,14 @@ class BookingController extends Controller
         if ($this->bookings->isUnavailable($room, $startDate, $endDate)) {
             return back()
                 ->withInput()
-                ->with('error', 'This room is already booked for these dates. Please try different dates.');
+                ->with('error', 'This room is no longer available.');
         }
 
         $this->bookings->create($room, $request->validated(), $request->user());
 
         return redirect()
             ->route('bookings.index')
-            ->with('message', 'Your booking request was sent. We will confirm it by email shortly.');
+            ->with('message', 'Booking confirmed successfully');
     }
 
     public function cancel(Booking $booking): RedirectResponse
@@ -49,6 +49,6 @@ class BookingController extends Controller
 
         $this->bookings->cancel($booking);
 
-        return back()->with('message', 'Your booking has been cancelled.');
+        return back()->with('message', 'Your booking has been cancelled');
     }
 }

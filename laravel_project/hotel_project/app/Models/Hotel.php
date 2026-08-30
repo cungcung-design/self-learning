@@ -59,10 +59,20 @@ class Hotel extends Model
 
     public function imageUrl(): string
     {
-        return PublicImage::url(
-            $this->primaryImage?->image_url ?: $this->image,
-            'images/gallery1.jpg'
-        );
+        foreach ([$this->image, $this->primaryImage?->image_url] as $path) {
+            if (! $path) {
+                continue;
+            }
+
+            if (PublicImage::isRemote($path) || PublicImage::existingPath($path)) {
+                $url = PublicImage::url($path, 'images/gallery1.jpg');
+                $version = $this->updated_at?->timestamp;
+
+                return $version ? $url.'?v='.$version : $url;
+            }
+        }
+
+        return PublicImage::url(null, 'images/gallery1.jpg');
     }
 
     public function scopeActive($query)

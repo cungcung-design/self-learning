@@ -1,4 +1,4 @@
-<x-public-layout title="Best Seller Hotels - LuxeStay">
+<x-public-layout :title="$pageTitle">
     @push('styles')
     <style>
       * {
@@ -97,7 +97,21 @@
       .collection-tabs {
         display: flex;
         align-items: center;
+        flex-wrap: nowrap;
         gap: 10px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+      }
+
+      .collection-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .collection-tabs .tab-pill {
+        flex-shrink: 0;
       }
 
       .tab-pill {
@@ -323,9 +337,25 @@
       }
 
       /* Right Hotel List Area */
+      html {
+        scroll-behavior: smooth;
+      }
+
       .hotels-section {
         display: flex;
         flex-direction: column;
+        scroll-margin-top: 96px;
+        position: relative;
+        transition: opacity 0.28s ease;
+      }
+
+      .hotels-section.is-loading {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+
+      .hotels-section.is-swapping {
+        opacity: 0;
       }
 
       .hotels-header {
@@ -355,10 +385,98 @@
         cursor: pointer;
       }
 
-      .hotels-list {
+      .hotels-header-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .hotels-carousel-arrows {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .hotels-carousel {
         display: flex;
         flex-direction: column;
         gap: 16px;
+      }
+
+      .hotels-carousel-shell {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .hotels-carousel-viewport {
+        overflow: hidden;
+        width: 100%;
+        touch-action: pan-y;
+      }
+
+      .hotels-carousel-track {
+        display: flex;
+        will-change: transform;
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .hotels-carousel-page {
+        flex: 0 0 100%;
+        min-width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .carousel-arrow {
+        width: 44px;
+        height: 44px;
+        border: 1px solid #e2e8f0;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #0f172a;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+        transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .carousel-arrow:hover:not(:disabled) {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #ffffff;
+        transform: translateY(-1px);
+      }
+
+      .carousel-arrow:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .hotels-page-meta {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #64748b;
+        text-align: center;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hotels-carousel-track {
+          transition: none;
+        }
+
+        .collection-tabs {
+          scroll-behavior: auto;
+        }
+
+        .hotels-section {
+          transition: none;
+        }
       }
 
 /* Keep the card container completely static on hover */
@@ -492,6 +610,14 @@
           margin: 12px auto;
           padding: 24px 20px 32px 20px;
         }
+        .hotels-header {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .hotels-carousel-shell {
+          grid-template-columns: 40px minmax(0, 1fr) 40px;
+          gap: 8px;
+        }
       }
 
       @media (max-width: 520px) {
@@ -507,6 +633,13 @@
           padding: 20px 16px 28px 16px;
           border-radius: 20px;
         }
+        .hotels-carousel-shell {
+          grid-template-columns: 1fr 1fr;
+          justify-items: center;
+        }
+        .hotels-carousel-viewport {
+          grid-column: 1 / -1;
+        }
       }
     </style>
     @endpush
@@ -515,34 +648,35 @@
 
       <!-- Top Navigation Bar -->
       <div class="top-bar">
-        <a href="#" class="home-link">
+        <a href="{{ route('home.public') }}" class="home-link">
           <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
           <span>Home</span>
         </a>
-        <a href="#" class="auth-btn">Sign In</a>
+        @auth
+          <a href="{{ route('bookings.index') }}" class="auth-btn">My Bookings</a>
+        @else
+          <a href="{{ route('login') }}" class="auth-btn">Sign In</a>
+        @endauth
       </div>
 
       <!-- Header & Category Tabs -->
       <div class="header-section">
         <h1 class="page-title">
           <span></span>
-          <span>Best Seller Hotels</span>
+          <span data-featured-page-title>{{ $pageTitle }}</span>
         </h1>
         <p class="page-subtitle">Most booked stays loved by our guests</p>
 
         <div class="collection-tabs">
-          <a href="#" class="tab-pill active">
-            <span></span>
-            <span>Best Seller</span>
+          <a href="{{ route('featured.index') }}" class="tab-pill {{ $activeCategory ? '' : 'active' }}">
+            <span>All</span>
           </a>
-          <a href="#" class="tab-pill">
-            <span></span>
-            <span>Popular</span>
-          </a>
-          <a href="#" class="tab-pill">
-            <span></span>
-            <span>Luxury</span>
-          </a>
+          @foreach ($categories as $category)
+            <a href="{{ route('featured.index', ['category' => $category->slug]) }}"
+              class="tab-pill {{ $activeCategory?->is($category) ? 'active' : '' }}">
+              <span>{{ $category->name }}</span>
+            </a>
+          @endforeach
         </div>
       </div>
 
@@ -566,7 +700,7 @@
             </div>
             <div class="map-info">
               <span class="map-info-title">📍 Selected: Downtown</span>
-              <span class="map-info-sub">• 24 hotels in radius</span>
+              <span class="map-info-sub" data-featured-map-count>• {{ $hotels->count() }} {{ \Illuminate\Support\Str::plural('hotel', $hotels->count()) }} in this collection</span>
             </div>
           </div>
 
@@ -620,115 +754,12 @@
             </div>
           </div>
 
-          <button class="apply-filter-btn">Apply Filters (24)</button>
+          <button class="apply-filter-btn" type="button" data-featured-apply-count>{{ $hotels->count() }} {{ \Illuminate\Support\Str::plural('stay', $hotels->count()) }} found</button>
         </aside>
 
         <!-- Right Hotels List -->
-        <main class="hotels-section">
-          <div class="hotels-header">
-            <span class="hotels-count">HOTELS (24 Stays Found)</span>
-            <button class="sort-btn">
-              <span>Sort By</span>
-              <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
-            </button>
-          </div>
-
-          <div class="hotels-list">
-
-            <!-- Hotel Card 1 -->
-            <div class="hotel-card">
-              <div class="hotel-img-wrap">
-                <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=500&q=80" alt="Grand Metro City Hotel">
-              </div>
-              <div class="hotel-details">
-                <div>
-                  <div class="hotel-top-row">
-                    <h3 class="hotel-name">Grand Metro City Hotel</h3>
-                    <div class="hotel-rating">
-                      <span class="star">★</span>
-                      <span>4.9</span>
-                    </div>
-                  </div>
-                  <div class="hotel-location">
-                    <span>📍 Downtown Center • 200m to Metro</span>
-                  </div>
-                </div>
-                <div class="hotel-bottom-row">
-                  <div class="hotel-price">
-                    <span class="price-val">$120</span>
-                    <span class="price-unit">/ night</span>
-                  </div>
-                  <a href="{{ route('rooms.show', 3) }}" class="btn-view-details">
-                    <span>View Details</span>
-                    <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Hotel Card 2 -->
-            <div class="hotel-card">
-              <div class="hotel-img-wrap">
-                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=500&q=80" alt="Ocean Breeze Resort">
-              </div>
-              <div class="hotel-details">
-                <div>
-                  <div class="hotel-top-row">
-                    <h3 class="hotel-name">Ocean Breeze Resort</h3>
-                    <div class="hotel-rating">
-                      <span class="star">★</span>
-                      <span>4.8</span>
-                    </div>
-                  </div>
-                  <div class="hotel-location">
-                    <span>📍 Beachfront Blvd • Infinity Pool</span>
-                  </div>
-                </div>
-                <div class="hotel-bottom-row">
-                  <div class="hotel-price">
-                    <span class="price-val">$150</span>
-                    <span class="price-unit">/ night</span>
-                  </div>
-                  <a href="{{ route('rooms.show', 4) }}" class="btn-view-details">
-                    <span>View Details</span>
-                    <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Hotel Card 3 -->
-            <div class="hotel-card">
-              <div class="hotel-img-wrap">
-                <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=500&q=80" alt="Aegean Cliff Suites">
-              </div>
-              <div class="hotel-details">
-                <div>
-                  <div class="hotel-top-row">
-                    <h3 class="hotel-name">Aegean Cliff Suites</h3>
-                    <div class="hotel-rating">
-                      <span class="star">★</span>
-                      <span>4.9</span>
-                    </div>
-                  </div>
-                  <div class="hotel-location">
-                    <span>📍 Cliffside Drive • Sunset View</span>
-                  </div>
-                </div>
-                <div class="hotel-bottom-row">
-                  <div class="hotel-price">
-                    <span class="price-val">$130</span>
-                    <span class="price-unit">/ night</span>
-                  </div>
-                  <a href="{{ route('rooms.show', 5) }}" class="btn-view-details">
-                    <span>View Details</span>
-                    <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-          </div>
+        <main class="hotels-section" id="featured-hotels" aria-live="polite">
+          @include('home.partials.featured-hotels', ['hotels' => $hotels])
         </main>
 
       </div>
@@ -736,8 +767,292 @@
     </div>
 
     @push('scripts')
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-      lucide.createIcons();
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const collectionTabs = document.querySelector('.collection-tabs');
+      const hotelsSection = document.getElementById('featured-hotels');
+      const pageTitleEl = document.querySelector('[data-featured-page-title]');
+      const mapCountEl = document.querySelector('[data-featured-map-count]');
+      const applyCountEl = document.querySelector('[data-featured-apply-count]');
+      let listingsRequest = null;
+
+      const sameLocation = (left, right) => {
+        const a = new URL(left, window.location.origin);
+        const b = new URL(right, window.location.origin);
+        return a.pathname === b.pathname && a.search === b.search;
+      };
+
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      const revealTab = (tab) => {
+        if (!tab || !collectionTabs) {
+          return;
+        }
+
+        const tabRect = tab.getBoundingClientRect();
+        const containerRect = collectionTabs.getBoundingClientRect();
+        const overflowed = tabRect.left < containerRect.left + 8 || tabRect.right > containerRect.right - 8;
+        const maxScroll = collectionTabs.scrollWidth - collectionTabs.clientWidth;
+
+        if (maxScroll <= 0) {
+          return;
+        }
+
+        const tabCenter = tabRect.left + tabRect.width / 2;
+        const containerCenter = containerRect.left + containerRect.width / 2;
+        const nextScroll = Math.min(
+          maxScroll,
+          Math.max(0, collectionTabs.scrollLeft + (tabCenter - containerCenter))
+        );
+
+        if (overflowed || Math.abs(nextScroll - collectionTabs.scrollLeft) > 1) {
+          collectionTabs.scrollTo({
+            left: nextScroll,
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          });
+        }
+      };
+
+      const setActiveTab = (url) => {
+        if (!collectionTabs) {
+          return null;
+        }
+
+        let active = null;
+        collectionTabs.querySelectorAll('.tab-pill').forEach((tab) => {
+          const isActive = sameLocation(tab.href, url);
+          tab.classList.toggle('active', isActive);
+          if (isActive) {
+            active = tab;
+          }
+        });
+
+        return active;
+      };
+
+      const initHotelCarousel = () => {
+        const carousel = document.querySelector('[data-hotel-carousel]');
+        if (!carousel) {
+          return;
+        }
+
+        const track = carousel.querySelector('[data-carousel-track]');
+        const pages = carousel.querySelectorAll('[data-carousel-page]');
+        const viewport = carousel.querySelector('[data-carousel-viewport]');
+        const prevButtons = document.querySelectorAll('[data-carousel-prev]');
+        const nextButtons = document.querySelectorAll('[data-carousel-next]');
+        const meta = carousel.querySelector('[data-carousel-meta]');
+        const pageSize = Number(carousel.dataset.pageSize || 4);
+        const total = Number(carousel.dataset.hotelCount || 0);
+        const lastIndex = Math.max(0, pages.length - 1);
+        let index = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        const update = () => {
+          if (track) {
+            track.style.transform = 'translateX(-' + (index * 100) + '%)';
+          }
+          const atStart = index <= 0;
+          const atEnd = index >= lastIndex;
+          prevButtons.forEach((button) => {
+            button.disabled = atStart;
+            button.setAttribute('aria-disabled', atStart ? 'true' : 'false');
+          });
+          nextButtons.forEach((button) => {
+            button.disabled = atEnd;
+            button.setAttribute('aria-disabled', atEnd ? 'true' : 'false');
+          });
+          if (meta && total) {
+            const start = index * pageSize + 1;
+            const end = Math.min(total, (index + 1) * pageSize);
+            meta.textContent = 'Showing ' + start + '–' + end + ' of ' + total + ' stays';
+          }
+        };
+
+        const go = (delta) => {
+          const next = Math.min(lastIndex, Math.max(0, index + delta));
+          if (next === index) {
+            return;
+          }
+          index = next;
+          update();
+        };
+
+        prevButtons.forEach((button) => button.addEventListener('click', () => go(-1)));
+        nextButtons.forEach((button) => button.addEventListener('click', () => go(1)));
+
+        viewport?.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            go(-1);
+          }
+          if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            go(1);
+          }
+        });
+
+        viewport?.addEventListener('touchstart', (event) => {
+          touchStartX = event.changedTouches[0].clientX;
+          touchStartY = event.changedTouches[0].clientY;
+        }, { passive: true });
+
+        viewport?.addEventListener('touchend', (event) => {
+          const touch = event.changedTouches[0];
+          const dx = touch.clientX - touchStartX;
+          const dy = touch.clientY - touchStartY;
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+            go(dx < 0 ? 1 : -1);
+          }
+        }, { passive: true });
+
+        update();
+      };
+
+      const applyListings = async (payload) => {
+        if (!hotelsSection) {
+          return;
+        }
+
+        if (!prefersReducedMotion) {
+          hotelsSection.classList.add('is-swapping');
+          await wait(180);
+        }
+
+        hotelsSection.innerHTML = payload.html || '';
+
+        if (pageTitleEl && payload.title) {
+          pageTitleEl.textContent = payload.title;
+        }
+        if (payload.documentTitle) {
+          document.title = payload.documentTitle;
+        }
+        if (mapCountEl && payload.mapCountLabel) {
+          mapCountEl.textContent = payload.mapCountLabel;
+        }
+        if (applyCountEl && payload.applyLabel) {
+          applyCountEl.textContent = payload.applyLabel;
+        }
+
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+        initHotelCarousel();
+
+        hotelsSection.classList.remove('is-loading');
+        hotelsSection.removeAttribute('aria-busy');
+        if (!prefersReducedMotion) {
+          void hotelsSection.offsetWidth;
+        }
+        hotelsSection.classList.remove('is-swapping');
+      };
+
+      const loadCategory = async (url, { push = false } = {}) => {
+        if (!hotelsSection) {
+          return;
+        }
+
+        if (listingsRequest) {
+          listingsRequest.abort();
+        }
+
+        const controller = new AbortController();
+        listingsRequest = controller;
+
+        hotelsSection.classList.add('is-loading');
+        hotelsSection.setAttribute('aria-busy', 'true');
+
+        if (push && !sameLocation(window.location.href, url)) {
+          window.history.pushState({ featuredCategory: true }, '', url);
+        }
+
+        try {
+          const response = await fetch(url, {
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json',
+            },
+            credentials: 'same-origin',
+            signal: controller.signal,
+          });
+
+          if (!response.ok) {
+            throw new Error('Unable to load hotels.');
+          }
+
+          const payload = await response.json();
+          await applyListings(payload);
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            return;
+          }
+          hotelsSection.classList.remove('is-loading', 'is-swapping');
+          hotelsSection.removeAttribute('aria-busy');
+        } finally {
+          if (listingsRequest === controller) {
+            listingsRequest = null;
+          }
+        }
+      };
+
+      if (collectionTabs) {
+        requestAnimationFrame(() => {
+          revealTab(collectionTabs.querySelector('.tab-pill.active'));
+        });
+
+        collectionTabs.addEventListener('click', (event) => {
+          const tab = event.target.closest('a.tab-pill');
+          if (!tab) {
+            return;
+          }
+
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return;
+          }
+
+          event.preventDefault();
+          const active = setActiveTab(tab.href);
+          revealTab(active || tab);
+
+          if (sameLocation(window.location.href, tab.href)) {
+            return;
+          }
+
+          loadCategory(tab.href, { push: true });
+        });
+      }
+
+      const onFeaturedPopState = () => {
+        const featuredTab = collectionTabs?.querySelector('.tab-pill');
+        const featuredPath = featuredTab
+          ? new URL(featuredTab.href, window.location.origin).pathname
+          : '/featured-listings';
+
+        if (window.location.pathname !== featuredPath) {
+          return;
+        }
+
+        const active = setActiveTab(window.location.href);
+        revealTab(active);
+        loadCategory(window.location.href, { push: false });
+      };
+
+      window.addEventListener('popstate', onFeaturedPopState);
+
+      document.addEventListener('public-page:leave', () => {
+        if (listingsRequest) {
+          listingsRequest.abort();
+        }
+        window.removeEventListener('popstate', onFeaturedPopState);
+      }, { once: true });
+
+      initHotelCarousel();
     </script>
     @endpush
 </x-public-layout>

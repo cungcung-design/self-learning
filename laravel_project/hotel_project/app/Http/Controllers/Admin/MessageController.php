@@ -46,6 +46,6 @@ class MessageController extends Controller
 
         return redirect()
             ->route('admin.messages.index')
-            ->with('message', 'Reply sent successfully!');
+            ->with('message', 'Changes saved successfully');
     }
 }

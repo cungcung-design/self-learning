@@ -15,6 +15,15 @@
         color: #1e293b;
       }
 
+      html {
+        scroll-behavior: smooth;
+      }
+
+      #room-description,
+      #room-features {
+        scroll-margin-top: 24px;
+      }
+
       /* Outer App Window */
       .app-card {
         background: #ffffff;
@@ -103,6 +112,102 @@
   background: rgba(255, 255, 255, 0.45);
 }
 
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.72);
+  padding: 24px;
+}
+
+.gallery-lightbox.is-open {
+  display: flex;
+}
+
+.gallery-lightbox__dialog {
+  position: relative;
+  width: min(920px, 100%);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+}
+
+.gallery-lightbox__image {
+  width: 100%;
+  height: min(62vh, 520px);
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+
+.gallery-lightbox__caption {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gallery-lightbox__close,
+.gallery-lightbox__nav {
+  position: absolute;
+  border: none;
+  background: #0f172a;
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.gallery-lightbox__close {
+  top: 12px;
+  right: 12px;
+}
+
+.gallery-lightbox__nav {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.gallery-lightbox__prev { left: 12px; }
+.gallery-lightbox__next { right: 12px; }
+
+.date-box input,
+.guest-box input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  outline: none;
+}
+
+.btn-book-now {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-book-now:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.booking-unavailable {
+  font-size: 12px;
+  font-weight: 600;
+  color: #dc2626;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
 
 /* Room Header & Badges */
       .badges-row {
@@ -160,23 +265,6 @@
         font-weight: 800;
         color: #0f172a;
         letter-spacing: -0.4px;
-      }
-
-      .action-btns {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: #94a3b8;
-      }
-
-      .action-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #94a3b8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
 
       .room-address {
@@ -237,6 +325,7 @@
       .features-row {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 28px;
       }
 
@@ -249,10 +338,29 @@
         color: #334155;
       }
 
-      .feature-item svg {
+      .feature-item svg,
+      .feature-item i {
         width: 16px;
         height: 16px;
+        font-size: 14px;
         stroke: #334155;
+        color: #334155;
+      }
+
+      .stay-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #475569;
+      }
+
+      .stay-meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
       }
 
       /* ------------------------------------
@@ -289,24 +397,6 @@
         font-size: 12px;
         font-weight: 500;
         color: #64748b;
-      }
-
-      .price-old {
-        font-size: 12px;
-        font-weight: 500;
-        color: #cbd5e1;
-        text-decoration: line-through;
-        margin-left: 4px;
-      }
-
-      .badge-discount {
-        background: #ff2e79;
-        color: #ffffff;
-        font-size: 10px;
-        font-weight: 800;
-        padding: 3px 7px;
-        border-radius: 12px;
-        letter-spacing: 0.2px;
       }
 
       /* Date Picker Row */
@@ -352,72 +442,6 @@
         justify-content: space-between;
         margin-bottom: 18px;
         cursor: pointer;
-      }
-
-      /* Extra Features Collapsible */
-      .extras-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 11px;
-        font-weight: 700;
-        color: #64748b;
-        margin-bottom: 10px;
-      }
-
-      .extras-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 18px;
-      }
-
-      .extra-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 11.5px;
-        font-weight: 500;
-        color: #334155;
-      }
-
-      .extra-item-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .custom-check {
-        width: 14px;
-        height: 14px;
-        border-radius: 4px;
-        border: 1.5px solid #cbd5e1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-
-      .custom-check.checked {
-        background: #1d72fe;
-        border-color: #1d72fe;
-      }
-
-      .custom-check.checked svg {
-        width: 10px;
-        height: 10px;
-        stroke: #fff;
-        stroke-width: 3;
-      }
-
-      .extra-price {
-        font-weight: 700;
-        color: #1e293b;
-      }
-
-      .extra-price.muted {
-        color: #94a3b8;
-        font-weight: 500;
       }
 
       /* Price Breakdown Box */
@@ -540,192 +564,232 @@
         <!-- Left Column: Gallery & Property Overview -->
         <div class="room-details-left">
 <!-- Image Gallery Showcase -->
+@php
+    $galleryImages = $room->roomImages->values();
+    $gridImages = $galleryImages->take(4)->values();
+    $shownIds = $gridImages->pluck('id');
+    $extraImages = $galleryImages
+        ->reject(fn ($image) => $shownIds->contains($image->id))
+        ->values();
+    $gridClasses = ['gallery-main', 'gallery-thumb-top-corner', 'gallery-thumb-mid', 'gallery-overlay-wrap'];
+@endphp
 <div class="gallery-grid">
-  <!-- Main Left Image -->
-  <div class="gallery-main">
-    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1000&q=80" alt="Main Room View">
-  </div>
-
-  <!-- Top Right Image -->
-<div class="gallery-thumb-top-corner">
-    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=500&q=80" alt="Resort View">
-  </div>
-
-  <!-- Middle Right Image -->
-  <div class="gallery-item">
-    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=500&q=80" alt="Bed View">
-  </div>
-
-  <!-- Bottom Right (+Photos Overlay) -->
-  <div class="gallery-overlay-wrap">
-    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=500&q=80" alt="More Photos">
-    <div class="gallery-overlay-text">+12 Photos</div>
-  </div>
+  @forelse ($gridImages as $index => $image)
+    <div class="{{ $gridClasses[$index] ?? 'gallery-item' }}"
+      @if ($index === 3 && $extraImages->isNotEmpty())
+        data-open-gallery-more role="button" tabindex="0" aria-label="Open remaining room photos"
+      @endif
+    >
+      <img src="{{ $image->imageUrl() }}" alt="{{ $room->room_name }} — {{ $image->featureLabel() }}">
+      @if ($index === 3 && $extraImages->isNotEmpty())
+        <div class="gallery-overlay-text">+{{ $extraImages->count() }} Photos</div>
+      @endif
+    </div>
+  @empty
+    <div class="gallery-main">
+      <img src="{{ $room->imageUrl() }}" alt="{{ $room->room_name }}">
+    </div>
+  @endforelse
 </div>
+@if ($extraImages->isNotEmpty())
+  <div class="gallery-lightbox" id="gallery-more-lightbox" hidden>
+    <div class="gallery-lightbox__dialog" role="dialog" aria-modal="true" aria-label="More room photos">
+      <button type="button" class="gallery-lightbox__close" data-gallery-more-close aria-label="Close photos">&times;</button>
+      <button type="button" class="gallery-lightbox__nav gallery-lightbox__prev" data-gallery-more-prev aria-label="Previous photo">&#8249;</button>
+      <img class="gallery-lightbox__image" id="gallery-more-image" src="{{ $extraImages->first()->imageUrl() }}" alt="{{ $room->room_name }} — {{ $extraImages->first()->featureLabel() }}">
+      <button type="button" class="gallery-lightbox__nav gallery-lightbox__next" data-gallery-more-next aria-label="Next photo">&#8250;</button>
+      <p class="gallery-lightbox__caption" id="gallery-more-caption">{{ $room->room_name }} — {{ $extraImages->first()->featureLabel() }}</p>
+    </div>
+  </div>
+@endif
 
-          <!-- Badges, Title & Rating -->
+          @php
+            $hasWifiAmenity = $room->roomAmenities->contains(
+                fn ($amenity) => str_contains(strtolower($amenity->name), 'wi-fi')
+                    || str_contains(strtolower($amenity->name), 'wifi')
+            );
+            $hasFeatures = $room->max_guests
+                || $room->beds
+                || $room->bed_type
+                || $room->room_size
+                || $room->hasWifi()
+                || $room->roomAmenities->isNotEmpty();
+          @endphp
+
           <div class="badges-row">
-            <span class="score-badge">5.0 Perfect</span>
-            <span class="tag-badge tag-blue">Hotels</span>
-            <span class="tag-badge tag-purple">New Building</span>
-            <span class="tag-badge tag-orange">Top Value</span>
-            <div class="stars">
-              <i data-lucide="star"></i>
-              <i data-lucide="star"></i>
-              <i data-lucide="star"></i>
-              <i data-lucide="star"></i>
-            </div>
+            @if ($room->hotel?->rating)
+              <span class="score-badge">{{ number_format((float) $room->hotel->rating, 1) }}</span>
+            @endif
+            @if ($room->hotel?->name)
+              <span class="tag-badge tag-blue">{{ $room->hotel->name }}</span>
+            @endif
+            @if ($room->room_type)
+              <span class="tag-badge tag-purple">{{ $room->typeLabel() }}</span>
+            @endif
+            @if ($room->is_available)
+              <span class="tag-badge tag-orange">Available</span>
+            @endif
+            @if ($room->hotel?->rating)
+              <div class="stars">
+                @for ($i = 0; $i < (int) min(5, max(0, round((float) $room->hotel->rating))); $i++)
+                  <i data-lucide="star"></i>
+                @endfor
+              </div>
+            @endif
           </div>
 
           <div class="title-row">
-            <h1 class="room-title">Maxone Ascent Hotel Luxury Kota Malang</h1>
-            <div class="action-btns">
-              <button class="action-btn" aria-label="Save"><i data-lucide="bookmark" style="width: 18px; height: 18px;"></i></button>
-              <button class="action-btn" aria-label="Share"><i data-lucide="share-2" style="width: 18px; height: 18px;"></i></button>
+            <h1 class="room-title">{{ $room->room_name }}</h1>
+          </div>
+
+          @if ($room->hotel?->location)
+            <p class="room-address">{{ $room->hotel->location }}</p>
+          @endif
+
+          @if ($room->room_description || $hasFeatures)
+            <div class="tabs-nav">
+              @if ($room->room_description)
+                <a href="#room-description" class="tab-link active">Description</a>
+              @endif
+              @if ($hasFeatures)
+                <a href="#room-features" class="tab-link {{ $room->room_description ? '' : 'active' }}">Features</a>
+              @endif
             </div>
-          </div>
+          @endif
 
-          <p class="room-address">Jln. Diponegoro V No. 12, Kec. Lowokwaru, Kota Malang</p>
+          @if ($room->room_description)
+            <p class="room-description" id="room-description">{{ $room->room_description }}</p>
+          @endif
 
-          <!-- Tabs Navigation -->
-          <div class="tabs-nav">
-            <a href="#" class="tab-link active">Description</a>
-            <a href="#" class="tab-link">Features</a>
-            <a href="#" class="tab-link">Virtual</a>
-            <a href="#" class="tab-link">Price & Task history</a>
-          </div>
-
-          <!-- Room Description -->
-          <p class="room-description">
-            A studio apartment in strategic location in Malang. Located nearby Univ Muhammadiyah Malang, Univ Negeri Malang and Univ Brawijaya, this is perfect for students and academics. This is in the main road to Batu, the main tourist attractions in East Java. So, it is well suited for tourists. This has a stunning Arjuno Mountain view with misty ambience in morning. It has kitchen, and cozy sofa and bunk bed & it caters up 3 guests. It has two pools, gyms, futsal field, minimarket and coffee shop.
-          </p>
-
-          <!-- Hotel Features Icons -->
-          <h3 class="features-heading">Hotels features</h3>
+          @if ($hasFeatures)
+          <h3 class="features-heading" id="room-features">Room features</h3>
           <div class="features-row">
-            <div class="feature-item">
-              <i data-lucide="wifi"></i>
-              <span>Wi-Fi</span>
-            </div>
-            <div class="feature-item">
-              <i data-lucide="bed"></i>
-              <span>Kings Bed</span>
-            </div>
-            <div class="feature-item">
-              <i data-lucide="bath"></i>
-              <span>Bathup</span>
-            </div>
-            <div class="feature-item">
-              <i data-lucide="utensils"></i>
-              <span>Breakfast</span>
-            </div>
-            <div class="feature-item">
-              <i data-lucide="maximize-2"></i>
-              <span>4m x 6m</span>
-            </div>
+            @if ($room->max_guests)
+              <div class="feature-item">
+                <i data-lucide="users"></i>
+                <span>{{ $room->max_guests }} {{ \Illuminate\Support\Str::plural('guest', (int) $room->max_guests) }}</span>
+              </div>
+            @endif
+            @if ($room->beds)
+              <div class="feature-item">
+                <i data-lucide="bed"></i>
+                <span>{{ $room->beds }} {{ \Illuminate\Support\Str::plural('bed', (int) $room->beds) }}</span>
+              </div>
+            @endif
+            @if ($room->bed_type)
+              <div class="feature-item">
+                <i data-lucide="bed-double"></i>
+                <span>{{ $room->bed_type }}</span>
+              </div>
+            @endif
+            @if ($room->room_size)
+              <div class="feature-item">
+                <i data-lucide="maximize-2"></i>
+                <span>{{ $room->room_size }}</span>
+              </div>
+            @endif
+            @if ($room->hasWifi() && ! $hasWifiAmenity)
+              <div class="feature-item">
+                <i data-lucide="wifi"></i>
+                <span>Wi-Fi</span>
+              </div>
+            @endif
+            @foreach ($room->roomAmenities as $amenity)
+              <div class="feature-item">
+                <i class="{{ $amenity->icon ?: 'fa fa-check' }}"></i>
+                <span>{{ $amenity->name }}</span>
+              </div>
+            @endforeach
           </div>
+          @endif
 
         </div>
 
         <!-- Right Column: Booking Card -->
         <aside class="booking-card">
-          <div class="price-header">
-            <div class="price-main">
-              <span class="price-current">$301</span>
-              <span class="price-unit">/night</span>
-              <span class="price-old">$501</span>
-            </div>
-            <span class="badge-discount">20% OFF</span>
-          </div>
-
-          <!-- Check-in / Check-out Fields -->
-          <div class="dates-grid">
-            <div class="field-group">
-              <label>Check-In</label>
-              <div class="date-box">Oct 7, 2021</div>
-            </div>
-            <div class="field-group">
-              <label>Check-Out</label>
-              <div class="date-box">Oct 8, 2021</div>
-            </div>
-          </div>
-
-          <!-- Guest Selector -->
-          <div class="field-group">
-            <label>Guest</label>
-            <div class="guest-box">
-              <span>2 Adults, 1 Children</span>
-              <i data-lucide="chevron-down" style="width: 14px; height: 14px; color: #64748b;"></i>
-            </div>
-          </div>
-
-          <!-- Extra Features Checkboxes -->
-          <div class="extras-header">
-            <span>Extra Features</span>
-            <i data-lucide="minus" style="width: 14px; height: 14px; color: #64748b; cursor: pointer;"></i>
-          </div>
-
-          <div class="extras-list">
-            <div class="extra-item">
-              <div class="extra-item-left">
-                <span class="custom-check"></span>
-                <span>Allow to bring pet</span>
+          @php
+            $nightlyRate = (float) $room->room_price;
+            $stayNights = max(1, (int) ($nights ?? 1));
+            $stayTotal = $nightlyRate * $stayNights;
+          @endphp
+          <form action="{{ route('bookings.store', $room) }}" method="POST">
+            @csrf
+            <div class="price-header">
+              <div class="price-main">
+                <span class="price-current">${{ number_format($nightlyRate, 0) }}</span>
+                <span class="price-unit">/night</span>
               </div>
-              <span class="extra-price muted">$13</span>
             </div>
-            <div class="extra-item">
-              <div class="extra-item-left">
-                <span class="custom-check checked"><i data-lucide="check"></i></span>
-                <span>Breakfast a day per person</span>
-              </div>
-              <span class="extra-price">$10</span>
-            </div>
-            <div class="extra-item">
-              <div class="extra-item-left">
-                <span class="custom-check"></span>
-                <span>Parking a day</span>
-              </div>
-              <span class="extra-price muted">$6</span>
-            </div>
-            <div class="extra-item">
-              <div class="extra-item-left">
-                <span class="custom-check"></span>
-                <span>Extra pillow</span>
-              </div>
-              <span class="extra-price muted">Free</span>
-            </div>
-          </div>
 
-          <!-- Pricing Breakdown -->
-          <div class="pricing-summary">
-            <span class="pricing-summary-title">Price</span>
-            <div class="summary-line">
-              <span>1 Nights</span>
-              <span>$501</span>
+            <div class="dates-grid">
+              <div class="field-group">
+                <label for="start_date">Check-In</label>
+                <div class="date-box">
+                  <input id="start_date" type="date" name="start_date" min="{{ date('Y-m-d') }}"
+                    value="{{ old('start_date', $filters['start_date'] ?? '') }}" @required(auth()->check())>
+                </div>
+              </div>
+              <div class="field-group">
+                <label for="end_date">Check-Out</label>
+                <div class="date-box">
+                  <input id="end_date" type="date" name="end_date" min="{{ date('Y-m-d') }}"
+                    value="{{ old('end_date', $filters['end_date'] ?? '') }}" @required(auth()->check())>
+                </div>
+              </div>
             </div>
-            <div class="summary-line highlight">
-              <span>Discount 20%</span>
-              <span>-$200</span>
-            </div>
-            <div class="summary-line">
-              <span>Breakfast a day per person</span>
-              <span>$10</span>
-            </div>
-            <div class="summary-line">
-              <span>Service fee</span>
-              <span>$5</span>
-            </div>
-          </div>
 
-          <!-- Total Price -->
-          <div class="total-line">
-            <span>Total Payment</span>
-            <span class="total-price">$316</span>
-          </div>
+            @if ($room->max_guests)
+              <div class="field-group">
+                <label>Guests</label>
+                <div class="guest-box">
+                  <span>Up to {{ $room->max_guests }} {{ \Illuminate\Support\Str::plural('guest', (int) $room->max_guests) }}</span>
+                </div>
+              </div>
+            @endif
 
-          <!-- Booking CTA -->
-          <button class="btn-book-now">Book Now</button>
-          <p class="disclaimer">You will not get charged yet</p>
+            @if ($room->hotel?->check_in_time || $room->hotel?->check_out_time)
+              <div class="stay-meta">
+                @if ($room->hotel?->check_in_time)
+                  <div class="stay-meta-row">
+                    <span>Check-in</span>
+                    <span>{{ $room->hotel->check_in_time }}</span>
+                  </div>
+                @endif
+                @if ($room->hotel?->check_out_time)
+                  <div class="stay-meta-row">
+                    <span>Check-out</span>
+                    <span>{{ $room->hotel->check_out_time }}</span>
+                  </div>
+                @endif
+              </div>
+            @endif
+
+            <div class="pricing-summary">
+              <span class="pricing-summary-title">Price</span>
+              <div class="summary-line">
+                <span>{{ $stayNights }} {{ \Illuminate\Support\Str::plural('Night', $stayNights) }}</span>
+                <span>${{ number_format($stayTotal, 0) }}</span>
+              </div>
+            </div>
+
+            <div class="total-line">
+              <span>Total Payment</span>
+              <span class="total-price">${{ number_format($stayTotal, 0) }}</span>
+            </div>
+
+            @auth
+              <input type="hidden" name="name" value="{{ auth()->user()->name }}">
+              <input type="hidden" name="email" value="{{ auth()->user()->email }}">
+              <input type="hidden" name="phone" value="{{ auth()->user()->phone ?? '0000000000' }}">
+              @if ($unavailable)
+                <p class="booking-unavailable">This room is already booked for these dates.</p>
+              @endif
+              <button type="submit" class="btn-book-now" @disabled($unavailable)>Request booking</button>
+            @else
+              <a href="{{ route('login') }}" class="btn-book-now">Log in to book</a>
+            @endauth
+            <p class="disclaimer">You will not get charged yet</p>
+          </form>
         </aside>
 
       </div>
@@ -733,8 +797,103 @@
     </div>
 
     @push('scripts')
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-      lucide.createIcons();
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      document.querySelectorAll('.tabs-nav .tab-link').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const target = link.getAttribute('href');
+          if (! target || target.charAt(0) !== '#') {
+            return;
+          }
+          event.preventDefault();
+          document.querySelectorAll('.tabs-nav .tab-link').forEach((item) => item.classList.remove('active'));
+          link.classList.add('active');
+          const section = document.querySelector(target);
+          if (section) {
+            const top = section.getBoundingClientRect().top + window.scrollY - 24;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+          }
+        });
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const extraImages = @json($extraImages->map(fn ($image) => [
+            'src' => $image->imageUrl(),
+            'alt' => $room->room_name.' — '.$image->featureLabel(),
+        ])->values());
+        const lightbox = document.getElementById('gallery-more-lightbox');
+        const lightboxImage = document.getElementById('gallery-more-image');
+        const lightboxCaption = document.getElementById('gallery-more-caption');
+        if (! lightbox || ! lightboxImage || extraImages.length === 0) {
+          return;
+        }
+
+        let currentIndex = 0;
+
+        function showImage(index) {
+          currentIndex = (index + extraImages.length) % extraImages.length;
+          const photo = extraImages[currentIndex];
+          lightboxImage.src = photo.src;
+          lightboxImage.alt = photo.alt;
+          if (lightboxCaption) {
+            lightboxCaption.textContent = photo.alt;
+          }
+        }
+
+        function openGallery(index) {
+          showImage(index || 0);
+          lightbox.hidden = false;
+          lightbox.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeGallery() {
+          lightbox.hidden = true;
+          lightbox.classList.remove('is-open');
+          document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('[data-open-gallery-more]').forEach((trigger) => {
+          trigger.addEventListener('click', () => {
+            openGallery(0);
+          });
+          trigger.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              openGallery(0);
+            }
+          });
+        });
+
+        lightbox.addEventListener('click', (event) => {
+          if (event.target === lightbox) {
+            closeGallery();
+          }
+        });
+
+        lightbox.querySelector('[data-gallery-more-close]')?.addEventListener('click', closeGallery);
+        lightbox.querySelector('[data-gallery-more-prev]')?.addEventListener('click', () => showImage(currentIndex - 1));
+        lightbox.querySelector('[data-gallery-more-next]')?.addEventListener('click', () => showImage(currentIndex + 1));
+
+        document.addEventListener('keydown', (event) => {
+          if (! lightbox.classList.contains('is-open')) {
+            return;
+          }
+          if (event.key === 'Escape') {
+            closeGallery();
+          }
+          if (event.key === 'ArrowLeft') {
+            showImage(currentIndex - 1);
+          }
+          if (event.key === 'ArrowRight') {
+            showImage(currentIndex + 1);
+          }
+        });
+      });
     </script>
     @endpush
 </x-public-layout>

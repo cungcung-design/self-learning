@@ -29,7 +29,7 @@
 
     <x-slot name="actions">
         <x-action-message class="me-3" on="saved">
-            {{ __('Saved.') }}
+            {{ __('Your changes have been saved') }}
         </x-action-message>
 
         <x-button>

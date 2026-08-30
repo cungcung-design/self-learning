@@ -40,14 +40,18 @@ class RoomController extends Controller
         $startDate = $request->date('start_date');
         $endDate = $request->date('end_date');
         $unavailable = false;
+        $nights = 1;
 
         if ($startDate && $endDate && $endDate->gt($startDate)) {
             $unavailable = $this->bookings->isUnavailable($room, $startDate, $endDate);
+            $nights = max(1, (int) $startDate->diffInDays($endDate));
         }
 
         return view('home.room_details', [
-            'room' => $room,
+            'room' => $room->load(['roomImages', 'roomAmenities', 'hotel']),
             'unavailable' => $unavailable,
+            'nights' => $nights,
+            'filters' => $request->only(['start_date', 'end_date']),
         ]);
     }
 }

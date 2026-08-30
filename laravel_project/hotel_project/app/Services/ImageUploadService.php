@@ -36,7 +36,15 @@ class ImageUploadService
             return;
         }
 
-        $fullPath = public_path($path);
+        $normalized = ltrim(str_replace('\\', '/', $path), '/');
+
+        if (! str_starts_with($normalized, 'admin/img/hotels/')
+            && ! str_starts_with($normalized, 'admin/img/rooms/')
+            && ! str_starts_with($normalized, 'admin/img/gallery/')) {
+            return;
+        }
+
+        $fullPath = public_path($normalized);
 
         if (File::isFile($fullPath)) {
             File::delete($fullPath);

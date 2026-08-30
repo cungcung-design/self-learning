@@ -37,7 +37,7 @@ class AmenityController extends Controller
 
         return redirect()
             ->route('admin.amenities.index')
-            ->with('message', 'Amenity created successfully!');
+            ->with('message', 'Changes saved successfully');
     }
 
     public function edit(Amenity $amenity): View
@@ -51,13 +51,13 @@ class AmenityController extends Controller
 
         return redirect()
             ->route('admin.amenities.index')
-            ->with('message', 'Amenity updated successfully!');
+            ->with('message', 'Changes saved successfully');
     }
 
     public function destroy(Amenity $amenity): RedirectResponse
     {
         $amenity->delete();
 
-        return back()->with('message', 'Amenity deleted successfully!');
+        return back()->with('message', 'Changes saved successfully');
     }
 }

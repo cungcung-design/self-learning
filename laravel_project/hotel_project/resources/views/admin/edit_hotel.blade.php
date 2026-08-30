@@ -89,7 +89,7 @@
                                 <div class="row">
                                     <div class="mb-4 col-md-6">
                                         <label class="font-weight-bold d-block">Current Image</label>
-                                        <img src="{{ $hotel->imageUrl() }}" class="rounded shadow-sm"
+                                        <img id="hotel_image_preview" src="{{ $hotel->imageUrl() }}" class="rounded shadow-sm"
                                             style="width: 150px; height: 150px; object-fit: cover; border: 2px solid #eee;"
                                             alt="Current hotel image">
                                     </div>
@@ -209,6 +209,27 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const currentImagePreview = document.getElementById('hotel_image_preview');
+            const currentImageInput = document.getElementById('image');
+            const originalImageSrc = currentImagePreview ? currentImagePreview.src : '';
+
+            if (currentImagePreview && currentImageInput) {
+                currentImageInput.addEventListener('change', function () {
+                    const file = this.files && this.files[0];
+
+                    if (!file || !file.type.startsWith('image/')) {
+                        currentImagePreview.src = originalImageSrc;
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        currentImagePreview.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
             const uploadArea = document.querySelector('.hotel-images-upload-area');
             const fileInput = document.getElementById('hotel_images_input');
             const previewsContainer = document.getElementById('hotel_image_previews');
@@ -245,7 +266,9 @@
                 uploadedFiles = [...uploadedFiles, ...newFiles];
                 if (uploadedFiles.length > 10) {
                     uploadedFiles = uploadedFiles.slice(0, 10);
-                    alert('You can upload a maximum of 10 images.');
+                    if (window.showSiteToast) {
+                        window.showSiteToast('warning', 'You can upload a maximum of 10 images.');
+                    }
                 }
                 renderPreviews();
                 syncFileInput();
