@@ -3,7 +3,10 @@
     --studio-green-dark: #14382d;
     --studio-mint: #e7f4f2;
     --studio-mint-2: #f3faf8;
-    --studio-page: #e8eeec;
+    /* --studio-page: #e8eeec; */
+        --studio-page: #eef6f4;
+        /* background-color: #eaf1fa; */
+
     --studio-text: #1c2421;
     --studio-muted: #6b7280;
     --studio-line: #e5e7eb;

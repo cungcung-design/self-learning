@@ -9,8 +9,7 @@
       }
 
       body {
-        background-color: #eaf1fa;
-        padding: 0;
+background-color: var(--studio-page);        padding: 0;
         margin: 0;
         color: #1e293b;
       }
