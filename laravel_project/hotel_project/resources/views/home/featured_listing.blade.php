@@ -8,8 +8,8 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
       }
 
-      body {
-        background-color: #f1f5f9;
+body {
+        background-color: var(--studio-page);
         padding: 0;
         margin: 0;
         color: #0f172a;
@@ -582,9 +582,9 @@
         color: #64748b;
       }
 
-      .btn-view-details {
-        background: #0f172a;
-        color: #ffffff;
+.btn-view-details {
+        background-color: #0f172a !important;
+        color: #ffffff !important;
         text-decoration: none;
         padding: 7px 14px;
         border-radius: 8px;
@@ -593,14 +593,14 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        transition: background 0.2s ease, gap 0.2s ease;
+        transition: background-color 0.2s ease;
       }
 
       .btn-view-details:hover {
-        background: #15803d;
-        gap: 7px;
+        background-color: #15803d !important;
+        color: #ffffff !important;
       }
-
+      
       /* Responsive */
       @media (max-width: 860px) {
         .content-layout {
@@ -646,19 +646,13 @@
 
     <div class="bestsellers-page">
 
-      <!-- Top Navigation Bar -->
+<!-- Top Navigation Bar -->
       <div class="top-bar">
         <a href="{{ route('home.public') }}" class="home-link">
           <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
           <span>Home</span>
         </a>
-        @auth
-          <a href="{{ route('bookings.index') }}" class="auth-btn">My Bookings</a>
-        @else
-          <a href="{{ route('login') }}" class="auth-btn">Sign In</a>
-        @endauth
       </div>
-
       <!-- Header & Category Tabs -->
       <div class="header-section">
         <h1 class="page-title">
